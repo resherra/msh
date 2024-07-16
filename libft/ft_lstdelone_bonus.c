@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_lstdelone_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/24 20:41:22 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/04 21:35:02 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	printf("%zu\n", ft_strlen("hello"));
-
+	if (!lst || !del)
+		return ;
+	del(lst->content);
+	free(lst);
 }

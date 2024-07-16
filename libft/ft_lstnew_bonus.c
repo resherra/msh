@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/21 20:25:56 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/06 15:41:48 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+t_list	*ft_lstnew(void *content)
 {
-	printf("%zu\n", ft_strlen("hello"));
+	t_list	*node;
 
+	node = ft_calloc(1, sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->content = content;
+	node->next = NULL;
+	return (node);
 }

@@ -1,19 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/18 20:34:40 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/06 14:33:37 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	printf("%zu\n", ft_strlen("hello"));
+	int		i;
+	char	*str;
 
+	if (!s || !f)
+		return (NULL);
+	i = 0;
+	str = ft_calloc((ft_strlen(s) + 1), sizeof(char));
+	if (!str)
+		return (NULL);
+	while (s[i])
+	{
+		str[i] = f(i, s[i]);
+		i++;
+	}
+	return (str);
 }

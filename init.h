@@ -14,6 +14,7 @@
 #ifndef INIT_H
 #define  INIT_H
 
+#include "libft/libft.h"
 #include <stdio.h> //printf, perror, strerror
 #include <stdlib.h> //malloc, free, exit, getenv
 #include <unistd.h> //write, close, fork, pipe, dup, dup2, ttyslot, ttyname, ttyslot, isatty, chdir, unlink, execve, read, getcwd

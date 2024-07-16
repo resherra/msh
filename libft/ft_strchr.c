@@ -1,19 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/10 15:59:33 by recherra          #+#    #+#             */
+/*   Updated: 2023/12/31 16:39:12 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+char	*ft_strchr(const char *str, int c)
 {
-	printf("%zu\n", ft_strlen("hello"));
+	char	*s;
+	char	ac;
 
+	s = (char *)str;
+	ac = c;
+	while (*s)
+	{
+		if (*s == ac)
+			return (s);
+		s++;
+	}
+	if (ac == '\0')
+		return (s);
+	return (NULL);
 }

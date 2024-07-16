@@ -14,9 +14,10 @@ CFLAGS=-Wall -Wextra -Werror
 SRC=init.c
 OBJS=$(SRC:.c=.o)
 NAME=minishell
+LIBFT=./libft/libft.a
 
 all: init.h $(OBJS)
-	cc $(CFLAGS) $(OBJS) -o $(NAME)
+	cc $(CFLAGS) $(LIBFT) $(OBJS) -o $(NAME)
 clean:
 	rm -rf $(OBJS)
 

@@ -1,19 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/26 18:49:08 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/04 21:30:00 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	printf("%zu\n", ft_strlen("hello"));
+	t_list	*ne;
 
+	if (!lst || !del)
+		return ;
+	if (*lst)
+	{
+		while (*lst)
+		{
+			ne = *lst;
+			*lst = (*lst)->next;
+			del(ne->content);
+			free(ne);
+		}
+	}
 }

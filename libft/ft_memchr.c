@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/12 20:58:26 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/03 10:43:52 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+void	*ft_memchr(const void *str, int c, size_t n)
 {
-	printf("%zu\n", ft_strlen("hello"));
+	unsigned char	*s;
 
+	s = (unsigned char *)str;
+	while (n)
+	{
+		if (*s == (unsigned char)c)
+			return (s);
+		s++;
+		n--;
+	}
+	return (NULL);
 }

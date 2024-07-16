@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2023/12/23 13:46:08 by recherra          #+#    #+#             */
+/*   Updated: 2024/01/04 13:42:46 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "libft.h"
 
-int main()
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	printf("%zu\n", ft_strlen("hello"));
-
+	if (!lst)
+		return ;
+	if (*lst && new)
+	{
+		new->next = *lst;
+		*lst = new;
+	}
+	else
+		*lst = new;
 }
