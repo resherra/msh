@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2024/07/18 10:42:07 by recherra          #+#    #+#             */
+/*   Updated: 2024/07/18 10:42:09 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "../init.h"
 
-int main()
+void cd(char *path)
 {
-	while (1)
+	if (chdir(path))
 	{
-		char *str = readline("ms-0.1$ ");
-		printf("%s\n", str);
-		free(str);
+		perror("cd");
+		exit(1);
 	}
 }
+
+
+//int main(int ac, char **av)
+//{
+//	(void)ac;
+//	cd(av[1]);
+//}

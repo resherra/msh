@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Created: 2024/07/18 10:35:22 by recherra          #+#    #+#             */
+/*   Updated: 2024/07/18 10:35:24 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "../init.h"
 
-int main()
+void    pwd()
 {
-	while (1)
-	{
-		char *str = readline("ms-0.1$ ");
-		printf("%s\n", str);
-		free(str);
-	}
+	char *path;
+
+	path = getcwd(NULL, 0);
+	printf("%s\n", path);
+	free(path);
 }
+
+
+//int main()
+//{
+//	pwd();
+//}
