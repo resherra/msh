@@ -11,13 +11,15 @@
 # **************************************************************************** #
 
 CFLAGS=-Wall -Wextra
-SRC=init.c
+SRC=init.c env_utils.c list_utils.c
 OBJS=$(SRC:.c=.o)
-NAME=minishell
+NAME=ms
 LIBFT=./libft/libft.a
 
 all: init.h $(OBJS)
 	cc $(CFLAGS) -lreadline $(LIBFT) $(OBJS) -o $(NAME)
+	cp ${NAME} /Users/recherra/Library/Python/3.9/bin
+
 clean:
 	rm -rf $(OBJS)
 

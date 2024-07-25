@@ -20,9 +20,3 @@ void    pwd()
 	printf("%s\n", path);
 	free(path);
 }
-
-
-//int main()
-//{
-//	pwd();
-//}
