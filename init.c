@@ -20,6 +20,10 @@ int check_operator(char *str, int i)
 		return PIPE;
 	else if (*(str + i) == '$')
 		return ENV;
+	else if (*(str + i) == '\'')
+		return S_QUOTE;
+	else if (*(str + i) == '\"')
+		return D_QUOTE;
 	else if (*(str + i) == '>')
 	{
 		if (!ft_strncmp(">>", str + i, 2))
@@ -32,10 +36,6 @@ int check_operator(char *str, int i)
 			return HERE_DOC;
 		return RED_IN;
 	}
-	else if (*(str + i) == '\'')
-		return S_QUOTE;
-	else if (*(str + i) == '\"')
-		return D_QUOTE;
 	return WORD;
 }
 
@@ -63,15 +63,19 @@ char *double_to_str(char *str, int i)
 
 void    tokenize(char *str, t_token **head)
 {
-	int i = 0;
+	int i;
+	int len;
+	int tmp;
+	int op;
 
+	i = 0;
 	while (str[i] == ' ') //work on the other spaces later;
 		i++;
 	while (str[i])
 	{
-		int len = 0;
-		int tmp = i;
-		int op = check_operator(str, i);
+		len = 0;
+		tmp = i;
+		op = check_operator(str, i);
 		while (str[i] && (!op || op == ENV))
 		{
 			i++;
