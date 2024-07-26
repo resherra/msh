@@ -12,6 +12,10 @@
 
 #include "init.h"
 
+
+const char *format_state(int type);
+const char *format_type(int type);
+
 int check_operator(char *str, int i)
 {
 	if (*(str + i) == ' ')
@@ -76,7 +80,7 @@ void    tokenize(char *str, t_token **head)
 		len = 0;
 		tmp = i;
 		op = check_operator(str, i);
-		while (str[i] && (!op || op == ENV))
+		while (str[i] && !op)
 		{
 			i++;
 			op = check_operator(str, i);
@@ -84,26 +88,53 @@ void    tokenize(char *str, t_token **head)
 		}
 		if (len > 0)
 		{
-			t_token *word = lst_new(ft_substr(str, tmp, len), WORD, SIMPLE);
+			t_token *word = lst_new(ft_substr(str, tmp, len), WORD, GENERAL);
 			lst_add_back(head, word);
 		}
 		if (str[i])
 		{
 			if (op == RED_APP || op == HERE_DOC)
 			{
-				t_token *double_op = lst_new(double_to_str(str, i), op, SIMPLE);
+				t_token *double_op = lst_new(double_to_str(str, i), op, GENERAL);
 				lst_add_back(head, double_op);
 				i++;
 			}
+			else if (op == ENV)
+			{
+				int len = 0;
+				int tmp = i;
+				i++;
+				while (str[i] && !check_operator(str, i))
+				{
+					len++;
+					i++;
+				}
+				i--;
+				t_token *env = lst_new(ft_substr(str, tmp, len + 1), ENV, GENERAL);
+				lst_add_back(head, env);
+			}
 			else
 			{
-				t_token *single_op = lst_new(char_to_str(str[i]), op, SIMPLE);
+				t_token *single_op = lst_new(char_to_str(str[i]), op, GENERAL);
 				lst_add_back(head, single_op);
 			}
 		}
 		i++;
 	}
 }
+
+void set_state(t_token *head)
+{
+	t_token *curr;
+	curr = head;
+
+	while (curr)
+	{
+		if (curr->prev ==)
+		curr = curr->next;
+	}
+}
+
 
 int main(int ac, char **av, char **envp)
 {
@@ -121,19 +152,60 @@ int main(int ac, char **av, char **envp)
 		char *str = readline("ms-0.1$ ");
 		//parse
 		tokenize(str, &head);
-
+		set_state(head);
 		// traverse tokens list
 		t_token *curr = head;
 		while (curr)
 		{
-			printf("content: \"%s\" | type: %d | state: %d\n", curr->str, curr->type, curr->state);
+			printf("content: | '%20s' | type: | %8s | state: | %8s |\n", curr->str,  format_type(curr->type), format_state(curr->state));
 			curr = curr->next;
 		}
+
+		head = NULL;
 		//exec
 		add_history(str);
 		free(str);
 	}
 }
 
-//double list utils
+
+
+const char *format_type(int type)
+{
+	switch (type) {
+		case D_QUOTE:
+			return "D_QUOTE";
+		case S_QUOTE:
+			return "S_QUOTE";
+		case SPACE:
+			return "SPACE";
+		case ENV:
+			return "ENV";
+		case PIPE:
+			return "PIPE";
+		case RED_IN:
+			return "RED_IN";
+		case RED_OUT:
+			return "RED_OUT";
+		case RED_APP:
+			return "RED_APP";
+		case HERE_DOC:
+			return "HERE_DOC";
+		default:
+			return "WORD"; // Default case
+	}
+}
+
+const char *format_state(int type)
+{
+	switch (type) {
+		case IN_DOUBLE_Q:
+			return "IN_DOUBLE_Q";
+		case IN_QUOTE:
+			return "IN_QUOTE";
+		default:
+			return "GENERAL"; // Default case
+	}
+}
+
 

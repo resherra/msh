@@ -45,12 +45,13 @@ typedef enum type
 	HERE_DOC,
 } type;
 
+
 //state
 typedef enum state
 {
-	DOUBLE_Q,
-	QUOTE,
-	SIMPLE
+	IN_DOUBLE_Q,
+	IN_QUOTE,
+	GENERAL
 } state;
 
 //token's element
