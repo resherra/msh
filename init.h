@@ -50,7 +50,7 @@ typedef enum type
 typedef enum state
 {
 	IN_DOUBLE_Q,
-	IN_QUOTE,
+	IN_S_QUOTE,
 	GENERAL
 } state;
 

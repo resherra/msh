@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-CFLAGS=-Wall -Wextra
+CFLAGS=-Wall -Wextra -fsanitize=address -g
 SRC=init.c env_utils.c list_utils.c
 OBJS=$(SRC:.c=.o)
 NAME=ms

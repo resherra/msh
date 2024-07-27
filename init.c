@@ -126,12 +126,44 @@ void    tokenize(char *str, t_token **head)
 void set_state(t_token *head)
 {
 	t_token *curr;
+	bool doub_quote_flag = false;
+	bool sing_quote_flag = false;
 	curr = head;
-
 	while (curr)
 	{
-		if (curr->prev ==)
-		curr = curr->next;
+		//double quote check
+		if (curr->type == D_QUOTE)
+		{
+			doub_quote_flag = true;
+			curr = curr->next;
+			while (curr && curr->type != D_QUOTE)
+			{
+				curr->state = IN_DOUBLE_Q;
+				curr = curr->next;
+			}
+			if (curr)
+				doub_quote_flag = false;
+		}
+
+		//single quote check
+		if (curr && curr->type == S_QUOTE)
+		{
+			sing_quote_flag = true;
+			curr = curr->next;
+			while (curr && curr->type != S_QUOTE)
+			{
+				curr->state = IN_S_QUOTE;
+				curr = curr->next;
+			}
+			if (curr)
+				sing_quote_flag = false;
+		}
+
+
+		if (doub_quote_flag  == true || sing_quote_flag == true)
+			printf("Syntax Error Double!\n\n\n\n");
+		if (curr)
+			curr = curr->next;
 	}
 }
 
@@ -201,8 +233,8 @@ const char *format_state(int type)
 	switch (type) {
 		case IN_DOUBLE_Q:
 			return "IN_DOUBLE_Q";
-		case IN_QUOTE:
-			return "IN_QUOTE";
+		case IN_S_QUOTE:
+			return "IN_S_QUOTE";
 		default:
 			return "GENERAL"; // Default case
 	}
