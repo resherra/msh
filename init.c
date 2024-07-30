@@ -60,6 +60,17 @@ char *double_to_str(char *str, int i)
 	return new;
 }
 
+
+t_token *get_last_node(t_token **head)
+{
+	t_token *curr;
+
+	curr = *head;
+	while (curr && curr->next)
+			curr = curr->next;
+	return curr;
+}
+
 void    tokenize(char *str, t_token **head)
 {
 	int i;
@@ -74,18 +85,22 @@ void    tokenize(char *str, t_token **head)
 	{
 		len = 0;
 		tmp = i;
+		//save the operator found;
 		op = check_operator(str, i);
+		//while its work, traverse the string
 		while (str[i] && !op)
 		{
 			i++;
 			op = check_operator(str, i);
 			len++;
 		}
+		//get the whole word;
 		if (len > 0)
 		{
 			t_token *word = lst_new(ft_substr(str, tmp, len), WORD, GENERAL);
 			lst_add_back(head, word);
 		}
+		//if there's no operator, we'll not enter here!
 		if (str[i])
 		{
 			if (op == RED_APP || op == HERE_DOC)
@@ -93,8 +108,7 @@ void    tokenize(char *str, t_token **head)
 				t_token *double_op = lst_new(double_to_str(str, i), op, GENERAL);
 				lst_add_back(head, double_op);
 				i++;
-			}
-			else if (op == ENV)
+			} else if (op == ENV)
 			{
 				int len = 0;
 				int tmp = i;
@@ -105,10 +119,22 @@ void    tokenize(char *str, t_token **head)
 					i++;
 				}
 				i--;
-				t_token *env = lst_new(ft_substr(str, tmp, len + 1), ENV, GENERAL);
-				lst_add_back(head, env);
-			}
-			else
+
+				t_token *last_node = get_last_node(head);
+				while (last_node && (last_node->type == SPACE || last_node->type == D_QUOTE))
+					last_node = last_node->prev;
+				if (last_node && last_node->type == HERE_DOC)
+				{
+					t_token *non_expanded_env = lst_new(ft_substr(str, tmp, len + 1), WORD, GENERAL);
+					lst_add_back(head, non_expanded_env);
+				} else
+				{
+					t_token *env = lst_new(ft_substr(str, tmp, len + 1), ENV, GENERAL);
+					lst_add_back(head, env);
+				}
+
+
+			} else
 			{
 				t_token *single_op = lst_new(char_to_str(str[i]), op, GENERAL);
 				lst_add_back(head, single_op);
@@ -118,7 +144,27 @@ void    tokenize(char *str, t_token **head)
 	}
 }
 
-void set_state(t_token *head)
+void    expansion(t_token *var, t_env *envs)
+{
+	t_env *curr = envs;
+
+	int len = ft_strlen(var->str);
+
+	if (len == 1)
+		return;
+	while (curr)
+	{
+		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
+		{
+			var->str = curr->value;
+			return;
+		}
+		curr = curr->next;
+	}
+	var->str = ft_strdup("");
+}
+
+void set_state(t_token *head, t_env *env)
 {
 	t_token *curr;
 	bool doub_quote_flag = false;
@@ -133,6 +179,8 @@ void set_state(t_token *head)
 			curr = curr->next;
 			while (curr && curr->type != D_QUOTE)
 			{
+				if (curr->type == ENV)
+					expansion(curr, env);
 				curr->state = IN_DOUBLE_Q;
 				curr = curr->next;
 			}
@@ -156,13 +204,14 @@ void set_state(t_token *head)
 				sing_quote_flag = false;
 		}
 
+		if (curr && curr->type == ENV)
+			expansion(curr, env);
 
 		if (doub_quote_flag  == true || sing_quote_flag == true)
 		{
 			printf("Syntax Error\n");
 			exit(1);
 		}
-
 		if (curr)
 			curr = curr->next;
 	}
@@ -205,12 +254,12 @@ int main(int ac, char **av, char **envp)
 	t_token *head = NULL;
 
 	//env list
-//	traverse_env_list(env);
+	//	traverse_env_list(env);
 	while (1)
 	{
 		char *str = readline("ms-0.1$ ");
 		tokenize(str, &head);
-		set_state(head);
+		set_state(head, env);
 
 		//traverse primary tokens list;
 		traverse_primary_tokens_list(head);
@@ -221,6 +270,7 @@ int main(int ac, char **av, char **envp)
 }
 
 
+//miscs
 void    traverse_primary_tokens_list(t_token *token)
 {
 	t_token *curr = token;
@@ -242,6 +292,3 @@ void    traverse_env_list(t_env *env)
 		curr = curr->next;
 	}
 }
-
-
-
