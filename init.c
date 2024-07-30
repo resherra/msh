@@ -12,10 +12,6 @@
 
 #include "init.h"
 
-
-const char *format_state(int type);
-const char *format_type(int type);
-
 int check_operator(char *str, int i)
 {
 	if (*(str + i) == ' ')
@@ -42,7 +38,6 @@ int check_operator(char *str, int i)
 	}
 	return WORD;
 }
-
 
 char *char_to_str(char c)
 {
@@ -152,6 +147,8 @@ void set_state(t_token *head)
 			curr = curr->next;
 			while (curr && curr->type != S_QUOTE)
 			{
+				if (curr->type == ENV)
+					curr->type = WORD;
 				curr->state = IN_S_QUOTE;
 				curr = curr->next;
 			}
@@ -161,12 +158,41 @@ void set_state(t_token *head)
 
 
 		if (doub_quote_flag  == true || sing_quote_flag == true)
-			printf("Syntax Error Double!\n\n\n\n");
+		{
+			printf("Syntax Error\n");
+			exit(1);
+		}
+
 		if (curr)
 			curr = curr->next;
 	}
 }
 
+//today
+
+
+int check_token(t_token *token)
+{
+	if (token->type == SPACE && token->state == GENERAL)
+		return 1;
+	if (token->type == D_QUOTE && token->state == GENERAL)
+		return 1;
+	if (token->type == S_QUOTE && token->state == GENERAL)
+		return 1;
+	return 0;
+}
+
+void    sanitize(t_token *head, t_token **new)
+{
+	t_token *curr = head;
+
+	while (curr)
+	{
+		if (!check_token(curr))
+			lst_add_back(new, lst_new(curr->str, curr->type, curr->state));
+		curr = curr->next;
+	}
+}
 
 int main(int ac, char **av, char **envp)
 {
@@ -174,70 +200,48 @@ int main(int ac, char **av, char **envp)
 	(void)av;
 	(void)envp;
 
-	//deleted the list functions by accident lol
-	//	t_env *env = NULL;
-	//	init_env(&env, envp);
-	//deleted the list functions by accident lol
+	t_env *env = NULL;
+	init_env(&env, envp);
 	t_token *head = NULL;
+
+	//env list
+//	traverse_env_list(env);
 	while (1)
 	{
 		char *str = readline("ms-0.1$ ");
-		//parse
 		tokenize(str, &head);
 		set_state(head);
-		// traverse tokens list
-		t_token *curr = head;
-		while (curr)
-		{
-			printf("content: | '%20s' | type: | %8s | state: | %8s |\n", curr->str,  format_type(curr->type), format_state(curr->state));
-			curr = curr->next;
-		}
 
+		//traverse primary tokens list;
+		traverse_primary_tokens_list(head);
 		head = NULL;
-		//exec
 		add_history(str);
 		free(str);
 	}
 }
 
 
-
-const char *format_type(int type)
+void    traverse_primary_tokens_list(t_token *token)
 {
-	switch (type) {
-		case D_QUOTE:
-			return "D_QUOTE";
-		case S_QUOTE:
-			return "S_QUOTE";
-		case SPACE:
-			return "SPACE";
-		case ENV:
-			return "ENV";
-		case PIPE:
-			return "PIPE";
-		case RED_IN:
-			return "RED_IN";
-		case RED_OUT:
-			return "RED_OUT";
-		case RED_APP:
-			return "RED_APP";
-		case HERE_DOC:
-			return "HERE_DOC";
-		default:
-			return "WORD"; // Default case
+	t_token *curr = token;
+
+	while (curr)
+	{
+		printf("content: | '%20s' | type: | %8s | state: | %8s |\n", curr->str,  format_type(curr->type), format_state(curr->state));
+		curr = curr->next;
 	}
 }
 
-const char *format_state(int type)
+void    traverse_env_list(t_env *env)
 {
-	switch (type) {
-		case IN_DOUBLE_Q:
-			return "IN_DOUBLE_Q";
-		case IN_S_QUOTE:
-			return "IN_S_QUOTE";
-		default:
-			return "GENERAL"; // Default case
+	t_env *curr = env;
+
+	while (curr)
+	{
+		printf("key: %s | value: %s\n", curr->key, curr->value);
+		curr = curr->next;
 	}
 }
+
 
 

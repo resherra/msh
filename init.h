@@ -71,9 +71,17 @@ void    lst_add_back(t_token **head, t_token *node);
 //env
 typedef struct s_env
 {
-	char *str;
-	struct s_env *next_env;
+	char *key;
+	char *value;
+	struct s_env *next;
 } t_env;
+
+void env_addback(t_env **env, t_env *new);
+t_env *new_env(char *key, char *value);
+void    extract_env(t_env **envs, char *str);
+void    init_env(t_env **env, char **envp);
+
+
 
 //tree
 typedef struct s_tree
@@ -86,4 +94,13 @@ typedef struct s_tree
 //env
 void    init_env(t_env **env, char **envp);
 
+
+
+
+
+//miscs
+const char *format_state(int type);
+const char *format_type(int type);
+void    traverse_primary_tokens_list(t_token *env);
+void    traverse_env_list(t_env *env);
 #endif

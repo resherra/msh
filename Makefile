@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CFLAGS=-Wall -Wextra -fsanitize=address -g
-SRC=init.c env_utils.c list_utils.c
+SRC=init.c env_utils.c list_utils.c miscs.c
 OBJS=$(SRC:.c=.o)
 NAME=ms
 LIBFT=./libft/libft.a
