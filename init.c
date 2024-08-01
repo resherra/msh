@@ -147,21 +147,26 @@ void    tokenize(char *str, t_token **head)
 void    expansion(t_token *var, t_env *envs)
 {
 	t_env *curr = envs;
-
 	int len = ft_strlen(var->str);
 
 	if (len == 1)
+	{
+		var->str = ft_strdup("$");
+		var->type = WORD;
 		return;
+	}
 	while (curr)
 	{
 		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
 		{
 			var->str = curr->value;
+			var->type = WORD;
 			return;
 		}
 		curr = curr->next;
 	}
 	var->str = ft_strdup("");
+	var->type = WORD;
 }
 
 void set_state(t_token *head, t_env *env)
@@ -181,6 +186,8 @@ void set_state(t_token *head, t_env *env)
 			{
 				if (curr->type == ENV)
 					expansion(curr, env);
+				else
+					curr->type = WORD;
 				curr->state = IN_DOUBLE_Q;
 				curr = curr->next;
 			}
@@ -195,8 +202,9 @@ void set_state(t_token *head, t_env *env)
 			curr = curr->next;
 			while (curr && curr->type != S_QUOTE)
 			{
-				if (curr->type == ENV)
-					curr->type = WORD;
+//				if (curr->type == ENV)
+//					curr->type = WORD;
+				curr->type = WORD;
 				curr->state = IN_S_QUOTE;
 				curr = curr->next;
 			}
@@ -222,14 +230,16 @@ void set_state(t_token *head, t_env *env)
 
 int check_token(t_token *token)
 {
-	if (token->type == SPACE && token->state == GENERAL)
+	if (token->type == WORD)
 		return 1;
-	if (token->type == D_QUOTE && token->state == GENERAL)
-		return 1;
-	if (token->type == S_QUOTE && token->state == GENERAL)
-		return 1;
+	if (token->type == D_QUOTE || token->type == S_QUOTE)
+		return 2;
 	return 0;
 }
+
+//		while its not a space with state general and its not an operator -> join and p
+//      skip the spaces
+//      skip the operators with state GENERAL
 
 void    sanitize(t_token *head, t_token **new)
 {
@@ -237,9 +247,24 @@ void    sanitize(t_token *head, t_token **new)
 
 	while (curr)
 	{
-		if (!check_token(curr))
-			lst_add_back(new, lst_new(curr->str, curr->type, curr->state));
-		curr = curr->next;
+		char *str = NULL;
+		while (curr && curr->type != SPACE)
+		{
+			if (curr->type == D_QUOTE || curr->type == S_QUOTE)
+			{
+				curr = curr->next;
+				continue;
+			}
+			str = ft_strjoin(str, curr->str);
+			curr = curr->next;
+		}
+		if (str)
+		{
+			t_token *node = lst_new(str, WORD, GENERAL);
+			lst_add_back(new, node);
+		}
+		if (curr)
+			curr = curr->next;
 	}
 }
 
@@ -252,6 +277,7 @@ int main(int ac, char **av, char **envp)
 	t_env *env = NULL;
 	init_env(&env, envp);
 	t_token *head = NULL;
+	t_token *pre = NULL;
 
 	//env list
 	//	traverse_env_list(env);
@@ -260,9 +286,13 @@ int main(int ac, char **av, char **envp)
 		char *str = readline("ms-0.1$ ");
 		tokenize(str, &head);
 		set_state(head, env);
+		sanitize(head, &pre);
 
 		//traverse primary tokens list;
 		traverse_primary_tokens_list(head);
+		printf("\n\n");
+		traverse_primary_tokens_list(pre);
+		pre = NULL;
 		head = NULL;
 		add_history(str);
 		free(str);
@@ -277,7 +307,7 @@ void    traverse_primary_tokens_list(t_token *token)
 
 	while (curr)
 	{
-		printf("content: | '%20s' | type: | %8s | state: | %8s |\n", curr->str,  format_type(curr->type), format_state(curr->state));
+		printf("content: | '%s' | type: | %8s | state: | %8s |\n", curr->str,  format_type(curr->type), format_state(curr->state));
 		curr = curr->next;
 	}
 }
