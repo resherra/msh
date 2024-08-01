@@ -300,7 +300,6 @@ int main(int ac, char **av, char **envp)
 }
 
 
-//miscs
 void    traverse_primary_tokens_list(t_token *token)
 {
 	t_token *curr = token;
