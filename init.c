@@ -120,11 +120,17 @@ void    tokenize(char *str, t_token **head)
 				}
 				i--;
 
+				//handle ENV after HEREDOC
 				t_token *last_node = get_last_node(head);
 				while (last_node && (last_node->type == SPACE || last_node->type == D_QUOTE))
 					last_node = last_node->prev;
 				if (last_node && last_node->type == HERE_DOC)
 				{
+					if (check_operator(str, tmp) == ENV && (check_operator(str, tmp + 1) == D_QUOTE || check_operator(str, tmp + 1) == S_QUOTE))
+					{
+						i++;
+						continue;
+					}
 					t_token *non_expanded_env = lst_new(ft_substr(str, tmp, len + 1), WORD, GENERAL);
 					lst_add_back(head, non_expanded_env);
 				} else
@@ -152,7 +158,7 @@ void    expansion(t_token *var, t_env *envs)
 	if (len == 1)
 	{
 		var->str = ft_strdup("$");
-		var->type = WORD;
+//		var->type = WORD;
 		return;
 	}
 	while (curr)
@@ -160,7 +166,7 @@ void    expansion(t_token *var, t_env *envs)
 		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
 		{
 			var->str = curr->value;
-			var->type = WORD;
+//			var->type = WORD;
 			return;
 		}
 		curr = curr->next;
@@ -185,7 +191,10 @@ void set_state(t_token *head, t_env *env)
 			while (curr && curr->type != D_QUOTE)
 			{
 				if (curr->type == ENV)
+				{
 					expansion(curr, env);
+					//SINE
+				}
 				else
 					curr->type = WORD;
 				curr->state = IN_DOUBLE_Q;
@@ -212,8 +221,11 @@ void set_state(t_token *head, t_env *env)
 				sing_quote_flag = false;
 		}
 
+
 		if (curr && curr->type == ENV)
-			expansion(curr, env);
+		{
+				expansion(curr, env);
+		}
 
 		if (doub_quote_flag  == true || sing_quote_flag == true)
 		{
@@ -226,17 +238,6 @@ void set_state(t_token *head, t_env *env)
 }
 
 //today
-
-
-int check_token(t_token *token)
-{
-	if (token->type == WORD)
-		return 1;
-	if (token->type == D_QUOTE || token->type == S_QUOTE)
-		return 2;
-	return 0;
-}
-
 //		while its not a space with state general and its not an operator -> join and p
 //      skip the spaces
 //      skip the operators with state GENERAL
@@ -250,6 +251,15 @@ void    sanitize(t_token *head, t_token **new)
 		char *str = NULL;
 		while (curr && curr->type != SPACE)
 		{
+			//if there's $ just before " or '
+			if (ft_strlen(curr->str) == 1)
+			{
+				if ((curr->type == ENV && curr->state == GENERAL) && curr->next && (curr->next->type == D_QUOTE || curr->next->type == S_QUOTE))
+				{
+					curr = curr->next;
+					continue;
+				}
+			}
 			if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 			{
 				curr = curr->next;
