@@ -37,3 +37,52 @@ const char *format_state(int type)
 			return "GENERAL"; // Default case
 	}
 }
+
+
+void    freed(void *str)
+{
+	free(str);
+}
+
+void	lstclear(t_token **token, void (*del)(void *))
+{
+	t_token	*ne;
+
+	if (!token || !del)
+		return ;
+	if (*token)
+	{
+		while (*token)
+		{
+			ne = *token;
+			*token = (*token)->next;
+			del(ne->str);
+			free(ne);
+		}
+	}
+}
+
+void	traverse_primary_tokens_list(t_token *token)
+{
+	t_token	*curr;
+
+	curr = token;
+	while (curr)
+	{
+		printf("content: | '%s' | type: | %8s | state: | %8s |\n", curr->str,
+		       format_type(curr->type), format_state(curr->state));
+		curr = curr->next;
+	}
+}
+
+void	traverse_env_list(t_env *env)
+{
+	t_env	*curr;
+
+	curr = env;
+	while (curr)
+	{
+		printf("key: %s | value: %s\n", curr->key, curr->value);
+		curr = curr->next;
+	}
+}

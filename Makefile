@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CFLAGS=-Wall -Wextra
-SRC=init.c env_utils.c list_utils.c miscs.c state.c expansion.c tokens_content_utils.c
+SRC=init.c env_utils.c list_utils.c miscs.c state.c expansion.c tokens_content_utils.c pre_parse_func.c tokenize_miscs.c check.c
 OBJS=$(SRC:.c=.o)
 NAME=ms
 LIBFT=./libft/libft.a

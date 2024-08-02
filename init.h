@@ -65,6 +65,26 @@ typedef struct s_token
 	struct s_token	*prev;
 }					t_token;
 
+//tokenizer vars
+typedef struct s_env_token_utils
+{
+	int					len;
+	int					tmp;
+}						t_env_token_utils;
+
+typedef struct s_tokenizer_vars
+{
+	int					i;
+	int					len;
+	int					tmp;
+	int					op;
+	t_token				*content;
+	t_env_token_utils	env_utils;
+}						t_tokenizer_vars;
+
+
+
+
 //d-list functions
 t_token				*lst_new(char *str, t_type type, t_state state);
 void				lst_add_back(t_token **head, t_token *node);
@@ -91,9 +111,20 @@ char				*double_to_str(char *str, int i);
 void				extract_env(t_env **envs, char *str);
 void				init_env(t_env **env, char **envp);
 
+//pre-parse functions
+void	sanitize(t_token *head, t_token **new);
+
 //env list utils
 t_env				*new_env(char *key, char *value);
 void				env_addback(t_env **env, t_env *new);
+
+//tokenizer miscs
+t_token	*get_last_node(t_token **head);
+
+//operator checks & others
+int	check_operator(char *str, int i);
+int	check(char *str, int tmp);
+
 
 //tree
 typedef struct s_tree
@@ -103,6 +134,7 @@ typedef struct s_tree
 	struct s_tree	*right;
 }					t_tree;
 
+
 //env
 void				init_env(t_env **env, char **envp);
 
@@ -111,5 +143,7 @@ const char			*format_state(int type);
 const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
+void	lstclear(t_token **token, void (*del)(void *));
+void    freed(void *str);
 
 #endif

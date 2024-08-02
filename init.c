@@ -12,176 +12,98 @@
 
 #include "init.h"
 
-int	check_operator(char *str, int i)
+void	get_full_var(char *str, t_tokenizer_vars *vars)
 {
-	if (*(str + i) == ' ')
-		return (SPACE);
-	else if (*(str + i) == '|')
-		return (PIPE);
-	else if (*(str + i) == '$')
-		return (ENV);
-	else if (*(str + i) == '\'')
-		return (S_QUOTE);
-	else if (*(str + i) == '\"')
-		return (D_QUOTE);
-	else if (*(str + i) == '>')
+	vars->env_utils.len = 0;
+	vars->env_utils.tmp = vars->i;
+	vars->i++;
+	while (str[vars->i] && !check_operator(str, vars->i))
 	{
-		if (!ft_strncmp(">>", str + i, 2))
-			return (RED_APP);
-		return (RED_OUT);
+		vars->env_utils.len++;
+		vars->i++;
 	}
-	else if (*(str + i) == '<')
-	{
-		if (!ft_strncmp("<<", str + i, 2))
-			return (HERE_DOC);
-		return (RED_IN);
-	}
-	return (WORD);
+	vars->i--;
 }
 
-t_token	*get_last_node(t_token **head)
+int	handle_env(char *str, t_tokenizer_vars *vars, t_token **head)
 {
-	t_token	*curr;
+	t_token	*last_node;
 
-	curr = *head;
-	while (curr && curr->next)
-		curr = curr->next;
-	return (curr);
-}
-
-void	join(t_token **curr, char **str)
-{
-	char *tmp;
-	while ((*curr) && (*curr)->type != SPACE)
+	get_full_var(str, vars);
+	last_node = get_last_node(head);
+	while (last_node && last_node->type != HERE_DOC)
+		last_node = last_node->prev;
+	if (last_node)
 	{
-		if (ft_strlen((*curr)->str) == 1)
+		if (check(str, vars->tmp))
 		{
-			if (((*curr)->type == ENV && (*curr)->state == GENERAL)
-				&& (*curr)->next && ((*curr)->next->type == D_QUOTE
-					|| (*curr)->next->type == S_QUOTE))
-			{
-				*curr = (*curr)->next;
-				continue ;
-			}
+			vars->i++;
+			return (1);
 		}
-		if ((*curr)->type == D_QUOTE || (*curr)->type == S_QUOTE)
-		{
-			*curr = (*curr)->next;
-			continue ;
-		}
-		tmp = *str;
-		*str = ft_strjoin(*str, (*curr)->str);
-		free(tmp);
-		*curr = (*curr)->next;
+		vars->content = lst_new(ft_substr(str, vars->env_utils.tmp,
+					vars->env_utils.len + 1), WORD, GENERAL);
 	}
-}
-
-void	sanitize(t_token *head, t_token **new)
-{
-	t_token	*curr;
-	t_token	*node;
-	char	*str;
-
-	curr = head;
-	while (curr)
-	{
-		str = NULL;
-		join(&curr, &str);
-		if (str)
-		{
-			node = lst_new(str, WORD, GENERAL);
-			lst_add_back(new, node);
-		}
-		if (curr)
-			curr = curr->next;
-	}
-}
-
-typedef struct s_env_token_utils
-{
-	int	len;
-	int	tmp;
-}		t_env_token_utils;
-
-int	check(char *str, int tmp)
-{
-	if (check_operator(str, tmp) == ENV && (check_operator(str, tmp
-				+ 1) == D_QUOTE || check_operator(str, tmp + 1) == S_QUOTE))
-	{
-		return (1);
-	}
+	else
+		vars->content = lst_new(ft_substr(str, vars->env_utils.tmp,
+					vars->env_utils.len + 1), ENV, GENERAL);
 	return (0);
+}
+
+void	handle_simple_word(char *str, t_tokenizer_vars *vars, t_token **head)
+{
+	vars->len = 0;
+	vars->tmp = vars->i;
+	vars->op = check_operator(str, vars->i);
+	while (str[vars->i] && !vars->op)
+	{
+		vars->i++;
+		vars->op = check_operator(str, vars->i);
+		vars->len++;
+	}
+	if (vars->len > 0)
+	{
+		vars->content = lst_new(ft_substr(str, vars->tmp, vars->len), WORD,
+				GENERAL);
+		lst_add_back(head, vars->content);
+	}
+}
+
+void	skip_spaces(char *str, t_tokenizer_vars *vars)
+{
+	while (str[vars->i] == ' ') //work on the other spaces later;
+		vars->i++;
+}
+
+void	handle_double_operators(char *str, t_tokenizer_vars *vars)
+{
+	vars->content = lst_new(double_to_str(str, vars->i), vars->op, GENERAL);
+	vars->i++;
 }
 
 void	tokenize(char *str, t_token **head)
 {
-	int					i;
-	int					len;
-	int					tmp;
-	int					op;
-	t_token				*content;
-	t_env_token_utils	env_utils;
-	t_token				*last_node;
+	t_tokenizer_vars	vars;
 
-	i = 0;
-	while (str[i] == ' ') //work on the other spaces later;
-		i++;
-	while (str[i])
+	vars.i = 0;
+	skip_spaces(str, &vars);
+	while (str[vars.i])
 	{
-		len = 0;
-		tmp = i;
-		op = check_operator(str, i);
-		while (str[i] && !op)
+		handle_simple_word(str, &vars, head);
+		if (str[vars.i])
 		{
-			i++;
-			op = check_operator(str, i);
-			len++;
-		}
-		if (len > 0)
-		{
-			content = lst_new(ft_substr(str, tmp, len), WORD, GENERAL);
-			lst_add_back(head, content);
-		}
-		if (str[i])
-		{
-			if (op == RED_APP || op == HERE_DOC)
+			if (vars.op == RED_APP || vars.op == HERE_DOC)
+				handle_double_operators(str, &vars);
+			else if (vars.op == ENV)
 			{
-				content = lst_new(double_to_str(str, i), op, GENERAL);
-				i++;
-			}
-			else if (op == ENV)
-			{
-				env_utils.len = 0;
-				env_utils.tmp = i;
-				i++;
-				while (str[i] && !check_operator(str, i))
-				{
-					env_utils.len++;
-					i++;
-				}
-				i--;
-				last_node = get_last_node(head);
-				while (last_node && last_node->type != HERE_DOC)
-					last_node = last_node->prev;
-				if (last_node)
-				{
-					if (check(str, tmp))
-					{
-						i++;
-						continue ;
-					}
-					content = lst_new(ft_substr(str, env_utils.tmp,
-								env_utils.len + 1), WORD, GENERAL);
-				}
-				else
-					content = lst_new(ft_substr(str, env_utils.tmp,
-								env_utils.len + 1), ENV, GENERAL);
+				if (handle_env(str, &vars, head))
+					continue ;
 			}
 			else
-				content = lst_new(char_to_str(str[i]), op, GENERAL);
-			lst_add_back(head, content);
+				vars.content = lst_new(char_to_str(str[vars.i]), vars.op,
+						GENERAL);
+			lst_add_back(head, vars.content);
 		}
-		i++;
+		vars.i++;
 	}
 }
 
@@ -195,10 +117,6 @@ void	lexer(char *str, t_token **head, t_env *env, t_token **pre)
 	}
 	sanitize(*head, pre);
 }
-
-
-void	lstclear(t_token **lst, void (*del)(void *));
-void    freed(void *str);
 
 int	main(int ac, char **av, char **envp)
 {
@@ -225,10 +143,7 @@ int	main(int ac, char **av, char **envp)
 		printf("\n\n");
 		//traverse pre-parse list;
 		traverse_primary_tokens_list(pre);
-
-
-
-//		clear the list
+		//		clear the list
 		lstclear(&head, freed);
 		lstclear(&pre, freed);
 		head = NULL;
@@ -236,54 +151,5 @@ int	main(int ac, char **av, char **envp)
 		system("leaks -q ms");
 		add_history(str);
 		free(str);
-	}
-}
-
-
-void    freed(void *str)
-{
-	free(str);
-}
-
-void	lstclear(t_token **token, void (*del)(void *))
-{
-	t_token	*ne;
-
-	if (!token || !del)
-		return ;
-	if (*token)
-	{
-		while (*token)
-		{
-			ne = *token;
-			*token = (*token)->next;
-			del(ne->str);
-			free(ne);
-		}
-	}
-}
-
-void	traverse_primary_tokens_list(t_token *token)
-{
-	t_token	*curr;
-
-	curr = token;
-	while (curr)
-	{
-		printf("content: | '%s' | type: | %8s | state: | %8s |\n", curr->str,
-				format_type(curr->type), format_state(curr->state));
-		curr = curr->next;
-	}
-}
-
-void	traverse_env_list(t_env *env)
-{
-	t_env	*curr;
-
-	curr = env;
-	while (curr)
-	{
-		printf("key: %s | value: %s\n", curr->key, curr->value);
-		curr = curr->next;
 	}
 }
