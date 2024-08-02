@@ -1,45 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_utils.c                                       :+:      :+:    :+:   */
+/*   expansion.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/25 08:45:45 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/25 08:45:47 by recherra         ###   ########.fr       */
+/*   Created: 2024/08/02 17:13:30 by recherra          #+#    #+#             */
+/*   Updated: 2024/08/02 17:13:31 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "init.h"
 
-t_token *lst_new(char *str, t_type type, t_state state)
+void	expansion(t_token *var, t_env *envs)
 {
-	t_token *new = malloc(sizeof(t_token));
-	if (!new)
-		return NULL;
+	t_env	*curr;
+	int		len;
 
-	new->str = str;
-	new->type = type;
-	new->state = state;
-	new->next = NULL;
-	new->prev = NULL;
-	return new;
-}
-
-void    lst_add_back(t_token **head, t_token *node)
-{
-	if (!head)
-		return;
-	if (!(*head))
+	curr = envs;
+	len = ft_strlen(var->str);
+	if (len == 1)
 	{
-		*head = node;
-		return;
+		var->str = ft_strdup("$");
+		return ;
 	}
-
-	t_token *curr = *head;
-	while (curr->next)
+	while (curr)
+	{
+		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
+		{
+			var->str = curr->value;
+			return ;
+		}
 		curr = curr->next;
-	curr->next = node;
-	node->prev = curr;
+	}
+	var->str = ft_strdup("");
+	var->type = WORD;
 }
