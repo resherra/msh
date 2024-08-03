@@ -12,41 +12,44 @@
 
 #include "../init.h"
 
-static void	double_quote_check(t_token **curr, bool *flag, t_env *env)
+static t_token *double_quote_check(t_token *curr, bool *flag, t_env *env)
 {
-	if ((*curr)->type == D_QUOTE)
+	if (curr->type == D_QUOTE)
 	{
 		*flag = true;
-		(*curr) = (*curr)->next;
-		while ((*curr) && (*curr)->type != D_QUOTE)
+		curr = curr->next;
+		while (curr && curr->type != D_QUOTE)
 		{
-			if ((*curr)->type == ENV)
-				expansion((*curr), env);
+			if (curr->type == ENV)
+				expansion(curr, env);
 			else
-				(*curr)->type = WORD;
-			(*curr)->state = IN_DOUBLE_Q;
-			(*curr) = (*curr)->next;
+				curr->type = WORD;
+			curr->state = IN_DOUBLE_Q;
+			curr = curr->next;
 		}
-		if ((*curr))
+		if (curr)
 			*flag = false;
 	}
+
+	return curr;
 }
 
-static void	single_quote_check(t_token **curr, bool *flag)
+static t_token *single_quote_check(t_token *curr, bool *flag)
 {
-	if ((*curr) && (*curr)->type == S_QUOTE)
+	if (curr && curr->type == S_QUOTE)
 	{
 		*flag = true;
-		(*curr) = (*curr)->next;
-		while ((*curr) && (*curr)->type != S_QUOTE)
+		curr = curr->next;
+		while (curr && curr->type != S_QUOTE)
 		{
-			(*curr)->type = WORD;
-			(*curr)->state = IN_S_QUOTE;
-			(*curr) = (*curr)->next;
+			curr->type = WORD;
+			curr->state = IN_S_QUOTE;
+			curr = curr->next;
 		}
-		if ((*curr))
+		if (curr)
 			*flag = false;
 	}
+	return curr;
 }
 
 int	set_state(t_token *head, t_env *env)
@@ -60,8 +63,8 @@ int	set_state(t_token *head, t_env *env)
 	sing_quote_flag = false;
 	while (curr)
 	{
-		double_quote_check(&curr, &doub_quote_flag, env);
-		single_quote_check(&curr, &sing_quote_flag);
+		curr = double_quote_check(curr, &doub_quote_flag, env);
+		curr = single_quote_check(curr, &sing_quote_flag);
 		if (curr && curr->type == ENV)
 			expansion(curr, env);
 		if (doub_quote_flag == true || sing_quote_flag == true)
