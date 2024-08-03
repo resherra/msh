@@ -35,16 +35,17 @@ int	main(int ac, char **av, char **envp)
 		str = readline("ms-0.1$ ");
 		lexer(str, &head, env, &pre);
 		//traverse primary tokens list;
-		traverse_primary_tokens_list(head);
-		printf("\n\n");
+//		traverse_primary_tokens_list(head);
+//		printf("\n\n");
 		//traverse pre-parse list;
 		traverse_primary_tokens_list(pre);
 		//		clear the list
-		lstclear(&head, freed);
+//		lstclear(&head, freed);
 		lstclear(&pre, freed);
 		head = NULL;
 		pre = NULL;
-		system("leaks -q ms");
+//		printf("\n\n\n");
+//		system("leaks -q ms");
 		add_history(str);
 		free(str);
 	}

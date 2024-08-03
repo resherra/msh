@@ -14,7 +14,8 @@
 
 static int	join_check(t_token *token)
 {
-	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE)
+	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE
+		|| token->type == ENV)
 		return (1);
 	return (0);
 }
