@@ -10,35 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
 
-t_token	*lst_new(char *str, t_type type, t_state state)
+#include "../init.h"
+
+t_token *lst_new(char *str, t_type type, t_state state)
 {
-	t_token	*new;
-
-	new = malloc(sizeof(t_token));
+	t_token *new = malloc(sizeof(t_token));
 	if (!new)
-		return (NULL);
+		return NULL;
+
 	new->str = str;
 	new->type = type;
 	new->state = state;
 	new->next = NULL;
 	new->prev = NULL;
-	return (new);
+	return new;
 }
 
-void	lst_add_back(t_token **head, t_token *node)
+void    lst_add_back(t_token **head, t_token *node)
 {
-	t_token	*curr;
-
 	if (!head)
-		return ;
+		return;
 	if (!(*head))
 	{
 		*head = node;
-		return ;
+		return;
 	}
-	curr = *head;
+
+	t_token *curr = *head;
 	while (curr->next)
 		curr = curr->next;
 	curr->next = node;

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "../init.h"
 
 int	check_operator(char *str, int i)
 {

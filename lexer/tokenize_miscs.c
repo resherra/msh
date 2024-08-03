@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens_content_utils.c                             :+:      :+:    :+:   */
+/*   tokenize_miscs.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/02 17:17:01 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/02 17:17:03 by recherra         ###   ########.fr       */
+/*   Created: 2024/08/02 19:28:19 by recherra          #+#    #+#             */
+/*   Updated: 2024/08/02 19:28:20 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
 
-char	*char_to_str(char c)
+#include "../init.h"
+
+
+
+void	skip_spaces(char *str, t_tokenizer_vars *vars)
 {
-	char	*new;
-
-	new = malloc(sizeof(char) * 2);
-	if (!new)
-		return (NULL);
-	new[0] = c;
-	new[1] = 0;
-	return (new);
+	while (str[vars->i] == ' ') //work on the other spaces later;
+		vars->i++;
 }
 
-char	*double_to_str(char *str, int i)
-{
-	char	*new;
 
-	new = malloc(sizeof(char) * 3);
-	if (!new)
-		return (NULL);
-	new[0] = *(str + i);
-	new[1] = *(str + i + 1);
-	new[2] = 0;
-	return (new);
+
+t_token	*get_last_node(t_token **head)
+{
+	t_token	*curr;
+
+	curr = *head;
+	while (curr && curr->next)
+		curr = curr->next;
+	return (curr);
 }

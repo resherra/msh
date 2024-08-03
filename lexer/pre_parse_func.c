@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "init.h"
+#include "../init.h"
 
 static void	join(t_token **curr, char **str)
 {

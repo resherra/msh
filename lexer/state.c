@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "../init.h"
 
 static void	double_quote_check(t_token **curr, bool *flag, t_env *env)
 {

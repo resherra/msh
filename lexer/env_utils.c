@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init.h"
+#include "../init.h"
 
 
 void env_addback(t_env **env, t_env *new)

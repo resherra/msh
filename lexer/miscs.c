@@ -1,4 +1,4 @@
-#include "init.h"
+#include "../init.h"
 
 const char *format_type(int type)
 {

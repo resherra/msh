@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 
-#include "init.h"
+#include "../init.h"
 
 void	expansion(t_token *var, t_env *envs)
 {

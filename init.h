@@ -89,6 +89,9 @@ typedef struct s_tokenizer_vars
 t_token				*lst_new(char *str, t_type type, t_state state);
 void				lst_add_back(t_token **head, t_token *node);
 
+
+
+
 //env
 typedef struct s_env
 {
@@ -96,6 +99,13 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }					t_env;
+
+void	tokenize(char *str, t_token **head);
+
+void	skip_spaces(char *str, t_tokenizer_vars *vars);
+
+void	lexer(char *str, t_token **head, t_env *env, t_token **pre);
+
 
 //state function
 int					set_state(t_token *head, t_env *env);
