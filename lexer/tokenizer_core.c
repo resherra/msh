@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../init.h"
 
 static void	get_full_var(char *str, t_tokenizer_vars *vars)
@@ -42,15 +41,16 @@ static int	handle_env(char *str, t_tokenizer_vars *vars, t_token **head)
 			return (1);
 		}
 		vars->content = lst_new(ft_substr(str, vars->env_utils.tmp,
-		                                  vars->env_utils.len + 1), WORD, GENERAL);
+					vars->env_utils.len + 1), WORD, GENERAL);
 	}
 	else
 		vars->content = lst_new(ft_substr(str, vars->env_utils.tmp,
-		                                  vars->env_utils.len + 1), ENV, GENERAL);
+					vars->env_utils.len + 1), ENV, GENERAL);
 	return (0);
 }
 
-static void	handle_simple_word(char *str, t_tokenizer_vars *vars, t_token **head)
+static void	handle_simple_word(char *str, t_tokenizer_vars *vars,
+		t_token **head)
 {
 	vars->len = 0;
 	vars->tmp = vars->i;
@@ -64,7 +64,7 @@ static void	handle_simple_word(char *str, t_tokenizer_vars *vars, t_token **head
 	if (vars->len > 0)
 	{
 		vars->content = lst_new(ft_substr(str, vars->tmp, vars->len), WORD,
-		                        GENERAL);
+				GENERAL);
 		lst_add_back(head, vars->content);
 	}
 }
@@ -75,10 +75,9 @@ static void	handle_double_operators(char *str, t_tokenizer_vars *vars)
 	vars->i++;
 }
 
-
 void	tokenize(char *str, t_token **head)
 {
-	t_tokenizer_vars	vars;
+	t_tokenizer_vars vars;
 
 	vars.i = 0;
 	skip_spaces(str, &vars);
@@ -96,7 +95,7 @@ void	tokenize(char *str, t_token **head)
 			}
 			else
 				vars.content = lst_new(char_to_str(str[vars.i]), vars.op,
-				                       GENERAL);
+						GENERAL);
 			lst_add_back(head, vars.content);
 		}
 		vars.i++;

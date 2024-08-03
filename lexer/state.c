@@ -12,7 +12,7 @@
 
 #include "../init.h"
 
-static t_token *double_quote_check(t_token *curr, bool *flag, t_env *env)
+static t_token	*double_quote_check(t_token *curr, bool *flag, t_env *env)
 {
 	if (curr->type == D_QUOTE)
 	{
@@ -30,11 +30,10 @@ static t_token *double_quote_check(t_token *curr, bool *flag, t_env *env)
 		if (curr)
 			*flag = false;
 	}
-
-	return curr;
+	return (curr);
 }
 
-static t_token *single_quote_check(t_token *curr, bool *flag)
+static t_token	*single_quote_check(t_token *curr, bool *flag)
 {
 	if (curr && curr->type == S_QUOTE)
 	{
@@ -49,7 +48,7 @@ static t_token *single_quote_check(t_token *curr, bool *flag)
 		if (curr)
 			*flag = false;
 	}
-	return curr;
+	return (curr);
 }
 
 int	set_state(t_token *head, t_env *env)

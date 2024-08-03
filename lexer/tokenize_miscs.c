@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../init.h"
-
-
 
 void	skip_spaces(char *str, t_tokenizer_vars *vars)
 {
@@ -21,11 +18,9 @@ void	skip_spaces(char *str, t_tokenizer_vars *vars)
 		vars->i++;
 }
 
-
-
 t_token	*get_last_node(t_token **head)
 {
-	t_token	*curr;
+	t_token *curr;
 
 	curr = *head;
 	while (curr && curr->next)

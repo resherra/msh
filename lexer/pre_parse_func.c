@@ -10,21 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../init.h"
 
-//static t_token *join(t_token *curr, char **str)
-//{
-//	char *tmp;
-//
-//	return curr;
-//}
-
-static int join_check(t_token *token)
+static int	join_check(t_token *token)
 {
 	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
+}
+
+static t_token	*join(t_token *curr, char **str)
+{
+	char	*tmp;
+
+	while (curr && join_check(curr))
+	{
+		if (ft_strlen(curr->str) == 1)
+		{
+			if ((curr->type == ENV && curr->state == GENERAL) && curr->next
+				&& (curr->next->type == D_QUOTE || curr->next->type == S_QUOTE))
+			{
+				curr = curr->next;
+				continue ;
+			}
+		}
+		if (curr->type == D_QUOTE || curr->type == S_QUOTE)
+		{
+			curr = curr->next;
+			continue ;
+		}
+		tmp = *str;
+		*str = ft_strjoin(*str, curr->str);
+		free(tmp);
+		curr = curr->next;
+	}
+	return (curr);
 }
 
 void	sanitize(t_token *head, t_token **new)
@@ -32,35 +52,12 @@ void	sanitize(t_token *head, t_token **new)
 	t_token	*curr;
 	t_token	*node;
 	char	*str;
-	char *tmp;
 
 	curr = head;
 	while (curr)
 	{
 		str = NULL;
-
-		while (curr && join_check(curr))
-		{
-			if (ft_strlen(curr->str) == 1)
-			{
-				if ((curr->type == ENV && curr->state == GENERAL)
-				    && curr->next && (curr->next->type == D_QUOTE
-				                      || curr->next->type == S_QUOTE))
-				{
-					curr = curr->next;
-					continue ;
-				}
-			}
-			if (curr->type == D_QUOTE || curr->type == S_QUOTE)
-			{
-				curr = curr->next;
-				continue ;
-			}
-			tmp = str;
-			str = ft_strjoin(str, curr->str);
-			free(tmp);
-			curr = curr->next;
-		}
+		curr = join(curr, &str);
 		if (str)
 		{
 			node = lst_new(str, WORD, GENERAL);

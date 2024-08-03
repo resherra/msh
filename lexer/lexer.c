@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../init.h"
 
 void	lexer(char *str, t_token **head, t_env *env, t_token **pre)

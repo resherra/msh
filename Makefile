@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CFLAGS=-Wall -Wextra
-SRC=init.c lexer/env_utils.c lexer/list_utils.c lexer/miscs.c lexer/state.c lexer/expansion.c lexer/tokens_content_utils.c lexer/pre_parse_func.c lexer/tokenize_miscs.c lexer/check.c lexer/tokenizer_core.c lexer/lexer.c
+SRC=init.c miscs.c lexer/env_utils.c lexer/list_utils.c  lexer/state.c lexer/expansion.c lexer/tokens_content_utils.c lexer/pre_parse_func.c lexer/tokenize_miscs.c lexer/check.c lexer/tokenizer_core.c lexer/lexer.c
 OBJS=$(SRC:.c=.o)
 NAME=ms
 LIBFT=./libft/libft.a

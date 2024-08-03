@@ -39,11 +39,10 @@ int	check_operator(char *str, int i)
 	return (WORD);
 }
 
-
 int	check(char *str, int tmp)
 {
 	if (check_operator(str, tmp) == ENV && (check_operator(str, tmp
-	                                                            + 1) == D_QUOTE || check_operator(str, tmp + 1) == S_QUOTE))
+				+ 1) == D_QUOTE || check_operator(str, tmp + 1) == S_QUOTE))
 	{
 		return (1);
 	}

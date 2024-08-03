@@ -10,24 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../init.h"
 
-void	expansion(t_token *var, t_env *envs)
+static int	single_dollar(t_token *var, int len)
 {
-	t_env	*curr;
-	int		len;
-	char *tmp;
+	char	*tmp;
 
-	curr = envs;
-	len = ft_strlen(var->str);
 	if (len == 1)
 	{
 		tmp = var->str;
 		var->str = ft_strdup("$");
 		free(tmp);
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+void	expansion(t_token *var, t_env *envs)
+{
+	t_env	*curr;
+	int		len;
+	char	*tmp;
+
+	curr = envs;
+	len = ft_strlen(var->str);
+	if (single_dollar(var, len))
+		return ;
 	while (curr)
 	{
 		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
