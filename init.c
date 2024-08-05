@@ -27,8 +27,8 @@ int	main(int ac, char **av, char **envp)
 	head = NULL;
 	pre = NULL;
 	//env list
-//		traverse_env_list(envs);
-//		exit(1);
+    //		traverse_env_list(envs);
+    //		exit(1);
 	while (1)
 	{
 		str = readline("msh-0.1$ ");
