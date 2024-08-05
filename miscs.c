@@ -96,6 +96,29 @@ void	traverse_env_list(t_env *env)
 	while (curr)
 	{
 		printf("key: %s | value: %s\n", curr->key, curr->value);
-		curr = curr->next;
+//        printf("%s=%s\n", curr->key, curr->value);
+        curr = curr->next;
 	}
+}
+
+
+int test_builtins(char *str, t_env *envs)
+{
+    char *vars[] = {"jack", "red", NULL};
+
+    if (!strcmp("env", str))
+    {
+        env(envs);
+        return 1;
+    } else if (!strcmp("unset", str))
+    {
+        unset(envs, vars);
+        return 1;
+    } else if (!strcmp("export", str))
+    {
+        export(envs);
+        return 1;
+    }
+
+    return 0;
 }

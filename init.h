@@ -13,6 +13,14 @@
 #ifndef INIT_H
 # define INIT_H
 
+
+
+//to be deleted;
+#include "string.h"
+
+
+
+
 # include "libft/libft.h"
 # include <curses.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include <dirent.h> //closedir, readdir, opendir
@@ -97,6 +105,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	bool            in_export;
 	struct s_env	*next;
 }					t_env;
 
@@ -127,6 +136,7 @@ void	sanitize(t_token *head, t_token **new);
 //env list utils
 t_env				*new_env(char *key, char *value);
 void				env_addback(t_env **env, t_env *new);
+void	env_delone(t_env *env, void (*del)(void *));
 
 //tokenizer miscs
 t_token	*get_last_node(t_token **head);
@@ -154,6 +164,12 @@ const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
 void	lstclear(t_token **token, void (*del)(void *));
+int test_builtins(char *str, t_env *envs);
 void    freed(void *str);
+
+//Built-ins
+void    unset(t_env *envs, char **vars);
+void    env(t_env *envs);
+void    export(t_env *envs);
 
 #endif

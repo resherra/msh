@@ -12,6 +12,21 @@
 
 #include "../init.h"
 
+t_env	*new_env(char *key, char *value)
+{
+    t_env	*new;
+
+    new = malloc(sizeof(t_env));
+    new->key = key;
+    new->value = value;
+    if (!ft_strlen(value))
+        new->in_export = true;
+    else
+        new->in_export = false;
+    new->next = NULL;
+    return (new);
+}
+
 void	env_addback(t_env **env, t_env *new)
 {
 	t_env	*curr;
@@ -29,16 +44,15 @@ void	env_addback(t_env **env, t_env *new)
 	curr->next = new;
 }
 
-t_env	*new_env(char *key, char *value)
+void	env_delone(t_env *env, void (*del)(void *))
 {
-	t_env	*new;
-
-	new = malloc(sizeof(t_env));
-	new->key = key;
-	new->value = value;
-	new->next = NULL;
-	return (new);
+    if (!env || !del)
+        return ;
+    del(env->key);
+    del(env->value);
+    free(env);
 }
+
 
 void	extract_env(t_env **envs, char *str)
 {

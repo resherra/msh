@@ -11,7 +11,8 @@
 # **************************************************************************** #
 
 CFLAGS=-Wall -Wextra
-SRC=init.c miscs.c lexer/env_utils.c lexer/list_utils.c  lexer/state.c lexer/expansion.c lexer/tokens_content_utils.c lexer/pre_parse_func.c lexer/tokenize_miscs.c lexer/check.c lexer/tokenizer_core.c lexer/lexer.c
+# CFLAGS=-Wall -Wextra -fsanitize=address -g
+SRC=builtins/unset.c builtins/export.c builtins/env.c init.c miscs.c lexer/env_utils.c lexer/list_utils.c  lexer/state.c lexer/expansion.c lexer/tokens_content_utils.c lexer/pre_parse_func.c lexer/tokenize_miscs.c lexer/check.c lexer/tokenizer_core.c lexer/lexer.c
 OBJS=$(SRC:.c=.o)
 NAME=ms
 LIBFT=./libft/libft.a
