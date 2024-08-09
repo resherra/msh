@@ -20,8 +20,8 @@ const char	*format_type(int type)
 		return ("D_QUOTE");
 	case S_QUOTE:
 		return ("S_QUOTE");
-	case SPACE:
-		return ("SPACE");
+	case SPACES:
+		return ("SPACES");
 	case ENV:
 		return ("ENV");
 	case PIPE:

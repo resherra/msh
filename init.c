@@ -17,17 +17,28 @@ int	main(int ac, char **av, char **envp)
 	t_env	*envs;
 	t_token	*head;
 	t_token	*pre;
+	t_cmd *cmd;
 	char	*str;
+	char **paths;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 	envs = NULL;
-	init_env(&envs, envp);
+	init_env(&envs, envp, &paths);
 	head = NULL;
 	pre = NULL;
+	cmd = NULL;
+
+	//PATHS
+	// int i = 0;
+	// while(paths[i])
+	// {
+	// 	printf("%s\n", paths[i++]);
+	// }
+
 	//env list
-    //		traverse_env_list(envs);
+    		//traverse_env_list(envs);
     //		exit(1);
 	while (1)
 	{
@@ -36,20 +47,21 @@ int	main(int ac, char **av, char **envp)
 		//test builtins;
 		test_builtins(str, envs);
 		lexer(str, &head, envs, &pre);
+		parser(&cmd, pre);
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
 //		printf("\n\n");
 //      traverse pre-parse list;
 		traverse_primary_tokens_list(pre);
 //		clear the list
-		lstclear(&head, freed);
-		lstclear(&pre, freed);
+		//lstclear(&head, freed);
+		//lstclear(&pre, freed);
 		head = NULL;
 		pre = NULL;
 //		printf("\n\n\n");
-		system("leaks -q ms");
+		//system("leaks -q ms");
 		add_history(str);
-		free(str);
+		//free(str);
 	}
 }
 

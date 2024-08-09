@@ -40,13 +40,14 @@
 //										ttyname,
 //	ttyslot, isatty, chdir, unlink, execve, read, getcwd
 
+
 //tokens
 typedef enum e_type
 {
 	WORD,
 	D_QUOTE,
 	S_QUOTE,
-	SPACE,
+	SPACES,
 	ENV,
 	PIPE,
 	RED_IN,
@@ -127,8 +128,8 @@ char				*char_to_str(char c);
 char				*double_to_str(char *str, int i);
 
 //env utils
-void				extract_env(t_env **envs, char *str);
-void				init_env(t_env **env, char **envp);
+void				extract_env(t_env **envs, char *str, char ***paths);
+void				init_env(t_env **env, char **envp, char ***paths);
 
 //pre-parse functions
 void	sanitize(t_token *head, t_token **new);
@@ -156,7 +157,6 @@ typedef struct s_tree
 
 
 //env
-void				init_env(t_env **env, char **envp);
 
 //miscs
 const char			*format_state(int type);
@@ -171,5 +171,31 @@ void    freed(void *str);
 void    unset(t_env *envs, char **vars);
 void    env(t_env *envs);
 void    export(t_env *envs);
+
+
+//PARSING
+typedef struct s_red
+{
+	t_type red_type;
+	char *red_file;
+	struct s_red *next;
+} t_red;
+
+typedef struct s_cmd
+{
+	char *cmd;
+	char *path;
+	char **args;
+	t_red	*redirections;
+	struct s_cmd *next;
+} t_cmd;
+
+void    parser(t_cmd **cmd, t_token *pre);
+
+
+//PARSING
+
+
+
 
 #endif

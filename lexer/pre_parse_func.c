@@ -64,7 +64,7 @@ void	sanitize(t_token *head, t_token **new)
 			node = lst_new(str, WORD, GENERAL);
 			lst_add_back(new, node);
 		}
-		if (curr && curr->type != SPACE)
+		if (curr && curr->type != SPACES)
 		{
 			node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
 			lst_add_back(new, node);

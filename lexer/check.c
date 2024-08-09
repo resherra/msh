@@ -15,7 +15,7 @@
 int	check_operator(char *str, int i)
 {
 	if (*(str + i) == ' ')
-		return (SPACE);
+		return (SPACES);
 	else if (*(str + i) == '|')
 		return (PIPE);
 	else if (*(str + i) == '$')
