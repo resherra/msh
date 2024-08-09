@@ -83,7 +83,7 @@ void	tokenize(char *str, t_token **head)
 	vars.i = 0;
 	skip_spaces(str, &vars);
 	while (str[vars.i])
-	{
+	{	
 		handle_simple_word(str, &vars, head);
 		if (str[vars.i])
 		{
@@ -98,7 +98,7 @@ void	tokenize(char *str, t_token **head)
 				vars.content = lst_new(char_to_str(str[vars.i]), vars.op,
 						GENERAL);
 			lst_add_back(head, vars.content);
+			vars.i++;
 		}
-		vars.i++;
 	}
 }

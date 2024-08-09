@@ -181,21 +181,26 @@ typedef struct s_red
 	struct s_red *next;
 } t_red;
 
+typedef struct s_args
+{
+	char *str;
+	struct s_args *next;
+} t_args;
+
 typedef struct s_cmd
 {
 	char *cmd;
 	char *path;
+	t_args *args_list;
+	int	args_lst_size;
 	char **args;
 	t_red	*redirections;
 	struct s_cmd *next;
 } t_cmd;
 
-void    parser(t_cmd **cmd, t_token *pre);
+void    parser(t_cmd **cmd, t_token *pre, char **paths);
 
 
 //PARSING
-
-
-
 
 #endif
