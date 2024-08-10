@@ -102,10 +102,41 @@ void	traverse_env_list(t_env *env)
 }
 
 
+void	traverse_parse_list(t_cmd *cmd)
+{
+	t_cmd *curr = NULL;
+
+	curr = cmd;
+	while (curr)
+	{
+		printf("\n\n\ncommand: %s\n\npath: %s\n\n", curr->cmd, curr->path);
+		printf("arguments: ");
+		int i = 0;
+		while (curr->args[i])
+		{
+			printf(" %s |", curr->args[i++]);
+		}
+		printf("\n\n");
+		printf("redirections:\n");
+		t_red *tmp = curr->redirections;
+		while (tmp)
+		{
+			printf("\tredirection file: %s\n\tredirection type: %s\n", tmp->red_file, format_type(tmp->red_type));
+			tmp = tmp->next;
+		}
+
+		curr = curr->next;
+	}
+}
+
+
+
 int test_builtins(char *str, t_env *envs)
 {
     char *vars[] = {"jack", "red", NULL};
 
+	if (!strcmp("exit", str))
+		exit(1);
     if (!strcmp("env", str))
     {
         env(envs);

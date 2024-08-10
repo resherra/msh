@@ -57,29 +57,16 @@ int	main(int ac, char **av, char **envp)
 //      traverse pre-parse list;
 		//traverse_primary_tokens_list(pre);
 		//		clear the list
+		traverse_parse_list(cmd);
+		printf("\n\n\n");
 		//lstclear(&head, freed);
 		//lstclear(&pre, freed);
-		// traverse_parse_list(cmd);
 		head = NULL;
 		pre = NULL;
 		cmd = NULL;
 //		printf("\n\n\n");
-		//system("leaks -q ms");
 		add_history(str);
-
-		//free(str);
-	}
-}
-
-void	traverse_parse_list(t_cmd *cmd)
-{
-	t_cmd *curr = NULL;
-
-	curr = cmd;
-	while (curr)
-	{
-		printf("%s\n", curr->cmd);
-		curr = curr->next;
+		free(str);
 	}
 }
 

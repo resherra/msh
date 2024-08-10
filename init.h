@@ -189,18 +189,30 @@ typedef struct s_args
 
 typedef struct s_cmd
 {
-	char *cmd;
-	char *path;
-	t_args *args_list;
-	int	args_lst_size;
-	char **args;
-	t_red	*redirections;
+	char *cmd; //command
+	char *path; //command path
+	t_args *args_list; //arguments in a list (command uncluded) to be converted to 2d arr
+	int	args_lst_size; //argument list size
+	char **args; //2d arr of args
+	t_red	*redirections; //redirections list
 	struct s_cmd *next;
 } t_cmd;
 
 void    parser(t_cmd **cmd, t_token *pre, char **paths);
 
+t_cmd *lst_new_cmd();
+void    cmd_add_back(t_cmd **cmd, t_cmd *new);
 
+t_args *new_arg(char *str);
+void arg_add_back(t_args **args, t_args *new);
+
+t_red *lst_new_red(t_type red_type, char *red_file);
+void    red_add_back(t_red **redirections, t_red *new);
+
+
+
+//miscs
+void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
 #endif
