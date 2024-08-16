@@ -45,7 +45,7 @@ void    treat(t_env **envs, char *str)
     if (!check_if_alpha(key))
     {
         printf("msh: export: `%s': not a valid identifier\n", key);
-        exit(1);
+        return;
     }
     if (!str[i])
     {
@@ -82,6 +82,5 @@ void    export(t_env **envs, t_cmd *cmd)
     {
         treat(envs, cmd->args[i]);
         i++;
-        // printf("%s\n", cmd->args[i++]);
     }
 }
