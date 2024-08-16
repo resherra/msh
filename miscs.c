@@ -109,7 +109,7 @@ void	traverse_parse_list(t_cmd *cmd)
 	curr = cmd;
 	while (curr)
 	{
-		printf("\n\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", curr->cmd, curr->path, curr->args_lst_size);
+		printf("\n\n\nPipes: %d\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", cmd->pipes, curr->cmd, curr->path, curr->args_lst_size);
 		printf("arguments: ");
 		int i = 0;
 		while (curr->args[i])

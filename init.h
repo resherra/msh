@@ -191,6 +191,7 @@ typedef struct s_cmd
 {
 	char *cmd; //command
 	char *path; //command path
+	int pipes;
 	t_args *args_list; //arguments in a list (command uncluded) to be converted to 2d arr
 	int	args_lst_size; //argument list size
 	char **args; //2d arr of args

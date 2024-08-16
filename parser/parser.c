@@ -47,6 +47,7 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
     t_red *new_red = NULL;
     t_cmd *new_cmd = NULL;
     t_args *arg = NULL;
+    int pipes = -1;
 
     curr = pre;
     while (curr)
@@ -72,6 +73,7 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
             if (curr)
                 curr = curr->next;
         }
+        pipes++;
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
@@ -79,4 +81,6 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
         if (curr)
             curr = curr->next;
     }
+    if (*cmd)
+        (*cmd)->pipes = pipes;
 }
