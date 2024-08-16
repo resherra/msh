@@ -109,7 +109,7 @@ void	traverse_parse_list(t_cmd *cmd)
 	curr = cmd;
 	while (curr)
 	{
-		printf("\n\n\ncommand: %s\n\npath: %s\n\n", curr->cmd, curr->path);
+		printf("\n\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", curr->cmd, curr->path, curr->args_lst_size);
 		printf("arguments: ");
 		int i = 0;
 		while (curr->args[i])
@@ -131,7 +131,7 @@ void	traverse_parse_list(t_cmd *cmd)
 
 
 
-int test_builtins(char *str, t_env *envs)
+int test_builtins(char *str, t_env **envs, t_cmd *cmd)
 {
     char *vars[] = {"jack", "red", NULL};
 
@@ -139,15 +139,15 @@ int test_builtins(char *str, t_env *envs)
 		exit(1);
     if (!strcmp("env", str))
     {
-        env(envs);
+        env(*envs);
         return 1;
     } else if (!strcmp("unset", str))
     {
-        unset(envs, vars);
+        unset(*envs, vars);
         return 1;
-    } else if (!strcmp("export", str))
+    } else if (!ft_strncmp("export", str, 6))
     {
-        export(envs);
+        export(envs, cmd);
         return 1;
     }
 

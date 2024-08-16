@@ -75,9 +75,6 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
-        if (new_cmd->path)
-            printf("%s\n", new_cmd->path);
-
         cmd_add_back(cmd, new_cmd);
         if (curr)
             curr = curr->next;

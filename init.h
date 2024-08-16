@@ -19,7 +19,7 @@
 #include "string.h"
 
 
-
+typedef struct s_cmd t_cmd;
 
 # include "libft/libft.h"
 # include <curses.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
@@ -164,13 +164,13 @@ const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
 void	lstclear(t_token **token, void (*del)(void *));
-int test_builtins(char *str, t_env *envs);
+int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
 
 //Built-ins
 void    unset(t_env *envs, char **vars);
 void    env(t_env *envs);
-void    export(t_env *envs);
+void    export(t_env **envs, t_cmd *cmd);
 
 
 //PARSING

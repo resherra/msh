@@ -48,17 +48,17 @@ int	main(int ac, char **av, char **envp)
 		str = readline("msh-0.1$ ");
 
 		//test builtins;
-		test_builtins(str, envs);
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, pre, paths);
+		test_builtins(str, &envs, cmd);
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
 //		printf("\n\n");
 //      traverse pre-parse list;
 		//traverse_primary_tokens_list(pre);
 		//		clear the list
-		traverse_parse_list(cmd);
-		printf("\n\n\n");
+//		traverse_parse_list(cmd);
+//		printf("\n\n\n");
 		//lstclear(&head, freed);
 		//lstclear(&pre, freed);
 		head = NULL;

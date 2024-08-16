@@ -19,13 +19,11 @@ t_env	*new_env(char *key, char *value)
     new = malloc(sizeof(t_env));
     new->key = key;
     new->value = value;
-    if (!ft_strlen(value))
-        new->in_export = true;
-    else
-        new->in_export = false;
     new->next = NULL;
     return (new);
 }
+
+
 
 void	env_addback(t_env **env, t_env *new)
 {
@@ -40,7 +38,21 @@ void	env_addback(t_env **env, t_env *new)
 	}
 	curr = *env;
 	while (curr->next)
+	{
+		if (strcmp(curr->key, new->key) == 0)
+		{
+			curr->value = new->value;
+			curr->in_export = false;
+			return;
+		}
 		curr = curr->next;
+	}
+	if (strcmp(curr->key, new->key) == 0)
+	{
+		curr->value = new->value;
+		curr->in_export = false;
+		return;
+	}
 	curr->next = new;
 }
 
