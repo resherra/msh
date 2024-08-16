@@ -23,7 +23,18 @@ t_env	*new_env(char *key, char *value)
     return (new);
 }
 
-
+int	var_replace(t_env *curr, t_env *new)
+{
+	if (strcmp(curr->key, new->key) == 0)
+	{
+		if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
+			return 1;
+		curr->value = new->value;
+		curr->in_export = false;
+		return 1;
+	}
+	return 0;
+}
 
 void	env_addback(t_env **env, t_env *new)
 {
@@ -39,24 +50,12 @@ void	env_addback(t_env **env, t_env *new)
 	curr = *env;
 	while (curr->next)
 	{
-		if (strcmp(curr->key, new->key) == 0)
-		{
-			if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
-				return;
-			curr->value = new->value;
-			curr->in_export = false;
+		if (var_replace(curr, new))
 			return;
-		}
 		curr = curr->next;
 	}
-	if (strcmp(curr->key, new->key) == 0)
-	{
-		if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
-			return;
-		curr->value = new->value;
-		curr->in_export = false;
+	if (var_replace(curr, new))
 		return;
-	}
 	curr->next = new;
 }
 
