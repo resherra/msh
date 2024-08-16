@@ -41,6 +41,8 @@ void	env_addback(t_env **env, t_env *new)
 	{
 		if (strcmp(curr->key, new->key) == 0)
 		{
+			if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
+				return;
 			curr->value = new->value;
 			curr->in_export = false;
 			return;
@@ -49,6 +51,8 @@ void	env_addback(t_env **env, t_env *new)
 	}
 	if (strcmp(curr->key, new->key) == 0)
 	{
+		if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
+			return;
 		curr->value = new->value;
 		curr->in_export = false;
 		return;

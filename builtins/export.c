@@ -32,7 +32,6 @@ int check_if_alpha(char *str)
     return 1;
 }
 
-
 void    treat(t_env **envs, char *str)
 {
     int i = 0;
