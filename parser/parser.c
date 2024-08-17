@@ -30,6 +30,8 @@ char    *extract_path(char *cmd, char **paths)
 {
     int i = 0;
     char *path = NULL;
+    if (!cmd)
+        return NULL;
     while (paths[i])
     {
         path = ft_strjoin(paths[i], "/");
