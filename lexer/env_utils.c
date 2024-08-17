@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 04:31:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/22 04:33:34 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/17 14:53:14 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,14 @@ t_env	*new_env(char *key, char *value)
     new = malloc(sizeof(t_env));
     new->key = key;
     new->value = value;
+	if (new->value)
+		new->in_export = false;
+	else
+		new->in_export = true;
     new->next = NULL;
     return (new);
 }
 
-int	var_replace(t_env *curr, t_env *new)
-{
-	if (strcmp(curr->key, new->key) == 0)
-	{
-		if (ft_strlen(curr->value) != 0 &&  ft_strlen(new->value) == 0)
-			return 1;
-		curr->value = new->value;
-		curr->in_export = false;
-		return 1;
-	}
-	return 0;
-}
 
 void	env_addback(t_env **env, t_env *new)
 {
@@ -49,13 +41,7 @@ void	env_addback(t_env **env, t_env *new)
 	}
 	curr = *env;
 	while (curr->next)
-	{
-		if (var_replace(curr, new))
-			return;
 		curr = curr->next;
-	}
-	if (var_replace(curr, new))
-		return;
 	curr->next = new;
 }
 

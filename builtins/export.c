@@ -1,86 +1,76 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/05 12:06:59 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/05 12:07:00 by recherra         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
 #include "../init.h"
 
-int check_if_alpha(char *str)
+int	cheek_idntf_error(char *str)
 {
-    int i = 0;
+	int var_len;
 
-    if (str[i])
-    {
-        if (ft_isalpha(str[i]) == 0)
-            return 0;
-    }
-    i++;
-    while (str[i])
-    {
-        if (ft_isalnum(str[i]) == 0)
-            return 0;
-        i++;
-    }
-    return 1;
+	var_len = 0;
+	if (str[var_len] != '_' && !ft_isalpha(str[var_len++]))
+	{
+		printf("export: `%s' : not a valid identifier\n", str);	
+		return (not_valid_idntf);
+	}
+	while (str[var_len] != 0 && str[var_len] != '=' && (ft_isalnum(str[var_len]) || str[var_len] == '_'))
+		var_len++;
+	if (str[var_len] == '=' || str[var_len] == 0)
+		return (var_len);
+	printf("export: `%s' : not a valid identifier\n", str);	
+	return(not_valid_idntf);
 }
 
-void    treat(t_env **envs, char *str)
+int	add_in_env(char *var, t_env *envs)
 {
-    int i = 0;
-    int len = ft_strlen(str);
-    char *key;
-    char *value;
+	int		len_value;
+	int		Name_var_len;
+	char	*var_name;
+	char	*var_value;
+	t_env	*new_var;
 
-    while (str[i] && str[i] != '=')
-        i++;
-    key = ft_substr(str, 0, i);
-    if (!check_if_alpha(key))
-    {
-        printf("msh: export: `%s': not a valid identifier\n", key);
-        return;
-    }
-    if (!str[i])
-    {
-        value = ft_strdup("");
-        t_env *env =  new_env(key, value);
-        env->in_export = true;
-        env_addback(envs, env);
-    } else
-    {
-        value = ft_substr(str, i + 1, len);
-        t_env *env = new_env(key, value);
-        env_addback(envs, env);
-    }
+	var_value = NULL;
+	Name_var_len = cheek_idntf_error(var);
+	len_value = ft_strlen(var) - Name_var_len - 1;
+	if (Name_var_len  == not_valid_idntf)
+		return (not_valid_idntf);
+	var_name = ft_substr(var, 0, Name_var_len);
+	if (len_value >= 0)
+	{
+		var_value = ft_substr(var, Name_var_len + 1, len_value);
+	}
+	if (!var_name || (!var_value && len_value > 0))
+		return(allocation_error);
+	new_var = new_env(var_name, var_value);
+	ft_env_addback(&envs, new_var);
+	return (1);
 }
 
-
-void    export(t_env **envs, t_cmd *cmd)
+void    ft_export(t_env *envs, char **args)
 {
-    t_env *curr = NULL;
-    int i = 0;
+    t_env	*curr;
+	int		state;
+	int		i;
 
-    if (cmd->args_lst_size == 1)
-    {
-        curr = *envs;
-        while (curr)
-        {
-            printf("declare -x %s=\"%s\"\n", curr->key, curr->value);
-            curr = curr->next;
-        }
-        return;
-    }
-    i++;
-    while (cmd->args[i])
-    {
-        treat(envs, cmd->args[i]);
-        i++;
-    }
+    curr = envs;
+	state = 0;
+	i = 1;
+	if (args[i])
+	{
+		while (args[i])
+		{
+			state += add_in_env(args[i], envs);
+			i++;
+		}
+		// if(state != (i - 1))
+		// 	state_var=1;
+	}
+	else
+	{
+    	while (curr)
+    	{
+        	printf("declare -x %s", curr->key);
+			if (curr->value)
+				printf("=\"%s\"", curr->value);
+			printf("\n");
+        	curr = curr->next;
+    	}
+	}
 }

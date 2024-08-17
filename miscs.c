@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miscs.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 15:22:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/03 15:22:57 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/17 14:33:19 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,23 +133,37 @@ void	traverse_parse_list(t_cmd *cmd)
 
 int test_builtins(char *str, t_env **envs, t_cmd *cmd)
 {
-    char *vars[] = {"jack", "red", NULL};
 
-	if (!strcmp("exit", str))
+	if (!strcmp("exit", cmd->cmd))
 		exit(1);
-    if (!strcmp("env", str))
+    else if (!strcmp("env", str))
     {
         env(*envs);
         return 1;
-    } else if (!strcmp("unset", str))
+    } else if (!strcmp("unset", cmd->cmd))
     {
-        unset(*envs, vars);
+        unset(envs, cmd->args);
         return 1;
-    } else if (!ft_strncmp("export", str, 6))
+    } else if (!strcmp("export", cmd->cmd))
     {
-        export(envs, cmd);
+        ft_export(*envs, cmd->args);
         return 1;
     }
+	else if (!strcmp("echo", cmd->cmd))
+	{
+		ft_echo(cmd->args);
+		return 1;
+	}
+	else if (!strcmp("cd", cmd->cmd))
+	{
+		ft_cd(cmd->args[1]);
+		return 1;
+	}
+	else if (!strcmp("pwd", cmd->cmd))
+	{
+		pwd();
+		return 1;
+	}
 
     return 0;
 }

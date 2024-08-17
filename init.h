@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 07:00:04 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/17 14:39:32 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ typedef struct s_cmd t_cmd;
 //										ttyname,
 //	ttyslot, isatty, chdir, unlink, execve, read, getcwd
 
+//macros for errors
+#define not_valid_idntf -2
+#define allocation_error -3
 
 //tokens
 typedef enum e_type
@@ -130,6 +133,8 @@ char				*double_to_str(char *str, int i);
 //env utils
 void				extract_env(t_env **envs, char *str, char ***paths);
 void				init_env(t_env **env, char **envp, char ***paths);
+void				ft_env_addback(t_env **env, t_env *new);
+
 
 //pre-parse functions
 void	sanitize(t_token *head, t_token **new);
@@ -168,9 +173,12 @@ int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
 
 //Built-ins
-void    unset(t_env *envs, char **vars);
+void    unset(t_env **envs, char **vars);
 void    env(t_env *envs);
-void    export(t_env **envs, t_cmd *cmd);
+void    ft_export(t_env *envs, char **args);
+void 	ft_echo(char **str);
+void 	ft_cd(char *path);
+void    pwd();
 
 
 //PARSING
