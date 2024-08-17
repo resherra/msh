@@ -48,7 +48,7 @@ void	syntax_check(t_token *pre)
 		{
 			if (!curr->prev || curr->prev->type != WORD)
 				print_syntax_error(curr->str);
-			if (!curr->next || (curr->next->type != WORD || !check_redirections(curr->next)))
+			if (!curr->next || (curr->next->type != WORD && !check_redirections(curr->next)))
 				print_syntax_error(curr->str);
 		}
 		curr = curr->next;

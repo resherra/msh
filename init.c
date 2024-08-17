@@ -57,7 +57,7 @@ int	main(int ac, char **av, char **envp)
 //      traverse pre-parse list;
 		 // traverse_primary_tokens_list(pre);
 		//		clear the list
-		// traverse_parse_list(cmd);
+		traverse_parse_list(cmd);
 		// printf("\n\n\n");
 		//lstclear(&head, freed);
 		//lstclear(&pre, freed);
