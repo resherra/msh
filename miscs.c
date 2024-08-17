@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 15:22:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/17 14:33:19 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/17 15:13:21 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,8 @@ void	traverse_parse_list(t_cmd *cmd)
 
 int test_builtins(char *str, t_env **envs, t_cmd *cmd)
 {
-
+	if (!cmd || !cmd->cmd) 
+		return 0;
 	if (!strcmp("exit", cmd->cmd))
 		exit(1);
     else if (!strcmp("env", str))
