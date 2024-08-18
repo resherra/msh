@@ -72,6 +72,8 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
             }
+            else if (curr && !curr->next)
+                new_cmd->unclosed = true;
             if (curr)
                 curr = curr->next;
         }

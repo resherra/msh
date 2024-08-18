@@ -204,6 +204,7 @@ typedef struct s_cmd
 	int	args_lst_size; //argument list size
 	char **args; //2d arr of args
 	t_red	*redirections; //redirections list
+	bool unclosed;
 	struct s_cmd *next;
 } t_cmd;
 
