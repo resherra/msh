@@ -68,7 +68,7 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
                 break;
             if (curr && curr->next && curr->next->type == WORD)
             {
-                new_red = lst_new_red(curr->type, curr->next->str);
+                new_red = lst_new_red(curr->type, ft_strdup(curr->next->str));
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
             }
