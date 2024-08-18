@@ -29,13 +29,10 @@ void excution(t_env **env, t_cmd *cmd)
 			{
 				exit(0);
 			}
-			else if (cmd->cmd)
-			{
-			 if (execve(cmd->path, cmd->args, envp) == -1)
+			else if (cmd->cmd && execve(cmd->path, cmd->args, envp) == -1)
 			 {
 				perror ("msh-0.1$ ");
 			 }
-			}
 				exit(1) ;
 		}
 		if (i > 0 )
