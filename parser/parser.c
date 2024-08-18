@@ -66,11 +66,16 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
             }
             if (curr && curr->type == PIPE)
                 break;
-            if (curr && curr->next)
+            if (curr && curr->next && curr->next->type == WORD)
             {
                 new_red = lst_new_red(curr->type, curr->next->str);
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
+            }
+            else if (curr && curr->next &&  curr->next->type != WORD)
+            {
+                printf("msh: syntax error near unexpected token `%s'\n", curr->next->str);
+                exit(1);
             }
             else if (curr && !curr->next)
                 new_cmd->unclosed = true;
