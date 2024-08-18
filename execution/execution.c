@@ -9,6 +9,11 @@ void excution(t_env **env, t_cmd *cmd)
 
 	envp[0] = "TERM=xterm-256color";
 	envp[1] = NULL ;
+	if (cmd && cmd ->cmd && !cmd->next)
+	{
+		if (is_bultin(env, cmd))
+			cmd = cmd->next;
+	}
     while (cmd)
     {
 		pipe(pfds);

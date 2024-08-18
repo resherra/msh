@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/18 23:20:21 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 00:49:41 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,12 +132,21 @@ void	traverse_parse_list(t_cmd *cmd)
 
 
 
-int test_builtins(char *str, t_env **envs, t_cmd *cmd)
-{
+// int test_builtins(char *str, t_env **envs, t_cmd *cmd)
+// {
 
-	if (cmd && cmd->cmd && !strcmp("exit", cmd->cmd))
-		exit(1);
-	excution(envs, cmd);
+// 	write(1, "12\n", 3);
+// 	if (cmd && cmd->cmd && !strcmp("exit", cmd->cmd))
+// 		exit(1);
+// 	else if (!cmd->next && !strcmp("cd", cmd->cmd))
+// 	{
+// 		// write(1, cmd->args[1], 2);
+// 		// write(1, "1\n", 2);
+// 		ft_cd(cmd->args[1]);
+// 		cmd = cmd->next;
+// 		//return ( 1);
+// 	}
+// 	excution(envs, cmd);
 	
-    return 0;
-}
+//     return 0;
+// }

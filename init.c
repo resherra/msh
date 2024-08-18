@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/16 13:15:44 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 00:42:56 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ int	main(int ac, char **av, char **envp)
 		//test builtins;
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, pre, paths);
-		if (!strcmp("exit", cmd->cmd))
-			exit(1);
 		excution(&envs, cmd);
-
+		//test_builtins("", &envs, cmd);
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
 //		printf("\n\n");
