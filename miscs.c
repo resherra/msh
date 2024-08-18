@@ -129,15 +129,3 @@ void	traverse_parse_list(t_cmd *cmd)
 		curr = curr->next;
 	}
 }
-
-
-
-int test_builtins(char *str, t_env **envs, t_cmd *cmd)
-{
-
-	if (!strcmp("exit", cmd->cmd))
-		exit(1);
-	excution(envs, cmd);
-	
-    return 0;
-}

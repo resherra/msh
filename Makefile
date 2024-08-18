@@ -21,7 +21,7 @@ all: $(NAME)
 
 $(NAME):  init.h $(LIBFT)  $(OBJS)
 	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline $(LIBFT)
-	cp ${NAME} /home/apple/.nvm/versions/node/v22.2.0/bin
+	cp ${NAME} /home/resherra/.nvm/versions/node/v22.2.0/bin
 	#cp ${NAME} /home/apple/.nvm/versions/node/v22.2.0/bin
 
 $(LIBFT):

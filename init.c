@@ -50,15 +50,18 @@ int	main(int ac, char **av, char **envp)
 		//test builtins;
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, pre, paths);
-		test_builtins(str, &envs, cmd);
+		if (!strcmp("exit", cmd->cmd))
+			exit(1);
+		excution(&envs, cmd);
+
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
 //		printf("\n\n");
 //      traverse pre-parse list;
 		 // traverse_primary_tokens_list(pre);
 		//		clear the list
-		traverse_parse_list(cmd);
-		printf("\n\n\n");
+		// traverse_parse_list(cmd);
+		// printf("\n\n\n");
 		//lstclear(&head, freed);
 		//lstclear(&pre, freed);
 		head = NULL;
