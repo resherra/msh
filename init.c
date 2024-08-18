@@ -50,9 +50,7 @@ int	main(int ac, char **av, char **envp)
 		//test builtins;
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, pre, paths);
-		if (!strcmp("exit", cmd->cmd))
-			exit(1);
-		excution(&envs, cmd);
+		test_builtins(str, &envs, cmd);
 
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
