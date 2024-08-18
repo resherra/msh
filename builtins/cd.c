@@ -1,22 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/18 10:42:07 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/18 10:42:09 by recherra         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../init.h"
 
-void cd(char *path)
+void ft_cd(char *path)
 {
-	if (chdir(path))
+	if (!path)
 	{
-		perror("cd");
-		exit(1);
+		if (chdir(getenv("HOME")))
+			perror("cd");
 	}
+	else if (chdir(path))
+		perror("cd");
 }

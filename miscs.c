@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   miscs.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 15:22:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/03 15:22:57 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/18 14:40:59 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,25 +131,12 @@ void	traverse_parse_list(t_cmd *cmd)
 
 
 
-int test_builtins(char *str, t_env *envs)
+int test_builtins(char *str, t_env **envs, t_cmd *cmd)
 {
-    char *vars[] = {"jack", "red", NULL};
 
-	if (!strcmp("exit", str))
+	if (!strcmp("exit", cmd->cmd))
 		exit(1);
-    if (!strcmp("env", str))
-    {
-        env(envs);
-        return 1;
-    } else if (!strcmp("unset", str))
-    {
-        unset(envs, vars);
-        return 1;
-    } else if (!strcmp("export", str))
-    {
-        export(envs);
-        return 1;
-    }
-
+	excution(envs, cmd);
+	
     return 0;
 }

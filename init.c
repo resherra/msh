@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 06:59:20 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/16 13:15:44 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	main(int ac, char **av, char **envp)
 		str = readline("msh-0.1$ ");
 
 		//test builtins;
-		test_builtins(str, envs);
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, pre, paths);
+		test_builtins(str, &envs, cmd);
 		//traverse primary tokens list;
 //		traverse_primary_tokens_list(head);
 //		printf("\n\n");

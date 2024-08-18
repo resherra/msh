@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/13 07:00:04 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/18 14:40:34 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@
 # include <unistd.h>    //write, close, fork, pipe, dup, dup2, ttyslot,
 //										ttyname,
 //	ttyslot, isatty, chdir, unlink, execve, read, getcwd
+
+//macros for errors
+#define not_valid_idntf -2
+#define allocation_error -3
 
 
 //tokens
@@ -102,6 +106,7 @@ void				lst_add_back(t_token **head, t_token *node);
 
 
 //env
+
 typedef struct s_env
 {
 	char			*key;
@@ -137,6 +142,8 @@ void	sanitize(t_token *head, t_token **new);
 //env list utils
 t_env				*new_env(char *key, char *value);
 void				env_addback(t_env **env, t_env *new);
+void				ft_env_addback(t_env **env, t_env *new);
+
 void	env_delone(t_env *env, void (*del)(void *));
 
 //tokenizer miscs
@@ -156,21 +163,17 @@ typedef struct s_tree
 }					t_tree;
 
 
+
 //env
 
-//miscs
-const char			*format_state(int type);
-const char			*format_type(int type);
-void				traverse_primary_tokens_list(t_token *env);
-void				traverse_env_list(t_env *env);
-void	lstclear(t_token **token, void (*del)(void *));
-int test_builtins(char *str, t_env *envs);
-void    freed(void *str);
-
 //Built-ins
-void    unset(t_env *envs, char **vars);
+void    unset(t_env **envs, char **vars);
 void    env(t_env *envs);
-void    export(t_env *envs);
+void    ft_export(t_env *envs, char **args);
+void 	ft_echo(char **str);
+void 	ft_cd(char *path);
+void    pwd();
+
 
 
 //PARSING
@@ -209,10 +212,24 @@ void arg_add_back(t_args **args, t_args *new);
 t_red *lst_new_red(t_type red_type, char *red_file);
 void    red_add_back(t_red **redirections, t_red *new);
 
+//miscs
+const char			*format_state(int type);
+const char			*format_type(int type);
+void				traverse_primary_tokens_list(t_token *env);
+void				traverse_env_list(t_env *env);
+void	lstclear(t_token **token, void (*del)(void *));
+//int test_builtins(char *str, t_env *envs);
+int test_builtins(char *str, t_env **envs, t_cmd *cmd);
+void    freed(void *str);
 
 
 //miscs
 void	traverse_parse_list(t_cmd *cmd);
 //PARSING
+
+//excution
+void excution(t_env **env, t_cmd *cmd);
+int implement_redirections(t_red *redrctns);
+int is_bultin(t_env **envs, t_cmd *cmd);
 
 #endif

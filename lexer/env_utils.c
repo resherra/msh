@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 04:31:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/22 04:33:34 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/17 01:47:47 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_env	*new_env(char *key, char *value)
     new = malloc(sizeof(t_env));
     new->key = key;
     new->value = value;
-    if (!ft_strlen(value))
+    if (!value || !ft_strlen(value))
         new->in_export = true;
     else
         new->in_export = false;
@@ -43,6 +43,7 @@ void	env_addback(t_env **env, t_env *new)
 		curr = curr->next;
 	curr->next = new;
 }
+
 
 void	env_delone(t_env *env, void (*del)(void *))
 {
