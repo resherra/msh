@@ -6,7 +6,7 @@
 #    By: apple <apple@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 06:54:06 by recherra          #+#    #+#              #
-#    Updated: 2024/08/18 16:30:45 by apple            ###   ########.fr        #
+#    Updated: 2024/08/18 21:10:37 by apple            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ all: $(NAME)
 $(NAME):  init.h $(LIBFT)  $(OBJS)
 	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline $(LIBFT)
 	cp ${NAME} /home/apple/.nvm/versions/node/v22.2.0/bin
+	#cp ${NAME} /home/apple/.nvm/versions/node/v22.2.0/bin
 
 $(LIBFT):
 	@make -C libft/

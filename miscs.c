@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/03 15:22:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/18 14:40:59 by apple            ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/08/18 21:20:39 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "./init.h"
 
@@ -109,7 +110,7 @@ void	traverse_parse_list(t_cmd *cmd)
 	curr = cmd;
 	while (curr)
 	{
-		printf("\n\n\ncommand: %s\n\npath: %s\n\n", curr->cmd, curr->path);
+		printf("\n\n\nUnclosed heredoc: %d\n\nPipes: %d\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", cmd->unclosed, cmd->pipes, curr->cmd, curr->path, curr->args_lst_size);
 		printf("arguments: ");
 		int i = 0;
 		while (curr->args[i])

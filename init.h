@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/18 14:40:34 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/18 21:25:45 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "string.h"
 
 
-
+typedef struct s_cmd t_cmd;
 
 # include "libft/libft.h"
 # include <curses.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
@@ -44,6 +44,13 @@
 #define not_valid_idntf -2
 #define allocation_error -3
 
+//macros for errors
+#define not_valid_idntf -2
+#define allocation_error -3
+
+//macros for errors
+#define not_valid_idntf -2
+#define allocation_error -3
 
 //tokens
 typedef enum e_type
@@ -135,6 +142,8 @@ char				*double_to_str(char *str, int i);
 //env utils
 void				extract_env(t_env **envs, char *str, char ***paths);
 void				init_env(t_env **env, char **envp, char ***paths);
+void				ft_env_addback(t_env **env, t_env *new);
+
 
 //pre-parse functions
 void	sanitize(t_token *head, t_token **new);
@@ -166,6 +175,15 @@ typedef struct s_tree
 
 //env
 
+//miscs
+const char			*format_state(int type);
+const char			*format_type(int type);
+void				traverse_primary_tokens_list(t_token *env);
+void				traverse_env_list(t_env *env);
+void	lstclear(t_token **token, void (*del)(void *));
+int test_builtins(char *str, t_env **envs, t_cmd *cmd);
+void    freed(void *str);
+
 //Built-ins
 void    unset(t_env **envs, char **vars);
 void    env(t_env *envs);
@@ -194,10 +212,12 @@ typedef struct s_cmd
 {
 	char *cmd; //command
 	char *path; //command path
+	int pipes;
 	t_args *args_list; //arguments in a list (command uncluded) to be converted to 2d arr
 	int	args_lst_size; //argument list size
 	char **args; //2d arr of args
 	t_red	*redirections; //redirections list
+	bool unclosed;
 	struct s_cmd *next;
 } t_cmd;
 

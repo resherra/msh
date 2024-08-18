@@ -30,6 +30,8 @@ char    *extract_path(char *cmd, char **paths)
 {
     int i = 0;
     char *path = NULL;
+    if (!cmd)
+        return NULL;
     while (paths[i])
     {
         path = ft_strjoin(paths[i], "/");
@@ -47,6 +49,7 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
     t_red *new_red = NULL;
     t_cmd *new_cmd = NULL;
     t_args *arg = NULL;
+    int pipes = -1;
 
     curr = pre;
     while (curr)
@@ -63,23 +66,30 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
             }
             if (curr && curr->type == PIPE)
                 break;
-            if (curr && curr->next)
+            if (curr && curr->next && curr->next->type == WORD)
             {
                 new_red = lst_new_red(curr->type, curr->next->str);
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
             }
+            else if (curr && curr->next &&  curr->next->type != WORD)
+            {
+                printf("msh: syntax error near unexpected token `%s'\n", curr->next->str);
+                exit(1);
+            }
+            else if (curr && !curr->next)
+                new_cmd->unclosed = true;
             if (curr)
                 curr = curr->next;
         }
+        pipes++;
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
-        if (new_cmd->path)
-            printf("%s\n", new_cmd->path);
-
         cmd_add_back(cmd, new_cmd);
         if (curr)
             curr = curr->next;
     }
+    if (*cmd)
+        (*cmd)->pipes = pipes;
 }

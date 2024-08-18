@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 04:31:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/17 01:47:47 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/18 21:23:12 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_env	*new_env(char *key, char *value)
     new->next = NULL;
     return (new);
 }
+
 
 void	env_addback(t_env **env, t_env *new)
 {
