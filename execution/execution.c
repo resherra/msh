@@ -25,20 +25,23 @@ void excution(t_env **env, t_cmd *cmd)
 				dup2(prev,STDIN_FILENO);
 			close(pfds[0]);
 			close(pfds[1]);
-			if (is_bultin(env, cmd))
+			if (cmd->cmd && is_bultin(env, cmd))
 			{
 				exit(0);
 			}
-			 else if (execve(cmd->path, cmd->args, envp) == -1)
+			else if (cmd->cmd)
+			{
+			 if (execve(cmd->path, cmd->args, envp) == -1)
 			 {
 				perror ("msh-0.1$ ");
 			 }
+			}
 				exit(1) ;
 		}
 		if (i > 0 )
 			close(prev);
 		if (cmd->next)
-		prev = dup(pfds[0]);
+			prev = dup(pfds[0]);
 		close(pfds[0]);
 		close(pfds[1]);
         i++;
