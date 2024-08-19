@@ -21,7 +21,6 @@ all: $(NAME)
 
 $(NAME):  init.h $(LIBFT)  $(OBJS)
 	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline $(LIBFT)
-	cp ${NAME} /home/resherra/.nvm/versions/node/v22.2.0/bin
 
 $(LIBFT):
 	@make -C libft/
@@ -32,7 +31,6 @@ clean:
 
 fclean: clean
 	make -C libft/ fclean
-	rm -rf /home/resherra/.nvm/versions/node/v22.2.0/bin/ms
 	rm -rf $(NAME)
 
 re: fclean all
