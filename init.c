@@ -27,6 +27,55 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 }
 
 
+
+void	clear_redirections(t_red **head)
+{
+	t_red	*ne;
+
+	if (!head)
+		return ;
+	if (*head)
+	{
+		while (*head)
+		{
+			ne = *head;
+			*head = (*head)->next;
+			free(ne->red_file);
+			free(ne);
+		}
+	}
+	*head = NULL;
+}
+
+void	free_all(t_cmd *cmd)
+{
+	int i = 0;
+	free(cmd->path);
+	while (cmd->args[i])
+		free(cmd->args[i++]);
+	free(cmd->args);
+	clear_redirections(&cmd->redirections);
+}
+
+void	free_cmd_list(t_cmd **cmds)
+{
+	t_cmd *tmp;
+
+	if (!cmds)
+		return;
+	if (*cmds)
+	{
+		while (*cmds)
+		{
+			tmp = *cmds;
+			*cmds = (*cmds)->next;
+			free_all(tmp);
+			free(tmp);
+		}
+	}
+	*cmds = NULL;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
@@ -49,7 +98,7 @@ int	main(int ac, char **av, char **envp)
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
 		excution(&envs, cmd);
-		
+		free_cmd_list(&cmd);
 		//traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);

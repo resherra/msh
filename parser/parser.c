@@ -19,7 +19,7 @@ char **lst_to_arr(int size, t_args *args_list)
     int i = 0;
     while (curr)
     {
-        args[i++] = curr->str;
+        args[i++] = ft_strdup(curr->str);
         curr = curr->next;
     }
     args[i] = NULL;
@@ -48,6 +48,26 @@ char    *extract_path(char *cmd, char **paths)
     free(path);
     return NULL;
 }
+
+void    clear_args_list(t_args **head)
+{
+    t_args	*ne;
+
+    if (!head)
+        return ;
+    if (*head)
+    {
+        while (*head)
+        {
+            ne = *head;
+            *head = (*head)->next;
+            free(ne->next);
+            free(ne);
+        }
+    }
+    *head = NULL;
+}
+
 
 void    parser(t_cmd **cmd, t_token **pre, char **paths)
 {
@@ -90,6 +110,7 @@ void    parser(t_cmd **cmd, t_token **pre, char **paths)
         }
         pipes++;
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
+        clear_args_list(&new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
         cmd_add_back(cmd, new_cmd);
