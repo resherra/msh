@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 04:10:16 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 14:57:45 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char **lst_to_arr(int size, t_args *args_list)
     int i = 0;
     while (curr)
     {
-        args[i++] = curr->str;
+        args[i++] = ft_strdup(curr->str);
         curr = curr->next;
     }
     args[i] = NULL;
@@ -28,27 +28,30 @@ char **lst_to_arr(int size, t_args *args_list)
 
 char    *extract_path(char *cmd, char **paths)
 {
-    char *tmp = NULL;
+    char *pre_path = NULL;
     char *path = NULL;
     int i = 0;
     if (!cmd)
         return NULL;
+    pre_path = ft_strjoin("/", cmd);
     if (!paths)
+    {
         return NULL;
+    }
     while (paths[i])
     {
-        path = ft_strjoin(paths[i], "/");
-        tmp = path;
-        path = ft_strjoin(path, cmd);
-        free(tmp);
+        path = ft_strjoin(paths[i], pre_path);
         if (!access(path, F_OK))
+        {
+            free(pre_path);
             return path;
+        }
+        free(path);
         i++;
     }
     if (!access(cmd, F_OK))
 		return (cmd);
-    free(path);
-	printf("msh-0.1$: %s: command not found\n",cmd);
+    free(pre_path);
     return NULL;
 }
 

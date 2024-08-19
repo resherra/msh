@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 04:26:49 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 15:06:39 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,81 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 	// printf("\n\n\n");
 }
 
+
+
+void	clear_redirections(t_red **head)
+{
+	t_red	*ne;
+
+	if (!head)
+		return ;
+	if (*head)
+	{
+		while (*head)
+		{
+			ne = *head;
+			*head = (*head)->next;
+			free(ne->red_file);
+			free(ne);
+		}
+	}
+	*head = NULL;
+}
+
+void    clear_args_list(t_args **head)
+{
+	t_args	*ne;
+
+	if (!head)
+		return ;
+	if (*head)
+	{
+		while (*head)
+		{
+			ne = *head;
+			*head = (*head)->next;
+			free(ne->str);
+			free(ne);
+		}
+	}
+	*head = NULL;
+}
+
+
+void	free_all(t_cmd *cmd)
+{
+	int i = 0;
+	while (cmd->args[i])
+	{
+		free(cmd->args[i++]);
+	}
+	free(cmd->args);
+	clear_redirections(&cmd->redirections);
+	clear_args_list(&cmd->args_list);
+}
+
+void	free_cmd_list(t_cmd **cmds)
+{
+	t_cmd *tmp;
+
+	if (!cmds)
+		return;
+	if (*cmds)
+	{
+		while (*cmds)
+		{
+			tmp = *cmds;
+			*cmds = (*cmds)->next;
+			if (tmp->cmd != tmp->path)
+			{
+				free(tmp->path);
+			}
+			free_all(tmp);
+			free(tmp);
+		}
+	}
+	*cmds = NULL;
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -48,12 +123,15 @@ int	main(int ac, char **av, char **envp)
 		str = readline("msh-0.1$ ");
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
-		excution(&envs, cmd);
-		//traverse_parse_list(cmd);
-		traverse(head, pre, cmd);
+		// traverse_parse_list(cmd);
+		// printf("\n\n\n");
+		excution(&envs, cmd, envp);
+		free_cmd_list(&cmd);
+		//traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);
 		free(str);
+		system("leaks ms");
 	}
 }
 

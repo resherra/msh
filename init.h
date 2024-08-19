@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/18 21:25:45 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 07:53:31 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_cmd t_cmd;
 # include <sys/wait.h>  //wait, waitpid, wait3, wait4
 # include <termios.h>   //tcgetattr, tcsetattr
 # include <unistd.h>    //write, close, fork, pipe, dup, dup2, ttyslot,
+# include <errno.h>
 //										ttyname,
 //	ttyslot, isatty, chdir, unlink, execve, read, getcwd
 
@@ -247,7 +248,7 @@ void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
 //excution
-void excution(t_env **env, t_cmd *cmd);
+void excution(t_env **env, t_cmd *cmd, char **envp);
 int implement_redirections(t_red *redrctns);
 int is_bultin(t_env **envs, t_cmd *cmd);
 
