@@ -28,46 +28,30 @@ char **lst_to_arr(int size, t_args *args_list)
 
 char    *extract_path(char *cmd, char **paths)
 {
-    char *tmp = NULL;
+    char *pre_path = NULL;
     char *path = NULL;
     int i = 0;
     if (!cmd)
         return NULL;
+    pre_path = ft_strjoin("/", cmd);
     if (!paths)
+    {
         return NULL;
+    }
     while (paths[i])
     {
-        path = ft_strjoin(paths[i], "/");
-        tmp = path;
-        path = ft_strjoin(path, cmd);
-        free(tmp);
+        path = ft_strjoin(paths[i], pre_path);
         if (!access(path, F_OK))
+        {
+            free(pre_path);
             return path;
+        }
+        free(path);
         i++;
     }
-    free(path);
+    free(pre_path);
     return NULL;
 }
-
-void    clear_args_list(t_args **head)
-{
-    t_args	*ne;
-
-    if (!head)
-        return ;
-    if (*head)
-    {
-        while (*head)
-        {
-            ne = *head;
-            *head = (*head)->next;
-            free(ne->next);
-            free(ne);
-        }
-    }
-    *head = NULL;
-}
-
 
 void    parser(t_cmd **cmd, t_token **pre, char **paths)
 {
@@ -110,7 +94,6 @@ void    parser(t_cmd **cmd, t_token **pre, char **paths)
         }
         pipes++;
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
-        clear_args_list(&new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
         cmd_add_back(cmd, new_cmd);

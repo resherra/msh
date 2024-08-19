@@ -47,14 +47,35 @@ void	clear_redirections(t_red **head)
 	*head = NULL;
 }
 
+void    clear_args_list(t_args **head)
+{
+	t_args	*ne;
+
+	if (!head)
+		return ;
+	if (*head)
+	{
+		while (*head)
+		{
+			ne = *head;
+			*head = (*head)->next;
+			free(ne->str);
+			free(ne);
+		}
+	}
+	*head = NULL;
+}
+
+
 void	free_all(t_cmd *cmd)
 {
 	int i = 0;
-	free(cmd->path);
+	// free(cmd->path);
 	while (cmd->args[i])
 		free(cmd->args[i++]);
 	free(cmd->args);
 	clear_redirections(&cmd->redirections);
+	clear_args_list(&cmd->args_list);
 }
 
 void	free_cmd_list(t_cmd **cmds)
@@ -97,6 +118,8 @@ int	main(int ac, char **av, char **envp)
 		str = readline("msh-0.1$ ");
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
+		// traverse_parse_list(cmd);
+		// printf("\n\n\n");
 		excution(&envs, cmd);
 		free_cmd_list(&cmd);
 		//traverse(head, pre, cmd);
