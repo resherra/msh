@@ -13,45 +13,43 @@
 #include "init.h"
 
 
-void	traverse_parse_list(t_cmd *cmd);
+void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
+{
+	(void)head;
+	(void)pre;
+	(void)cmd;
+
+	//traverse_primary_tokens_list(head);
+	// traverse_primary_tokens_list(pre);
+	//clear the list
+	// traverse_parse_list(cmd);
+	// printf("\n\n\n");
+}
+
 
 int	main(int ac, char **av, char **envp)
 {
+	(void)ac;
+	(void)av;
+	char	*str;
+	char **paths;
 	t_env	*envs;
 	t_token	*head;
 	t_token	*pre;
 	t_cmd *cmd;
-	char	*str;
-	char **paths;
-
-	(void)ac;
-	(void)av;
-	(void)envp;
 	envs = NULL;
-	init_env(&envs, envp, &paths);
 	head = NULL;
 	pre = NULL;
 	cmd = NULL;
+	paths = NULL;
+	init_env(&envs, envp, &paths);
 	while (1)
 	{
 		str = readline("msh-0.1$ ");
-
 		lexer(str, &head, envs, &pre);
-		parser(&cmd, pre, paths);
+		parser(&cmd, &pre, paths);
 		excution(&envs, cmd);
-		//test_builtins("", &envs, cmd);
-		//traverse primary tokens list;
-		//		traverse_primary_tokens_list(head);
-		//		printf("\n\n");
-		//      traverse pre-parse list;
-		// traverse_primary_tokens_list(pre);
-		//		clear the list
-		// traverse_parse_list(cmd);
-		// printf("\n\n\n");
-		//lstclear(&head, freed);
-		//lstclear(&pre, freed);
-		head = NULL;
-		pre = NULL;
+		traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);
 		free(str);

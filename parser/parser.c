@@ -28,14 +28,21 @@ char **lst_to_arr(int size, t_args *args_list)
 
 char    *extract_path(char *cmd, char **paths)
 {
+    char *tmp = NULL;
     int i = 0;
     char *path = NULL;
     if (!cmd)
         return NULL;
+    if (!paths)
+    {
+        return NULL;
+    }
     while (paths[i])
     {
         path = ft_strjoin(paths[i], "/");
+        tmp = path;
         path = ft_strjoin(path, cmd);
+        free(tmp);
         if (!access(path, F_OK))
             return path;
         i++;
@@ -43,7 +50,7 @@ char    *extract_path(char *cmd, char **paths)
     return NULL;
 }
 
-void    parser(t_cmd **cmd, t_token *pre, char **paths)
+void    parser(t_cmd **cmd, t_token **pre, char **paths)
 {
     t_token *curr = NULL;
     t_red *new_red = NULL;
@@ -51,7 +58,7 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
     t_args *arg = NULL;
     int pipes = -1;
 
-    curr = pre;
+    curr = *pre;
     while (curr)
     {
         new_cmd = lst_new_cmd();
@@ -92,4 +99,5 @@ void    parser(t_cmd **cmd, t_token *pre, char **paths)
     }
     if (*cmd)
         (*cmd)->pipes = pipes;
+    lstclear(pre);
 }

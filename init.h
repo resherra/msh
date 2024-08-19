@@ -180,7 +180,7 @@ const char			*format_state(int type);
 const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
-void	lstclear(t_token **token, void (*del)(void *));
+void	lstclear(t_token **head);
 int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
 
@@ -221,7 +221,7 @@ typedef struct s_cmd
 	struct s_cmd *next;
 } t_cmd;
 
-void    parser(t_cmd **cmd, t_token *pre, char **paths);
+void    parser(t_cmd **cmd, t_token **pre, char **paths);
 
 t_cmd *lst_new_cmd();
 void    cmd_add_back(t_cmd **cmd, t_cmd *new);
@@ -237,7 +237,6 @@ const char			*format_state(int type);
 const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
-void	lstclear(t_token **token, void (*del)(void *));
 //int test_builtins(char *str, t_env *envs);
 int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);

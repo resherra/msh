@@ -53,27 +53,23 @@ const char	*format_state(int type)
 	}
 }
 
-void	freed(void *str)
-{
-	free(str);
-}
-
-void	lstclear(t_token **token, void (*del)(void *))
+void	lstclear(t_token **head)
 {
 	t_token	*ne;
 
-	if (!token || !del)
+	if (!head)
 		return ;
-	if (*token)
+	if (*head)
 	{
-		while (*token)
+		while (*head)
 		{
-			ne = *token;
-			*token = (*token)->next;
-			del(ne->str);
+			ne = *head;
+			*head = (*head)->next;
+			free(ne->str);
 			free(ne);
 		}
 	}
+	*head = NULL;
 }
 
 void	traverse_primary_tokens_list(t_token *token)

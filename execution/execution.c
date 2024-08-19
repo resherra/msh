@@ -5,7 +5,7 @@ void excution(t_env **env, t_cmd *cmd)
     int prev;
     int pfds[2];
     int id, i = 0;
-	char *envp[2]; 
+	char *envp[2];
 
 	envp[0] = "TERM=xterm-256color";
 	envp[1] = NULL ;
