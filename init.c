@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 00:52:21 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 03:12:40 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	main(int ac, char **av, char **envp)
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
 		excution(&envs, cmd);
+		traverse_parse_list(cmd);
 		traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);
