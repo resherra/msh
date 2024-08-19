@@ -29,14 +29,12 @@ char **lst_to_arr(int size, t_args *args_list)
 char    *extract_path(char *cmd, char **paths)
 {
     char *tmp = NULL;
-    int i = 0;
     char *path = NULL;
+    int i = 0;
     if (!cmd)
         return NULL;
     if (!paths)
-    {
         return NULL;
-    }
     while (paths[i])
     {
         path = ft_strjoin(paths[i], "/");
@@ -47,6 +45,7 @@ char    *extract_path(char *cmd, char **paths)
             return path;
         i++;
     }
+    free(path);
     return NULL;
 }
 

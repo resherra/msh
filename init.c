@@ -49,7 +49,8 @@ int	main(int ac, char **av, char **envp)
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
 		excution(&envs, cmd);
-		traverse(head, pre, cmd);
+		
+		//traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);
 		free(str);
