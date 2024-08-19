@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/10 17:05:38 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/19 04:10:16 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ char    *extract_path(char *cmd, char **paths)
             return path;
         i++;
     }
+    if (!access(cmd, F_OK))
+		return (cmd);
     free(path);
+	printf("msh-0.1$: %s: command not found\n",cmd);
     return NULL;
 }
 
