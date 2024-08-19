@@ -9,6 +9,8 @@ void excution(t_env **env, t_cmd *cmd)
 
 	envp[0] = "TERM=xterm-256color";
 	envp[1] = NULL ;
+	if (!cmd->path)
+		cmd->path = cmd->args[0];
 	if (cmd && cmd ->cmd && !cmd->next)
 	{
 		if (is_bultin(env, cmd))
