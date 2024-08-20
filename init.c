@@ -6,12 +6,11 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 15:06:39 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/20 04:37:55 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
-
 
 void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 {
@@ -25,8 +24,6 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 	// traverse_parse_list(cmd);
 	// printf("\n\n\n");
 }
-
-
 
 void	clear_redirections(t_red **head)
 {
@@ -101,9 +98,12 @@ void	free_cmd_list(t_cmd **cmds)
 	}
 	*cmds = NULL;
 }
-
-int	main(int ac, char **av, char **envp)
+void leak()
 {
+	system("leaks ms");
+}
+int	main(int ac, char **av, char **envp)
+{	
 	(void)ac;
 	(void)av;
 	char	*str;
@@ -120,18 +120,19 @@ int	main(int ac, char **av, char **envp)
 	init_env(&envs, envp, &paths);
 	while (1)
 	{
-		str = readline("msh-0.1$ ");
+		str = readline("msh-0.1$");
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
 		// traverse_parse_list(cmd);
 		// printf("\n\n\n");
 		excution(&envs, cmd, envp);
+		//traverse_parse_list(cmd);
 		free_cmd_list(&cmd);
 		//traverse(head, pre, cmd);
 		cmd = NULL;
 		add_history(str);
 		free(str);
-		system("leaks ms");
+		//atexit(leak);
+	//		system("leaks ms");
 	}
 }
-

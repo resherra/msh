@@ -3,7 +3,9 @@
 int is_bultin(t_env **envs, t_cmd *cmd)
 {
 	if (!strcmp("exit", cmd->cmd))
-			exit(0);
+	{
+		ft_exit(&cmd);
+	}
     else if (!strcmp("env", cmd->cmd))
     {
         return (env(*envs), 1);

@@ -16,13 +16,11 @@ void child(t_cmd *cmd, int *pfds, int prev, t_env **env, char **envp)
 	{
 		exit(0);
 	}
-	else if (cmd-> path && cmd->cmd && execve(cmd->path, cmd->args,envp) == -1)
+	else if (cmd->path && cmd->cmd && execve(cmd->path, cmd->args,envp) == -1)
 	{
 		perror ("msh-0.1$ ");
-		if (errno == EFAULT) 
-			printf("Specific error: Bad address (EFAULT)\n");
 	}
-				exit(1) ;
+		exit(0) ;
 }
 
 void excution(t_env **env, t_cmd *cmd, char **envp)
@@ -33,6 +31,7 @@ void excution(t_env **env, t_cmd *cmd, char **envp)
 	int i;
 	
 	i = 0;
+	prev = -1;
 	if (cmd && cmd ->cmd && !cmd->next)
 	{
 		if (is_bultin(env, cmd))

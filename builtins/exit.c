@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 12:22:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/18 12:22:05 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/20 04:57:04 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-void    ft_exit()
+void    ft_exit(t_cmd **cmd)
 {
+	free_cmd_list(cmd);
+	printf("exit\n");
 	exit(0);
 }

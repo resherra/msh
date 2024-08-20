@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 07:53:31 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/19 15:35:47 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ void    ft_export(t_env *envs, char **args);
 void 	ft_echo(char **str);
 void 	ft_cd(char *path);
 void    pwd();
+void	ft_exit(t_cmd **cmd);
 
 
 
@@ -251,5 +252,8 @@ void	traverse_parse_list(t_cmd *cmd);
 void excution(t_env **env, t_cmd *cmd, char **envp);
 int implement_redirections(t_red *redrctns);
 int is_bultin(t_env **envs, t_cmd *cmd);
+
+//free
+void	free_cmd_list(t_cmd **cmds);
 
 #endif
