@@ -21,6 +21,7 @@ static int	single_dollar(t_token *var, int len)
 		tmp = var->str;
 		var->str = ft_strdup("$");
 		free(tmp);
+		tmp = NULL;
 		return (1);
 	}
 	return (0);
@@ -41,8 +42,9 @@ void	expansion(t_token *var, t_env *envs)
 		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
 		{
 			tmp = var->str;
-			var->str = curr->value;
+			var->str = ft_strdup(curr->value);
 			free(tmp);
+			tmp = NULL;
 			return ;
 		}
 		curr = curr->next;
@@ -50,5 +52,6 @@ void	expansion(t_token *var, t_env *envs)
 	tmp = var->str;
 	var->str = ft_strdup("");
 	free(tmp);
+	tmp = NULL;
 	var->type = WORD;
 }

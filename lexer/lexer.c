@@ -12,14 +12,6 @@
 
 #include "../init.h"
 
-
-// PIPE:
-// 	- left: (STRING)
-// 	- right: (STRING | REDIRECT)
-//
-// REDIRECT:
-// 	- right: STRING
-
 int	check_redirections(t_token *curr)
 {
 	if (curr->type == RED_IN || curr->type == RED_OUT || curr->type == RED_APP)
@@ -61,10 +53,9 @@ void	lexer(char *str, t_token **head, t_env *env, t_token **pre)
 	tokenize(str, head);
 	if (set_state(*head, env))
 	{
-		printf("syntax error\n");
+		printf("Syntax Error: unclosed quotes\n");
 		exit(1);
 	}
 	sanitize(*head, pre);
-	lstclear(head);
 	syntax_check(*pre);
 }

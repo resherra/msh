@@ -104,5 +104,4 @@ void    parser(t_cmd **cmd, t_token **pre, char **paths)
     }
     if (*cmd)
         (*cmd)->pipes = pipes;
-    lstclear(pre);
 }

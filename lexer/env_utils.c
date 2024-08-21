@@ -53,6 +53,7 @@ void	env_delone(t_env *env, void (*del)(void *))
     del(env->key);
     del(env->value);
     free(env);
+	env = NULL;
 }
 
 void	get_paths(char *value, char ***paths)

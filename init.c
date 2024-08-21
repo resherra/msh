@@ -25,6 +25,24 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 	// printf("\n\n\n");
 }
 
+void lstclear(t_token **head)
+{
+	t_token *ne;
+
+	if (!head || !*head)
+		return;
+	while (*head)
+	{
+		ne = *head;
+		*head = (*head)->next;
+		free(ne->str);
+		ne->str = NULL;
+		free(ne);
+		ne = NULL;
+	}
+	*head = NULL;
+}
+
 void	clear_redirections(t_red **head)
 {
 	t_red	*ne;
@@ -68,9 +86,7 @@ void	free_all(t_cmd *cmd)
 {
 	int i = 0;
 	while (cmd->args[i])
-	{
 		free(cmd->args[i++]);
-	}
 	free(cmd->args);
 	clear_redirections(&cmd->redirections);
 	clear_args_list(&cmd->args_list);
@@ -89,9 +105,7 @@ void	free_cmd_list(t_cmd **cmds)
 			tmp = *cmds;
 			*cmds = (*cmds)->next;
 			if (tmp->cmd != tmp->path)
-			{
 				free(tmp->path);
-			}
 			free_all(tmp);
 			free(tmp);
 		}
@@ -120,16 +134,13 @@ int	main(int ac, char **av, char **envp)
 	init_env(&envs, envp, &paths);
 	while (1)
 	{
-		str = readline("msh-0.1$");
+		str = readline("msh-0.1$ ");
 		lexer(str, &head, envs, &pre);
+		lstclear(&head);
 		parser(&cmd, &pre, paths);
-		// traverse_parse_list(cmd);
-		// printf("\n\n\n");
+		lstclear(&pre);
 		excution(&envs, cmd, envp);
-		//traverse_parse_list(cmd);
 		free_cmd_list(&cmd);
-		//traverse(head, pre, cmd);
-		cmd = NULL;
 		add_history(str);
 		free(str);
 		//atexit(leak);

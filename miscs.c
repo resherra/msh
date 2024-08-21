@@ -53,24 +53,6 @@ const char	*format_state(int type)
 	}
 }
 
-void	lstclear(t_token **head)
-{
-	t_token	*ne;
-
-	if (!head)
-		return ;
-	if (*head)
-	{
-		while (*head)
-		{
-			ne = *head;
-			*head = (*head)->next;
-			free(ne->str);
-			free(ne);
-		}
-	}
-	*head = NULL;
-}
 
 void	traverse_primary_tokens_list(t_token *token)
 {

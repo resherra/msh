@@ -43,6 +43,7 @@ static t_token	*join(t_token *curr, char **str)
 		tmp = *str;
 		*str = ft_strjoin(*str, curr->str);
 		free(tmp);
+		tmp = NULL;
 		curr = curr->next;
 	}
 	return (curr);
