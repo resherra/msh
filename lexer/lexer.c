@@ -15,47 +15,51 @@
 int	check_redirections(t_token *curr)
 {
 	if (curr->type == RED_IN || curr->type == RED_OUT || curr->type == RED_APP)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
 
-void	print_syntax_error(char *token)
+int	print_syntax_error(char *token)
 {
 	printf("msh: syntax error near unexpected token `%s'\n", token);
-	exit(1);
+	return (1);
 }
 
-void	syntax_check(t_token *pre)
+int	syntax_check(t_token *pre)
 {
-	t_token *curr = pre;
+	t_token	*curr;
 
+	curr = pre;
 	while (curr)
 	{
 		if (check_redirections(curr))
 		{
 			if (!curr->next || curr->next->type != WORD)
-				print_syntax_error(curr->str);
+				return (print_syntax_error(curr->str));
 		}
 		if (curr->type == PIPE)
 		{
 			if (!curr->prev || curr->prev->type != WORD)
-				print_syntax_error(curr->str);
-			if (!curr->next || (curr->next->type != WORD && !check_redirections(curr->next)))
-				print_syntax_error(curr->str);
+				return (print_syntax_error(curr->str));
+			if (!curr->next || (curr->next->type != WORD
+					&& !check_redirections(curr->next)))
+				return (print_syntax_error(curr->str));
 		}
 		curr = curr->next;
 	}
+	return (0);
 }
 
-
-void	lexer(char *str, t_token **head, t_env *env, t_token **pre)
+int	lexer(char *str, t_token **head, t_env *env, t_token **pre)
 {
 	tokenize(str, head);
 	if (set_state(*head, env))
 	{
 		printf("Syntax Error: unclosed quotes\n");
-		exit(1);
+		return (1);
 	}
 	sanitize(*head, pre);
-	syntax_check(*pre);
+	if (syntax_check(*pre))
+		return (1);
+	return (0);
 }

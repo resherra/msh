@@ -116,34 +116,48 @@ void leak()
 {
 	system("leaks ms");
 }
+
+typedef struct s_data
+{
+    t_env	*envs;
+    t_token	*head;
+    t_token	*pre;
+    t_cmd *cmd;
+    char **paths;
+    char	*str;
+} t_data;
+
 int	main(int ac, char **av, char **envp)
 {	
 	(void)ac;
 	(void)av;
-	char	*str;
-	char **paths;
-	t_env	*envs;
-	t_token	*head;
-	t_token	*pre;
-	t_cmd *cmd;
-	envs = NULL;
-	head = NULL;
-	pre = NULL;
-	cmd = NULL;
-	paths = NULL;
-	init_env(&envs, envp, &paths);
+    static t_data data;
+
+	init_env(&data.envs, envp, &data.paths);
 	while (1)
 	{
-		str = readline("msh-0.1$ ");
-		lexer(str, &head, envs, &pre);
-		lstclear(&head);
-		parser(&cmd, &pre, paths);
-		lstclear(&pre);
-		excution(&envs, cmd, envp);
-		free_cmd_list(&cmd);
-		add_history(str);
-		free(str);
-		//atexit(leak);
-	//		system("leaks ms");
+		data.str = readline("msh-0.1$ ");
+		if (lexer(data.str, &data.head, data.envs, &data.pre))
+        {
+            lstclear(&data.head);
+            lstclear(&data.pre);
+            free(data.str);
+            continue;
+        }
+		lstclear(&data.head);
+		if (parser(&data.cmd, &data.pre, data.paths))
+        {
+            lstclear(&data.pre);
+            free_cmd_list(&data.cmd);
+            free(data.str);
+            continue;
+        }
+		lstclear(&data.pre);
+		excution(&data.envs, data.cmd, envp);
+		free_cmd_list(&data.cmd);
+		add_history(data.str);
+		free(data.str);
+		//  atexit(leak);
+        //	system("leaks -q ms");
 	}
 }

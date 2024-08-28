@@ -127,7 +127,7 @@ void	tokenize(char *str, t_token **head);
 
 void	skip_spaces(char *str, t_tokenizer_vars *vars);
 
-void	lexer(char *str, t_token **head, t_env *env, t_token **pre);
+int	lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 
 //state function
@@ -141,7 +141,7 @@ char				*char_to_str(char c);
 char				*double_to_str(char *str, int i);
 
 //env utils
-void				extract_env(t_env **envs, char *str, char ***paths);
+//void				extract_env(t_env **envs, char *str, char ***paths);
 void				init_env(t_env **env, char **envp, char ***paths);
 void				ft_env_addback(t_env **env, t_env *new);
 
@@ -223,7 +223,7 @@ typedef struct s_cmd
 	struct s_cmd *next;
 } t_cmd;
 
-void    parser(t_cmd **cmd, t_token **pre, char **paths);
+int    parser(t_cmd **cmd, t_token **pre, char **paths);
 
 t_cmd *lst_new_cmd();
 void    cmd_add_back(t_cmd **cmd, t_cmd *new);

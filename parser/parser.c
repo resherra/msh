@@ -55,7 +55,7 @@ char    *extract_path(char *cmd, char **paths)
     return NULL;
 }
 
-void    parser(t_cmd **cmd, t_token **pre, char **paths)
+int    parser(t_cmd **cmd, t_token **pre, char **paths)
 {
     t_token *curr = NULL;
     t_red *new_red = NULL;
@@ -87,7 +87,7 @@ void    parser(t_cmd **cmd, t_token **pre, char **paths)
             else if (curr && curr->next &&  curr->next->type != WORD)
             {
                 printf("msh: syntax error near unexpected token `%s'\n", curr->next->str);
-                exit(1);
+                return 1;
             }
             else if (curr && !curr->next)
                 new_cmd->unclosed = true;
@@ -104,4 +104,5 @@ void    parser(t_cmd **cmd, t_token **pre, char **paths)
     }
     if (*cmd)
         (*cmd)->pipes = pipes;
+    return 0;
 }
