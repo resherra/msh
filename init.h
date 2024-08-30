@@ -111,7 +111,7 @@ t_token				*lst_new(char *str, t_type type, t_state state);
 void				lst_add_back(t_token **head, t_token *node);
 
 
-
+int ft_strcmp(char *str1, char *str2);
 
 //env
 
@@ -255,5 +255,6 @@ int is_bultin(t_env **envs, t_cmd *cmd);
 
 //free
 void	free_cmd_list(t_cmd **cmds);
+
 
 #endif

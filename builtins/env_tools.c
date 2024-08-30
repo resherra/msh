@@ -2,7 +2,7 @@
 
 static int	var_replace(t_env *curr, t_env *new)
 {
-	if (strcmp(curr->key, new->key) == 0)
+	if (ft_strcmp(curr->key, new->key) == 0)
 	{
 		if (new->value != 0)
 		{

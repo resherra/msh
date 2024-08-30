@@ -39,7 +39,7 @@ void	expansion(t_token *var, t_env *envs)
 		return ;
 	while (curr)
 	{
-		if (!ft_strncmp(var->str + 1, curr->key, len - 1))
+		if (!ft_strcmp(var->str + 1, curr->key))
 		{
 			tmp = var->str;
 			var->str = ft_strdup(curr->value);

@@ -13,6 +13,22 @@
 
 #include "./init.h"
 
+
+int ft_strcmp(char *str1, char *str2)
+{
+    while (*str1 && *str2 && *str1 == *str2)
+    {
+        str2++;
+        str1++;
+    }
+    if (*str1 > *str2)
+        return (1);
+    else if (*str1 < *str2)
+        return (-1);
+    return (0);
+}
+
+
 const char	*format_type(int type)
 {
 	switch (type)

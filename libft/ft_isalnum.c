@@ -11,8 +11,11 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 int	ft_isalnum(int c)
 {
+    if (c == '_')
+        return 1;
 	return (ft_isdigit(c) || ft_isalpha(c));
 }

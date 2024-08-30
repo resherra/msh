@@ -9,7 +9,7 @@ void ft_echo(char **str)
 	args = str + 1;
 
 	
-	if (*args && !strcmp(str[1], "-n"))
+	if (*args && !ft_strcmp(str[1], "-n"))
 	{
 		option = 0;
 		args = str + 2;

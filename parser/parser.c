@@ -12,6 +12,7 @@
 
 #include "../init.h"
 
+
 char **lst_to_arr(int size, t_args *args_list)
 {
     char **args = malloc((sizeof(char *) * (size + 1)));
@@ -55,6 +56,19 @@ char    *extract_path(char *cmd, char **paths)
     return NULL;
 }
 
+//int testing(t_args **args_list)
+//{
+//    char **res = ft_split((*args_list)->str, ' ');
+//
+//    int i = 0;
+//    while (res[i])
+//    {
+//        i++;
+////        printf("jaccck %s\n", res[i++]);
+//    }
+//    return 1;
+//}
+
 int    parser(t_cmd **cmd, t_token **pre, char **paths)
 {
     t_token *curr = NULL;
@@ -95,6 +109,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths)
                 curr = curr->next;
         }
         pipes++;
+//        testing(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
