@@ -1,6 +1,6 @@
 #include "../init.h"
 
-void ft_echo(char **str)
+int ft_echo(char **str)
 {
 	char	**args;
 	int		option;
@@ -8,7 +8,6 @@ void ft_echo(char **str)
 	option = 1;
 	args = str + 1;
 
-	
 	if (*args && !strcmp(str[1], "-n"))
 	{
 		option = 0;
@@ -25,4 +24,5 @@ void ft_echo(char **str)
 	
 	if (option)
 		write(STDOUT_FILENO, "\n", 1);
+	return (0);
 }

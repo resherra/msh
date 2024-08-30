@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/20 04:18:46 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/21 13:05:33 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ char    *extract_path(char *cmd, char **paths)
     int i = 0;
     if (!cmd)
         return NULL;
+	
     pre_path = ft_strjoin("/", cmd);
     if (!paths)
     {
@@ -49,9 +50,10 @@ char    *extract_path(char *cmd, char **paths)
         free(path);
         i++;
     }
-    if (!access(cmd, F_OK))
-		return (free(pre_path), cmd);
 	free(pre_path);
+    if (!access(cmd, F_OK))
+		return (cmd);
+	//perror("msh-0.1$: ");
     return NULL;
 }
 

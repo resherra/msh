@@ -43,7 +43,7 @@ int	add_in_env(char *var, t_env *envs)
 	return (1);
 }
 
-void    ft_export(t_env *envs, char **args)
+int    ft_export(t_env *envs, char **args)
 {
     t_env	*curr;
 	int		state;
@@ -59,11 +59,10 @@ void    ft_export(t_env *envs, char **args)
 			state += add_in_env(args[i], envs);
 			i++;
 		}
-		// if(state != (i - 1))
-		// 	state_var=1;
+		if(state != (i - 1))
+			return(1);
+		return (0);
 	}
-	else
-	{
     	while (curr)
     	{
         	printf("declare -x %s", curr->key);
@@ -72,5 +71,5 @@ void    ft_export(t_env *envs, char **args)
 			printf("\n");
         	curr = curr->next;
     	}
-	}
+	return (0);
 }

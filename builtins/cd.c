@@ -1,13 +1,19 @@
 #include "../init.h"
 
-void ft_cd(char *path)
+int ft_cd(char *path)
 {
-	//write(1, "kl\n", 3);
 	if (!path)
 	{
 		if (chdir(getenv("HOME")))
+		{
 			perror("cd");
+			return (1);
+		}
 	}
 	else if (chdir(path))
+	{
 		perror("cd");
+		return (1);
+	}
+	return (0);
 }

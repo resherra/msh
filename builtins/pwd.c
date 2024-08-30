@@ -3,20 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 10:35:22 by recherra          #+#    #+#             */
-/*   Updated: 2024/07/18 10:35:24 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/28 21:02:01 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-void    pwd()
+int    pwd()
 {
 	char *path;
 
 	path = getcwd(NULL, 0);
+	if (!path)
+		return(1);
 	printf("%s\n", path);
 	free(path);
+	return (0);
 }

@@ -18,9 +18,17 @@ void child(t_cmd *cmd, int *pfds, int prev, t_env **env, char **envp)
 	}
 	else if (cmd->path && cmd->cmd && execve(cmd->path, cmd->args,envp) == -1)
 	{
+		(*env)->value = 1;
 		perror ("msh-0.1$ ");
 	}
-		exit(0) ;
+	else if (!cmd->path)
+	{
+		write(2, "msh-0.1$: ", 10);
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, ": command not found\n", 20);
+		(*env)->value = 127;
+	}
+		exit(1) ;
 }
 
 void excution(t_env **env, t_cmd *cmd, char **envp)
@@ -32,15 +40,11 @@ void excution(t_env **env, t_cmd *cmd, char **envp)
 	
 	i = 0;
 	prev = -1;
-	if (cmd && cmd ->cmd && !cmd->next)
-	{
-		if (is_bultin(env, cmd))
+	if (cmd && cmd->cmd && !cmd->next)
+		if (sample_bultin(env, cmd) && !cmd->redirections)
 			cmd = cmd->next;
-	}
     while (cmd)
     {
-		if (!cmd->path)
-			printf("msh-0.1$: %s: command not found\n", cmd->cmd);
 		pipe(pfds);
         id = fork();
         if (id == 0)
@@ -54,6 +58,5 @@ void excution(t_env **env, t_cmd *cmd, char **envp)
 		cmd =cmd->next;
     }
 	while (wait(NULL) >= 0)
-	{
-	}	
+	{}
 }

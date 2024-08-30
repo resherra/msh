@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/19 15:35:47 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/28 20:52:06 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,6 @@ typedef struct s_cmd t_cmd;
 #define not_valid_idntf -2
 #define allocation_error -3
 
-//macros for errors
-#define not_valid_idntf -2
-#define allocation_error -3
-
-//macros for errors
-#define not_valid_idntf -2
-#define allocation_error -3
 
 //tokens
 typedef enum e_type
@@ -186,13 +179,13 @@ int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
 
 //Built-ins
-void    unset(t_env **envs, char **vars);
-void    env(t_env *envs);
-void    ft_export(t_env *envs, char **args);
-void 	ft_echo(char **str);
-void 	ft_cd(char *path);
-void    pwd();
-void	ft_exit(t_cmd **cmd);
+int		unset(t_env **envs, char **vars);
+int		env(t_env *envs);
+int		ft_export(t_env *envs, char **args);
+int		ft_echo(char **str);
+int		ft_cd(char *path);
+int		pwd();
+int		ft_exit(t_cmd **cmd);
 
 
 
@@ -248,12 +241,13 @@ void    freed(void *str);
 void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
-//excution
+// excution
 void excution(t_env **env, t_cmd *cmd, char **envp);
 int implement_redirections(t_red *redrctns);
 int is_bultin(t_env **envs, t_cmd *cmd);
+int sample_bultin(t_env **envs, t_cmd *cmd);
 
-//free
+// free
 void	free_cmd_list(t_cmd **cmds);
 
 #endif

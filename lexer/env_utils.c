@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 04:31:56 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/18 21:23:12 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/28 20:22:48 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	extract_env(t_env **envs, char *str, char ***paths)
 
 void	init_env(t_env **env, char **envp, char ***paths)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (envp[i])

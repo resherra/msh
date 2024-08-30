@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   state.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 17:10:05 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/02 17:10:07 by recherra         ###   ########.fr       */
+/*   Updated: 2024/08/28 20:22:21 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ int	set_state(t_token *head, t_env *env)
 		curr = double_quote_check(curr, &doub_quote_flag, env);
 		curr = single_quote_check(curr, &sing_quote_flag);
 		if (curr && curr->type == ENV)
+		{
 			expansion(curr, env);
+		}
 		if (doub_quote_flag == true || sing_quote_flag == true)
 			return (1);
 		curr = curr->next;

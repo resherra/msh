@@ -33,3 +33,27 @@ int is_bultin(t_env **envs, t_cmd *cmd)
 	
 	return(0);
 }
+
+int sample_bultin(t_env **envs, t_cmd *cmd)
+{
+	if (!strcmp("exit", cmd->cmd))
+	{
+		ft_exit(&cmd);
+	}
+    else if (cmd->args[1] && !strcmp("export", cmd->cmd))
+    {
+		(*envs)->value = ft_export(*envs, cmd->args);
+        return (ft_export(*envs, cmd->args), 1);
+    }
+    else if (!strcmp("unset", cmd->cmd))
+    {
+        (*envs)->value = unset(envs, cmd->args);
+		return (1);
+    } 
+	else if (!strcmp("cd", cmd->cmd))
+	{
+		(*envs)->value = ft_cd(cmd->args[1]);
+		return (1);
+	}
+	return(0);
+}

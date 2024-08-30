@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/20 04:37:55 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/28 19:45:02 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,10 @@ int	main(int ac, char **av, char **envp)
 	cmd = NULL;
 	paths = NULL;
 	init_env(&envs, envp, &paths);
+		//atexit(leak);
 	while (1)
 	{
-		str = readline("msh-0.1$");
+		str = readline("msh-0.1$ ");
 		lexer(str, &head, envs, &pre);
 		parser(&cmd, &pre, paths);
 		// traverse_parse_list(cmd);
@@ -132,7 +133,6 @@ int	main(int ac, char **av, char **envp)
 		cmd = NULL;
 		add_history(str);
 		free(str);
-		//atexit(leak);
 	//		system("leaks ms");
 	}
 }
