@@ -153,13 +153,11 @@ int	main(int ac, char **av, char **envp)
             continue;
         }
 		lstclear(&data.pre);
-        traverse_parse_list(data.cmd);
-        printf("\n\n");
 		excution(&data.envs, data.cmd, envp);
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
 		free(data.str);
-		//  atexit(leak);
-        //	system("leaks -q ms");
+        system("leaks -q ms");
+        //  atexit(leak);
 	}
 }

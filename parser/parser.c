@@ -71,12 +71,9 @@ void	arg_add_front(t_args **lst, t_args *new)
         *lst = new;
 }
 
-
-
-
-int testing(t_args **args_list)
+int treat_env(t_args **args_list)
 {
-    char **res = ft_split((*args_list)->str, ' ');
+    char **res = ft_split(ft_strtrim((*args_list)->str, "\x03"), ' ');
 
     int i = 0;
     while (res[i])
@@ -84,7 +81,6 @@ int testing(t_args **args_list)
     if (i > 0)
     {
         *args_list = (*args_list)->next;
-        //may be a leak!
     }
     int tmp = i;
     tmp--;
@@ -151,7 +147,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
         pipes++;
         int tmp = 0;
         if (check_in_env(new_cmd->args_list->str, envs))
-            tmp = testing(&new_cmd->args_list);
+            tmp = treat_env(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
