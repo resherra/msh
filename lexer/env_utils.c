@@ -18,7 +18,6 @@ t_env	*new_env(char *key, char *value)
 
 	new = malloc(sizeof(t_env));
 	new->key = key;
-//	new->value = value;
     new->value = ft_strjoin(value, "\x03");
     if (!value || !ft_strlen(value) || !ft_strcmp(new->value, "\x03"))
 		new->in_export = true;

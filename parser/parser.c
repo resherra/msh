@@ -73,14 +73,19 @@ void	arg_add_front(t_args **lst, t_args *new)
 
 int treat_env(t_args **args_list)
 {
-    char **res = ft_split(ft_strtrim((*args_list)->str, "\x03"), ' ');
-
+    t_args *tm = NULL;
+    char *new = ft_strtrim((*args_list)->str, "\x03");
+    char **res = ft_split(new, ' ');
+    free(new);
     int i = 0;
     while (res[i])
         i++;
     if (i > 0)
     {
+        tm = *args_list;
         *args_list = (*args_list)->next;
+        free(tm->str);
+        free(tm);
     }
     int tmp = i;
     tmp--;
@@ -89,6 +94,7 @@ int treat_env(t_args **args_list)
         arg_add_front(args_list, new_arg(res[tmp]));
         tmp--;
     }
+    free(res);
     return i;
 }
 
