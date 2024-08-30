@@ -56,20 +56,60 @@ char    *extract_path(char *cmd, char **paths)
     return NULL;
 }
 
-//int testing(t_args **args_list)
-//{
-//    char **res = ft_split((*args_list)->str, ' ');
-//
-//    int i = 0;
-//    while (res[i])
-//    {
-//        i++;
-////        printf("jaccck %s\n", res[i++]);
-//    }
-//    return 1;
-//}
 
-int    parser(t_cmd **cmd, t_token **pre, char **paths)
+
+void	arg_add_front(t_args **lst, t_args *new)
+{
+    if (!lst)
+        return ;
+    if (*lst && new)
+    {
+        new->next = *lst;
+        *lst = new;
+    }
+    else
+        *lst = new;
+}
+
+
+
+
+int testing(t_args **args_list)
+{
+    char **res = ft_split((*args_list)->str, ' ');
+
+    int i = 0;
+    while (res[i])
+        i++;
+    if (i > 0)
+    {
+        *args_list = (*args_list)->next;
+        //may be a leak!
+    }
+    int tmp = i;
+    tmp--;
+    while (tmp >= 0)
+    {
+        arg_add_front(args_list, new_arg(res[tmp]));
+        tmp--;
+    }
+    return i;
+}
+
+int check_in_env(char *str, t_env *envs)
+{
+    t_env *curr = envs;
+
+    while (curr)
+    {
+        if (!ft_strcmp(str, curr->value))
+            return 1;
+        curr = curr->next;
+    }
+    return 0;
+}
+
+int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
     t_token *curr = NULL;
     t_red *new_red = NULL;
@@ -109,8 +149,10 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths)
                 curr = curr->next;
         }
         pipes++;
-//        testing(&new_cmd->args_list);
-        new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
+        int tmp = 0;
+        if (check_in_env(new_cmd->args_list->str, envs))
+            tmp = testing(&new_cmd->args_list);
+        new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
         cmd_add_back(cmd, new_cmd);

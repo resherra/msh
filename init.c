@@ -137,7 +137,6 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		data.str = readline("msh-0.1$ ");
-		printf("heere \n\n%s\n\n", data.str);
 		if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
             lstclear(&data.head);
@@ -146,7 +145,7 @@ int	main(int ac, char **av, char **envp)
             continue;
         }
 		lstclear(&data.head);
-		if (parser(&data.cmd, &data.pre, data.paths))
+		if (parser(&data.cmd, &data.pre, data.paths, data.envs))
         {
             lstclear(&data.pre);
             free_cmd_list(&data.cmd);
@@ -154,7 +153,8 @@ int	main(int ac, char **av, char **envp)
             continue;
         }
 		lstclear(&data.pre);
-//		traverse_parse_list(data.cmd);
+        traverse_parse_list(data.cmd);
+        printf("\n\n");
 		excution(&data.envs, data.cmd, envp);
 		free_cmd_list(&data.cmd);
 		add_history(data.str);

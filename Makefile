@@ -20,18 +20,18 @@ LIBFT=libft/libft.a
 all: $(NAME)
 
 $(NAME):  init.h $(LIBFT)  $(OBJS)
-	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline $(LIBFT) && mv *.o lexer/*.o parser/*.o builtins/*.o execution/*.o objects
+	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline $(LIBFT)
 	cp ms /Users/recherra/Library/Python/3.9/bin
 
 $(LIBFT):
-	make -C libft/ && mv libft/*.o libft/objects
+	@make -C libft/
 
 clean:
-	rm -rf libft/objects/*.o
-	rm -rf objects/*.o
+	make -C libft/ clean
+	rm -rf $(OBJS)
 
 fclean: clean
-	rm -rf $(LIBFT)
+	make -C libft/ fclean
 	rm -rf $(NAME)
 
 re: fclean all

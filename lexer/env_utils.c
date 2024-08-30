@@ -18,8 +18,11 @@ t_env	*new_env(char *key, char *value)
 
 	new = malloc(sizeof(t_env));
 	new->key = key;
-	new->value = value;
-	if (!value || !ft_strlen(value))
+//    old
+//	new->value = value;
+//    new
+    new->value = ft_strjoin(value, "\a");
+    if (!value || !ft_strlen(value))
 		new->in_export = true;
 	else
 		new->in_export = false;
