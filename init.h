@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/28 20:52:06 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/31 14:00:21 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 //to be deleted;
 #include "string.h"
-
 
 typedef struct s_cmd t_cmd;
 
@@ -45,7 +44,7 @@ typedef struct s_cmd t_cmd;
 #define not_valid_idntf -2
 #define allocation_error -3
 
-
+//int pid;
 //tokens
 typedef enum e_type
 {
@@ -120,7 +119,7 @@ void	tokenize(char *str, t_token **head);
 
 void	skip_spaces(char *str, t_tokenizer_vars *vars);
 
-void	lexer(char *str, t_token **head, t_env *env, t_token **pre);
+int	lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 
 //state function
@@ -134,7 +133,7 @@ char				*char_to_str(char c);
 char				*double_to_str(char *str, int i);
 
 //env utils
-void				extract_env(t_env **envs, char *str, char ***paths);
+//void				extract_env(t_env **envs, char *str, char ***paths);
 void				init_env(t_env **env, char **envp, char ***paths);
 void				ft_env_addback(t_env **env, t_env *new);
 
@@ -185,7 +184,7 @@ int		ft_export(t_env *envs, char **args);
 int		ft_echo(char **str);
 int		ft_cd(char *path);
 int		pwd();
-int		ft_exit(t_cmd **cmd);
+void		ft_exit(t_cmd **cmd);
 
 
 
@@ -216,7 +215,7 @@ typedef struct s_cmd
 	struct s_cmd *next;
 } t_cmd;
 
-void    parser(t_cmd **cmd, t_token **pre, char **paths);
+int    parser(t_cmd **cmd, t_token **pre, char **paths);
 
 t_cmd *lst_new_cmd();
 void    cmd_add_back(t_cmd **cmd, t_cmd *new);
@@ -242,7 +241,7 @@ void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
 // excution
-void excution(t_env **env, t_cmd *cmd, char **envp);
+void excution(t_env **env, t_cmd *cmd, char **envp, int *pid);
 int implement_redirections(t_red *redrctns);
 int is_bultin(t_env **envs, t_cmd *cmd);
 int sample_bultin(t_env **envs, t_cmd *cmd);

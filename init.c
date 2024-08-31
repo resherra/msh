@@ -6,11 +6,14 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/28 19:45:02 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/31 19:24:25 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
+
+
+int pid;
 
 void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 {
@@ -23,6 +26,24 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 	//clear the list
 	// traverse_parse_list(cmd);
 	// printf("\n\n\n");
+}
+
+void lstclear(t_token **head)
+{
+	t_token *ne;
+
+	if (!head || !*head)
+		return;
+	while (*head)
+	{
+		ne = *head;
+		*head = (*head)->next;
+		free(ne->str);
+		ne->str = NULL;
+		free(ne);
+		ne = NULL;
+	}
+	*head = NULL;
 }
 
 void	clear_redirections(t_red **head)
@@ -68,9 +89,7 @@ void	free_all(t_cmd *cmd)
 {
 	int i = 0;
 	while (cmd->args[i])
-	{
 		free(cmd->args[i++]);
-	}
 	free(cmd->args);
 	clear_redirections(&cmd->redirections);
 	clear_args_list(&cmd->args_list);
@@ -89,9 +108,7 @@ void	free_cmd_list(t_cmd **cmds)
 			tmp = *cmds;
 			*cmds = (*cmds)->next;
 			if (tmp->cmd != tmp->path)
-			{
 				free(tmp->path);
-			}
 			free_all(tmp);
 			free(tmp);
 		}
@@ -102,37 +119,77 @@ void leak()
 {
 	system("leaks ms");
 }
+
+typedef struct s_data
+{
+    t_env	*envs;
+    t_token	*head;
+    t_token	*pre;
+    t_cmd *cmd;
+    char **paths;
+    char	*str;
+} t_data;
+
+void handler(int sign)
+{
+//	printf("--->%i\n", pid);
+	 if (pid == -1)
+	 {
+		 rl_on_new_line();
+		 rl_replace_line("", 0);
+   		 rl_redisplay();
+		pid = -2;
+		return ;
+	 }
+	 else
+	 	kill(pid, SIGINT);
+}
+
 int	main(int ac, char **av, char **envp)
 {	
 	(void)ac;
 	(void)av;
-	char	*str;
-	char **paths;
-	t_env	*envs;
-	t_token	*head;
-	t_token	*pre;
-	t_cmd *cmd;
-	envs = NULL;
-	head = NULL;
-	pre = NULL;
-	cmd = NULL;
-	paths = NULL;
-	init_env(&envs, envp, &paths);
-		//atexit(leak);
+    static t_data data;
+	struct sigaction sig;
+	struct sigaction old;
+
+	//sig.sa_handler = SIG_IGN;
+	sig.sa_flags = 0;
+	sig.sa_handler = &handler;
+	
+	init_env(&data.envs, envp, &data.paths);
+	
 	while (1)
 	{
-		str = readline("msh-0.1$ ");
-		lexer(str, &head, envs, &pre);
-		parser(&cmd, &pre, paths);
-		// traverse_parse_list(cmd);
-		// printf("\n\n\n");
-		excution(&envs, cmd, envp);
-		//traverse_parse_list(cmd);
-		free_cmd_list(&cmd);
-		//traverse(head, pre, cmd);
-		cmd = NULL;
-		add_history(str);
-		free(str);
-	//		system("leaks ms");
+		pid = -1;
+		sigaction(SIGINT, &sig, &old);
+		//printf("ok\n");
+		data.str = readline("msh-0.1$ ");
+		if (pid == -2)
+			continue;
+		if (data.str == NULL)
+			ft_exit(&data.cmd) ;
+		if (lexer(data.str, &data.head, data.envs, &data.pre))
+        {
+            lstclear(&data.head);
+            lstclear(&data.pre);
+            free(data.str);
+            continue;
+        }
+		lstclear(&data.head);
+		if (parser(&data.cmd, &data.pre, data.paths))
+        {
+            lstclear(&data.pre);
+            free_cmd_list(&data.cmd);
+            free(data.str);
+            continue;
+        }
+		lstclear(&data.pre);
+		excution(&data.envs, data.cmd, envp, &pid);
+		free_cmd_list(&data.cmd);
+		add_history(data.str);
+		free(data.str);
+		//  atexit(leak);
+        //	system("leaks -q ms");
 	}
 }

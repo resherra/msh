@@ -78,12 +78,12 @@ static void	handle_double_operators(char *str, t_tokenizer_vars *vars)
 
 void	tokenize(char *str, t_token **head)
 {
-	t_tokenizer_vars vars;
+	t_tokenizer_vars	vars;
 
 	vars.i = 0;
 	skip_spaces(str, &vars);
 	while (str[vars.i])
-	{	
+	{
 		handle_simple_word(str, &vars, head);
 		if (str[vars.i])
 		{

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 10:46:53 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/16 15:46:02 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/30 16:25:10 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    func(void *content)
     free(content);
 }
 
-void    unset(t_env **envs, char **vars)
+int    unset(t_env **envs, char **vars)
 {
     int i = 1;
     t_env *curr;
@@ -44,4 +44,5 @@ void    unset(t_env **envs, char **vars)
         }
         i++;
     }
+    return (0);
 }
