@@ -30,9 +30,9 @@ int    unset(t_env **envs, char **vars)
         prev = curr;
         while (curr)
         {
-            if (!strcmp(vars[i], curr->key))
+            if (!ft_strcmp(vars[i], curr->key))
             {   
-                if (!strcmp(vars[i], (*envs)->key))
+                if (!ft_strcmp(vars[i], (*envs)->key))
                     *envs = curr->next;
                 else
                     prev->next = curr->next;

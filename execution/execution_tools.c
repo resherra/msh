@@ -48,7 +48,7 @@ static int heredoc(t_red **hrdc)
         input = readline(">");
         if (!input)
             return(close(fd), allocation_error);
-        if ((*hrdc)->red_type == HERE_DOC && !strcmp(input , (*hrdc)->red_file))
+        if ((*hrdc)->red_type == HERE_DOC && !ft_strcmp(input , (*hrdc)->red_file))
         {
             if (!(*hrdc)->next)
                 return (free(input), duplicate_stdin(fd));

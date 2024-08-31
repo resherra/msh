@@ -103,7 +103,7 @@ t_token				*lst_new(char *str, t_type type, t_state state);
 void				lst_add_back(t_token **head, t_token *node);
 
 
-
+int ft_strcmp(char *str1, char *str2);
 
 //env
 
@@ -215,7 +215,7 @@ typedef struct s_cmd
 	struct s_cmd *next;
 } t_cmd;
 
-int    parser(t_cmd **cmd, t_token **pre, char **paths);
+int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs);
 
 t_cmd *lst_new_cmd();
 void    cmd_add_back(t_cmd **cmd, t_cmd *new);
@@ -248,5 +248,6 @@ int sample_bultin(t_env **envs, t_cmd *cmd);
 
 // free
 void	free_cmd_list(t_cmd **cmds);
+
 
 #endif

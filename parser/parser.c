@@ -12,6 +12,7 @@
 
 #include "../init.h"
 
+
 char **lst_to_arr(int size, t_args *args_list)
 {
     char **args = malloc((sizeof(char *) * (size + 1)));
@@ -57,7 +58,62 @@ char    *extract_path(char *cmd, char **paths)
     return NULL;
 }
 
-int    parser(t_cmd **cmd, t_token **pre, char **paths)
+
+
+void	arg_add_front(t_args **lst, t_args *new)
+{
+    if (!lst)
+        return ;
+    if (*lst && new)
+    {
+        new->next = *lst;
+        *lst = new;
+    }
+    else
+        *lst = new;
+}
+
+int treat_env(t_args **args_list)
+{
+    t_args *tm = NULL;
+    char *new = ft_strtrim((*args_list)->str, "\x03");
+    char **res = ft_split(new, ' ');
+    free(new);
+    int i = 0;
+    while (res[i])
+        i++;
+    if (i > 0)
+    {
+        tm = *args_list;
+        *args_list = (*args_list)->next;
+        free(tm->str);
+        free(tm);
+    }
+    int tmp = i;
+    tmp--;
+    while (tmp >= 0)
+    {
+        arg_add_front(args_list, new_arg(res[tmp]));
+        tmp--;
+    }
+    free(res);
+    return i;
+}
+
+int check_in_env(char *str, t_env *envs)
+{
+    t_env *curr = envs;
+
+    while (curr)
+    {
+        if (!ft_strcmp(str, curr->value))
+            return 1;
+        curr = curr->next;
+    }
+    return 0;
+}
+
+int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
     t_token *curr = NULL;
     t_red *new_red = NULL;
@@ -97,7 +153,10 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths)
                 curr = curr->next;
         }
         pipes++;
-        new_cmd->args = lst_to_arr(new_cmd->args_lst_size, new_cmd->args_list);
+        int tmp = 0;
+        if (check_in_env(new_cmd->args_list->str, envs))
+            tmp = treat_env(&new_cmd->args_list);
+        new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
         new_cmd->path = extract_path(new_cmd->cmd, paths);
         cmd_add_back(cmd, new_cmd);

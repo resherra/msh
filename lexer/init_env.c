@@ -26,7 +26,7 @@ static void	extract_env(t_env **envs, char *str, char ***paths)
 	while (str[i] && str[i] != '=')
 		i++;
 	new = new_env(ft_substr(str, 0, i), ft_substr(str, i + 1, ft_strlen(str)));
-	if (!strcmp("PATH", new->key))
+	if (!ft_strcmp("PATH", new->key))
 	{
 		get_paths(new->value, paths);
 	}

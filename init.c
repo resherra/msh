@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/31 19:24:25 by apple            ###   ########.fr       */
+/*   Updated: 2024/08/31 19:32:02 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,9 +151,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
     static t_data data;
 	struct sigaction sig;
-	struct sigaction old;
 
-	//sig.sa_handler = SIG_IGN;
 	sig.sa_flags = 0;
 	sig.sa_handler = &handler;
 	
@@ -162,8 +160,7 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		pid = -1;
-		sigaction(SIGINT, &sig, &old);
-		//printf("ok\n");
+		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
 		if (pid == -2)
 			continue;
@@ -177,7 +174,7 @@ int	main(int ac, char **av, char **envp)
             continue;
         }
 		lstclear(&data.head);
-		if (parser(&data.cmd, &data.pre, data.paths))
+		if (parser(&data.cmd, &data.pre, data.paths, data.envs))
         {
             lstclear(&data.pre);
             free_cmd_list(&data.cmd);
@@ -189,7 +186,7 @@ int	main(int ac, char **av, char **envp)
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
 		free(data.str);
-		//  atexit(leak);
-        //	system("leaks -q ms");
+//        system("leaks -q ms");
+        //  atexit(leak);
 	}
 }
