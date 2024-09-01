@@ -130,13 +130,17 @@ typedef struct s_data
     char	*str;
 } t_data;
 
+//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/history.h"
+//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/readline.h"
+
 void handler(int sign)
 {
+    (void)sign;
 //	printf("--->%i\n", pid);
 	 if (pid == -1)
 	 {
 		 rl_on_new_line();
-		 rl_replace_line("", 0);
+//		 rl_replace_line("", 0);
    		 rl_redisplay();
 		pid = -2;
 		return ;
