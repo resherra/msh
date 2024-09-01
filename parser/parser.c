@@ -170,7 +170,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
                 {
                     printf("msh: ambiguous redirect\n");
-                    return 1;
+                    new_red->is_ambegious = true;
                 }
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;

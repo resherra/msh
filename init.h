@@ -193,6 +193,7 @@ typedef struct s_red
 {
 	t_type red_type;
 	char *red_file;
+	bool is_ambegious;
 	struct s_red *next;
 } t_red;
 
