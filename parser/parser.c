@@ -147,7 +147,6 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
     t_red *new_red = NULL;
     t_cmd *new_cmd = NULL;
     t_args *arg = NULL;
-    int pipes = -1;
     int tmp = 0;
 
     curr = *pre;
@@ -187,7 +186,6 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 curr = curr->next;
         }
         tmp = 0;
-        pipes++;
         if (check_in_env(new_cmd->args_list->str, envs))
             tmp = treat_env(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
@@ -197,7 +195,6 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
         if (curr)
             curr = curr->next;
     }
-    if (*cmd)
-        (*cmd)->pipes = pipes;
+
     return 0;
 }

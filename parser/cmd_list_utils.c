@@ -21,7 +21,6 @@ t_cmd *lst_new_cmd()
     new->args = NULL;
     new->redirections = NULL;
     new->args_lst_size = 0;
-    new->pipes = 0;
     new->unclosed = false;
     new->next = NULL;
     return new;
