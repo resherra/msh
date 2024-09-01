@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/01 18:20:57 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/01 18:37:08 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,8 @@ void handler(int sign)
 {
     (void)sign;
 //	printf("--->%i\n", pid);
-	 if (pid == -1)
+	printf("\n");
+	 if (pid != -1)
 	 {
 		//printf("pa. = %i\n", pid);
 		kill(pid, SIGTERM);
