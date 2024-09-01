@@ -130,18 +130,12 @@ typedef struct s_data
     char	*str;
 } t_data;
 
-//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/history.h"
-//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/readline.h"
-
 void handler(int sign)
 {
     (void)sign;
-//	printf("--->%i\n", pid);
-	 if (pid == -1)
-	 {
-		//printf("pa. = %i\n", pid);
+    printf("\n");
+	 if (pid != -1)
 		kill(pid, SIGTERM);
-	 }
 	 else
 	 {
 		rl_replace_line("", 0);
@@ -176,7 +170,8 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-		lstclear(&data.head);
+//        traverse_primary_tokens_list(data.head);
+        lstclear(&data.head);
 		if (parser(&data.cmd, &data.pre, data.paths, data.envs))
         {
             lstclear(&data.pre);
@@ -184,7 +179,9 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-		lstclear(&data.pre);
+//        traverse_primary_tokens_list(data.pre);
+//        traverse_parse_list(data.cmd);
+        lstclear(&data.pre);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
