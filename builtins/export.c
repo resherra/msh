@@ -38,7 +38,7 @@ int	add_in_env(char *var, t_env *envs)
 	}
 	if (!var_name || (!var_value && len_value > 0))
 		return(allocation_error);
-	new_var = new_env(var_name, var_value);
+	new_var = new_env_export(var_name, var_value);
 	ft_env_addback(&envs, new_var);
 	return (1);
 }

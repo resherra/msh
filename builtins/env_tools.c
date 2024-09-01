@@ -1,5 +1,20 @@
 #include "../init.h"
 
+
+t_env	*new_env_export(char *key, char *value)
+{
+    t_env	*new;
+    new = malloc(sizeof(t_env));
+    new->key = key;
+    new->value = value;
+    if (!value)
+        new->in_export = true;
+    else
+        new->in_export = false;
+    new->next = NULL;
+    return (new);
+}
+
 static int	var_replace(t_env *curr, t_env *new)
 {
 	if (ft_strcmp(curr->key, new->key) == 0)

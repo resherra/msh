@@ -249,5 +249,7 @@ int sample_bultin(t_env **envs, t_cmd *cmd);
 // free
 void	free_cmd_list(t_cmd **cmds);
 
+t_env	*new_env_export(char *key, char *value);
+
 
 #endif

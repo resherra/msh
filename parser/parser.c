@@ -171,6 +171,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 {
                     printf("msh: ambiguous redirect\n");
                     new_red->is_ambegious = true;
+                    return 2;
                 }
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;

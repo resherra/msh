@@ -172,7 +172,7 @@ int	main(int ac, char **av, char **envp)
         }
 //        traverse_primary_tokens_list(data.head);
         lstclear(&data.head);
-		if (parser(&data.cmd, &data.pre, data.paths, data.envs))
+		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
             lstclear(&data.pre);
             free_cmd_list(&data.cmd);
