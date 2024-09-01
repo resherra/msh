@@ -113,6 +113,34 @@ int check_in_env(char *str, t_env *envs)
     return 0;
 }
 
+
+int check_n_files(char *str)
+{
+    char *new = ft_strtrim(str, "\x03");
+    char **res = ft_split(new, ' ');
+    free(new);
+    int i = 0;
+
+    while (res[i])
+    {
+        free(res[i]);
+        i++;
+    }
+    free(res);
+    return i;
+}
+
+int check_ambg(char *str, t_env *envs)
+{
+
+    if (check_in_env(str, envs))
+    {
+        if (!ft_strcmp(str, "\x03") || check_n_files(str) > 1)
+            return 1;
+    }
+    return 0;
+}
+
 int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
     t_token *curr = NULL;
@@ -120,6 +148,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
     t_cmd *new_cmd = NULL;
     t_args *arg = NULL;
     int pipes = -1;
+    int tmp = 0;
 
     curr = *pre;
     while (curr)
@@ -139,6 +168,11 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
             if (curr && curr->next && curr->next->type == WORD)
             {
                 new_red = lst_new_red(curr->type, ft_strdup(curr->next->str));
+                if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
+                {
+                    printf("msh: ambiguous redirect\n");
+                    return 1;
+                }
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
             }
@@ -152,8 +186,8 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
             if (curr)
                 curr = curr->next;
         }
+        tmp = 0;
         pipes++;
-        int tmp = 0;
         if (check_in_env(new_cmd->args_list->str, envs))
             tmp = treat_env(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);

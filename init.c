@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/01 18:18:22 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/01 18:20:57 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,14 @@ typedef struct s_data
     char	*str;
 } t_data;
 
+//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/history.h"
+//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/readline.h"
+
 void handler(int sign)
 {
-		printf("\n");
-	 if (pid != -1)
+    (void)sign;
+//	printf("--->%i\n", pid);
+	 if (pid == -1)
 	 {
 		//printf("pa. = %i\n", pid);
 		kill(pid, SIGTERM);
