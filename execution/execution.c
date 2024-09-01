@@ -38,9 +38,9 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     int pfds[2];
     int id;
 	int i;
+	int sta;
 	i = 0;
 	prev = -1;
-	*pid = getpid();
 	if (cmd && cmd->cmd && !cmd->next)
 		if (sample_bultin(env, cmd) && !cmd->redirections)
 			cmd = cmd->next;
@@ -53,6 +53,7 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
 		{
 			child(cmd, pfds, prev, env, envp);
 		}
+			
 		if (i++ > 0 )
 			close(prev);
 		if (cmd->next)
@@ -62,6 +63,10 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
 		cmd =cmd->next;
 
     }
-	while (wait(NULL) >= 0)
+	//int state;
+	while (wait(&sta) >= 0)
 	{}
+	// printf("-----%i\n", sta);
+	// //printf("pa.. = %i\n", *pid);
+
 }

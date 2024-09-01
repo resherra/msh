@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/31 19:32:02 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/01 18:18:22 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,17 +132,18 @@ typedef struct s_data
 
 void handler(int sign)
 {
-//	printf("--->%i\n", pid);
-	 if (pid == -1)
+		printf("\n");
+	 if (pid != -1)
 	 {
-		 rl_on_new_line();
-		 rl_replace_line("", 0);
-   		 rl_redisplay();
-		pid = -2;
-		return ;
+		//printf("pa. = %i\n", pid);
+		kill(pid, SIGTERM);
 	 }
 	 else
-	 	kill(pid, SIGINT);
+	 {
+		rl_replace_line("", 0);
+		rl_on_new_line();
+   		rl_redisplay();	
+	 }
 }
 
 int	main(int ac, char **av, char **envp)
@@ -162,8 +163,6 @@ int	main(int ac, char **av, char **envp)
 		pid = -1;
 		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
-		if (pid == -2)
-			continue;
 		if (data.str == NULL)
 			ft_exit(&data.cmd) ;
 		if (lexer(data.str, &data.head, data.envs, &data.pre))
@@ -186,7 +185,6 @@ int	main(int ac, char **av, char **envp)
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
 		free(data.str);
-//        system("leaks -q ms");
-        //  atexit(leak);
+       // atexit(leak);
 	}
 }
