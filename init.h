@@ -240,6 +240,18 @@ void    freed(void *str);
 void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
+
+void	arg_add_front(t_args **lst, t_args *new);
+
+
+char	**lst_to_arr(int size, t_args *args_list);
+char	*extract_path(char *cmd, char **paths);
+
+
+int	check_in_env(char *str, t_env *envs);
+int	check_ambg(char *str, t_env *envs);
+int	treat_env(t_args **args_list);
+
 // excution
 void excution(t_env **env, t_cmd *cmd, char **envp, int *pid);
 int implement_redirections(t_red *redrctns);

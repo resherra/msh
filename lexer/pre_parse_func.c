@@ -20,48 +20,56 @@ static int	join_check(t_token *token)
 	return (0);
 }
 
-static t_token	*join(t_token *curr, char **str)
+void	safejoin(t_token **curr, char **str, bool is_quotes_case)
 {
 	char	*tmp;
 
+	tmp = *str;
+	if (is_quotes_case)
+		*str = ft_strjoin(*str, "");
+	else
+		*str = ft_strjoin(*str, (*curr)->str);
+	free(tmp);
+	*curr = (*curr)->next;
+}
+
+int	handle_single_dollar(t_token **curr)
+{
+	if (ft_strlen((*curr)->str) == 1)
+	{
+		if (((*curr)->type == ENV && (*curr)->state == GENERAL) && (*curr)->next
+			&& ((*curr)->next->type == D_QUOTE
+				|| (*curr)->next->type == S_QUOTE))
+		{
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static t_token	*join(t_token *curr, char **str)
+{
 	while (curr && join_check(curr))
 	{
-		if (ft_strlen(curr->str) == 1)
+		if (handle_single_dollar(&curr))
+			continue ;
+		if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
 		{
-			if ((curr->type == ENV && curr->state == GENERAL) && curr->next
-				&& (curr->next->type == D_QUOTE || curr->next->type == S_QUOTE))
-			{
-				curr = curr->next;
-				continue ;
-			}
+			safejoin(&curr, str, true);
+			continue ;
 		}
-
-        if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
-        {
-            tmp = *str;
-            *str = ft_strjoin(*str, "");
-            free(tmp);
-            curr = curr->next;
-            continue;
-        }
-        else if (curr->type == S_QUOTE && curr->next && curr->next->type == S_QUOTE)
-        {
-            tmp = *str;
-            *str = ft_strjoin(*str, "");
-            free(tmp);
-            curr = curr->next;
-            continue;
-        }
-        else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
+		else if (curr->type == S_QUOTE && curr->next
+				&& curr->next->type == S_QUOTE)
+		{
+			safejoin(&curr, str, true);
+			continue ;
+		}
+		else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 		{
 			curr = curr->next;
 			continue ;
 		}
-		tmp = *str;
-		*str = ft_strjoin(*str, curr->str);
-		free(tmp);
-		tmp = NULL;
-		curr = curr->next;
+		safejoin(&curr, str, false);
 	}
 	return (curr);
 }

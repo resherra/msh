@@ -18,7 +18,7 @@ char	*char_to_str(char c)
 
 	new = malloc(sizeof(char) * 2);
 	if (!new)
-	    exit(1);
+		exit(1);
 	new[0] = c;
 	new[1] = 0;
 	return (new);
@@ -30,7 +30,7 @@ char	*double_to_str(char *str, int i)
 
 	new = malloc(sizeof(char) * 3);
 	if (!new)
-	    exit (1);
+		exit(1);
 	new[0] = *(str + i);
 	new[1] = *(str + i + 1);
 	new[2] = 0;

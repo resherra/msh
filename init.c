@@ -138,7 +138,7 @@ void handler(int sign)
 		kill(pid, SIGTERM);
 	 else
 	 {
-//		rl_replace_line("", 0);
+		rl_replace_line("", 0);
 		rl_on_new_line();
    		rl_redisplay();	
 	 }
