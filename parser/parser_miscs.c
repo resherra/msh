@@ -57,9 +57,7 @@ char	*extract_path(char *cmd, char **paths)
 		return (NULL);
 	pre_path = ft_strjoin("/", cmd);
 	if (!paths)
-	{
 		return (NULL);
-	}
 	while (paths[i])
 	{
 		path = ft_strjoin(paths[i], pre_path);
@@ -74,6 +72,5 @@ char	*extract_path(char *cmd, char **paths)
 	free(pre_path);
 	if (!access(cmd, F_OK))
 		return (cmd);
-	//perror("msh-0.1$: ");
 	return (NULL);
 }
