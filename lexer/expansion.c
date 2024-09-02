@@ -27,7 +27,20 @@ static int	single_dollar(t_token *var, int len)
 	return (0);
 }
 
-void	expansion(t_token *var, t_env *envs)
+static void	check_dq_flag(t_token *var, t_env *curr, bool in_double_quotes)
+{
+	char	*trimmed;
+
+	if (in_double_quotes)
+	{
+		trimmed = ft_strtrim(curr->value, "\x03");
+		var->str = trimmed;
+	}
+	else
+		var->str = ft_strdup(curr->value);
+}
+
+void	expansion(t_token *var, t_env *envs, bool in_double_quotes)
 {
 	t_env	*curr;
 	int		len;
@@ -42,9 +55,8 @@ void	expansion(t_token *var, t_env *envs)
 		if (!ft_strcmp(var->str + 1, curr->key))
 		{
 			tmp = var->str;
-			var->str = ft_strdup(curr->value);
+			check_dq_flag(var, curr, in_double_quotes);
 			free(tmp);
-			tmp = NULL;
 			return ;
 		}
 		curr = curr->next;
@@ -52,6 +64,5 @@ void	expansion(t_token *var, t_env *envs)
 	tmp = var->str;
 	var->str = ft_strdup("");
 	free(tmp);
-	tmp = NULL;
 	var->type = WORD;
 }

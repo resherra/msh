@@ -13,38 +13,28 @@
 #ifndef INIT_H
 # define INIT_H
 
-
-
-//to be deleted;
-#include "string.h"
-
 typedef struct s_cmd t_cmd;
 
 # include "libft/libft.h"
-# include <curses.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-# include <dirent.h> //closedir, readdir, opendir
-# include <fcntl.h>  //open
+# include <curses.h>
+# include <dirent.h>
+# include <fcntl.h>
 # include <readline/history.h>
-# include <readline/readline.h> //readline, rl_clear_history, rl_on_new_line,
-//rl_replace_line, rl_redisplay, add_history
-# include <signal.h> //signal, sigaction, sigemptyset, sigaddset,
-//									kill
-# include <stdio.h>     //printf, perror, strerror
-# include <stdlib.h>    //malloc, free, exit, getenv
-# include <sys/ioctl.h> //ioctl
-# include <sys/stat.h>  //stat, lstat
-# include <sys/wait.h>  //wait, waitpid, wait3, wait4
-# include <termios.h>   //tcgetattr, tcsetattr
-# include <unistd.h>    //write, close, fork, pipe, dup, dup2, ttyslot,
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/ioctl.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
+# include <termios.h>
+# include <unistd.h>
 # include <errno.h>
-//										ttyname,
-//	ttyslot, isatty, chdir, unlink, execve, read, getcwd
 
 //macros for errors
 #define not_valid_idntf -2
 #define allocation_error -3
 
-//int pid;
 //tokens
 typedef enum e_type
 {
@@ -126,7 +116,7 @@ int	lexer(char *str, t_token **head, t_env *env, t_token **pre);
 int					set_state(t_token *head, t_env *env);
 
 //variables expansion
-void				expansion(t_token *var, t_env *envs);
+void				expansion(t_token *var, t_env *envs, bool in_double_quotes);
 
 //tokens content utils
 char				*char_to_str(char c);
@@ -205,12 +195,12 @@ typedef struct s_args
 
 typedef struct s_cmd
 {
-	char *cmd; //command
-	char *path; //command path
-	t_args *args_list; //arguments in a list (command uncluded) to be converted to 2d arr
-	int	args_lst_size; //argument list size
-	char **args; //2d arr of args
-	t_red	*redirections; //redirections list
+	char *cmd;
+	char *path;
+	t_args *args_list;
+	int	args_lst_size;
+	char **args;
+	t_red	*redirections;
 	bool unclosed;
 	struct s_cmd *next;
 } t_cmd;
@@ -231,15 +221,9 @@ const char			*format_state(int type);
 const char			*format_type(int type);
 void				traverse_primary_tokens_list(t_token *env);
 void				traverse_env_list(t_env *env);
-//int test_builtins(char *str, t_env *envs);
 int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
-
-
-//miscs
 void	traverse_parse_list(t_cmd *cmd);
-//PARSING
-
 
 void	arg_add_front(t_args **lst, t_args *new);
 
@@ -258,7 +242,6 @@ int implement_redirections(t_red *redrctns);
 int is_bultin(t_env **envs, t_cmd *cmd);
 int sample_bultin(t_env **envs, t_cmd *cmd);
 
-// free
 void	free_cmd_list(t_cmd **cmds);
 
 t_env	*new_env_export(char *key, char *value);
