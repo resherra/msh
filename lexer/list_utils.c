@@ -18,7 +18,7 @@ t_token	*lst_new(char *str, t_type type, t_state state)
 
 	new = malloc(sizeof(t_token));
 	if (!new)
-		return (NULL);
+	    exit(1);
 	new->str = str;
 	new->type = type;
 	new->state = state;

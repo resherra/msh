@@ -15,6 +15,8 @@
 t_cmd *lst_new_cmd()
 {
     t_cmd *new = malloc(sizeof(t_cmd));
+    if (!new)
+        exit(1);
     new->args_list = NULL;
     new->cmd = NULL;
     new->path = NULL;

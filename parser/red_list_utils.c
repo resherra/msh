@@ -15,6 +15,8 @@
 t_red *lst_new_red(t_type red_type, char *red_file)
 {
     t_red *new = malloc(sizeof(t_red));
+    if (!new)
+        exit(1);
     new->red_type = red_type;
     new->red_file = red_file;
     new->is_ambegious = false;

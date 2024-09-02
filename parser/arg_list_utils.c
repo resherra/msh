@@ -15,6 +15,8 @@
 t_args *new_arg(char *str)
 {
     t_args *new = malloc(sizeof(t_args));
+    if (!new)
+        exit(1);
 
     new->str = str;
     new->next = NULL;

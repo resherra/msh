@@ -16,6 +16,8 @@
 char **lst_to_arr(int size, t_args *args_list)
 {
     char **args = malloc((sizeof(char *) * (size + 1)));
+    if (!args)
+        exit(1);
     t_args *curr = args_list;
     int i = 0;
     while (curr)
@@ -187,7 +189,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 curr = curr->next;
         }
         tmp = 0;
-        if (check_in_env(new_cmd->args_list->str, envs))
+        if (new_cmd->args_list && check_in_env(new_cmd->args_list->str, envs))
             tmp = treat_env(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];

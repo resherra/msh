@@ -10,8 +10,9 @@
 #                                                                              #
 # **************************************************************************** #
 
-CFLAGS=-Wall -Wextra
-CFLAGS=-Wall -Wextra -fsanitize=address -g -I/Users/recherra/Desktop/include -L/Users/recherra/Desktop/lib
+# CFLAGS=-Wall -Wextra
+# CFLAGS=-Wall -Wextra -fsanitize=address -g -I/Users/recherra/Desktop/include -L/Users/recherra/Desktop/lib
+CFLAGS=-Wall -Wextra -fsanitize=address -g
 SRC=execution/is_bult_in.c execution/execution_tools.c execution/execution.c builtins/exit.c builtins/env_tools.c builtins/pwd.c builtins/cd.c builtins/echo.c builtins/unset.c builtins/export.c builtins/env.c init.c miscs.c lexer/init_env.c lexer/env_utils.c lexer/list_utils.c  lexer/state.c lexer/expansion.c lexer/tokens_content_utils.c lexer/pre_parse_func.c lexer/tokenize_miscs.c lexer/check.c lexer/tokenizer_core.c lexer/lexer.c parser/parser.c parser/arg_list_utils.c parser/cmd_list_utils.c parser/red_list_utils.c
 OBJS=$(SRC:.c=.o)
 NAME=ms

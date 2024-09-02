@@ -17,6 +17,8 @@ t_env	*new_env(char *key, char *value)
 	t_env	*new;
 
 	new = malloc(sizeof(t_env));
+	if (!new)
+	    exit(1);
 	new->key = key;
     new->value = ft_strjoin(value, "\x03");
     if (!value || !ft_strlen(value) || !ft_strcmp(new->value, "\x03"))
