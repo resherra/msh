@@ -120,15 +120,7 @@ void leak()
 	system("leaks ms");
 }
 
-typedef struct s_data
-{
-    t_env	*envs;
-    t_token	*head;
-    t_token	*pre;
-    t_cmd *cmd;
-    char **paths;
-    char	*str;
-} t_data;
+
 
 void handler(int sign)
 {
