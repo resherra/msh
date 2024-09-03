@@ -157,6 +157,7 @@ typedef struct s_red
 	t_type				red_type;
 	char				*red_file;
 	bool				is_ambegious;
+	bool                expanded;
 	struct s_red		*next;
 }						t_red;
 
@@ -188,7 +189,7 @@ t_args					*new_arg(char *str);
 void					arg_add_front(t_args **lst, t_args *new);
 void					arg_add_back(t_args **args, t_args *new);
 
-t_red					*lst_new_red(t_type red_type, char *red_file);
+t_red					*lst_new_red(t_type red_type, char *red_file, bool expanded);
 void					red_add_back(t_red **redirections, t_red *new);
 
 char					**lst_to_arr(int size, t_args *args_list);

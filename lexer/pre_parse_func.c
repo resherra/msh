@@ -47,7 +47,7 @@ int	handle_single_dollar(t_token **curr)
 	return (0);
 }
 
-static t_token	*join(t_token *curr, char **str)
+static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 {
 	while (curr && join_check(curr))
 	{
@@ -55,17 +55,23 @@ static t_token	*join(t_token *curr, char **str)
 			continue ;
 		if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
 		{
+		    if (after_heredoc)
+		        *flag = true;
 			safejoin(&curr, str, true);
 			continue ;
 		}
 		else if (curr->type == S_QUOTE && curr->next
 				&& curr->next->type == S_QUOTE)
 		{
+		    if (after_heredoc)
+		        *flag = true;
 			safejoin(&curr, str, true);
 			continue ;
 		}
 		else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 		{
+		    if (after_heredoc)
+		        *flag = true;
 			curr = curr->next;
 			continue ;
 		}
@@ -79,12 +85,13 @@ void	sanitize(t_token *head, t_token **new)
 	t_token	*curr;
 	t_token	*node;
 	char	*str;
+    bool flag = false;
 
 	curr = head;
 	while (curr)
 	{
 		str = NULL;
-		curr = join(curr, &str);
+		curr = join(curr, &str, false, &flag);
 		if (str)
 		{
 			node = lst_new(str, WORD, GENERAL);
@@ -94,6 +101,21 @@ void	sanitize(t_token *head, t_token **new)
 		{
 			node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
 			lst_add_back(new, node);
+			if (curr->type == HERE_DOC)
+            {
+			    curr = curr->next;
+			    while (curr && curr->type == SPACES)
+			        curr = curr->next;
+			    curr = join(curr, &str, true, &flag);
+			    if (str)
+                {
+			        if (flag)
+                        node = lst_new(str, WORD, IN_DOUBLE_Q);
+			        else
+                        node = lst_new(str, WORD, GENERAL);
+			        lst_add_back(new, node);
+                }
+            }
 		}
 		if (curr)
 			curr = curr->next;

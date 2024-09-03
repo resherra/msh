@@ -12,7 +12,7 @@
 
 #include "../init.h"
 
-t_red	*lst_new_red(t_type red_type, char *red_file)
+t_red	*lst_new_red(t_type red_type, char *red_file, bool expanded)
 {
 	t_red	*new;
 
@@ -22,6 +22,7 @@ t_red	*lst_new_red(t_type red_type, char *red_file)
 	new->red_type = red_type;
 	new->red_file = red_file;
 	new->is_ambegious = false;
+	new->expanded = expanded;
 	new->next = NULL;
 	return (new);
 }

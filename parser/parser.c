@@ -41,8 +41,11 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
-	new_red = lst_new_red(curr->type, ft_strdup(curr->next->str));
-	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
+    if (curr->next->state == IN_DOUBLE_Q)
+        new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
+    else
+        new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
+    if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
 	{
 		printf("msh: ambiguous redirect\n");
 		new_red->is_ambegious = true;

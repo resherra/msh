@@ -99,6 +99,13 @@ void	traverse_parse_list(t_cmd *cmd)
 		while (tmp)
 		{
 			printf("\tredirection file: %s\n\tredirection type: %s\n", tmp->red_file, format_type(tmp->red_type));
+            if (tmp->red_type == HERE_DOC)
+            {
+                if (tmp->expanded)
+                    printf("\texpanded: %s\n", "true");
+                else
+                    printf("\texpanded: %s\n", "false");
+            }
 			tmp = tmp->next;
 		}
 
