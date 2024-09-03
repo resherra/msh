@@ -180,6 +180,7 @@ int	main(int ac, char **av, char **envp)
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
 		free(data.str);
+//		system("leaks -q ms");
        // atexit(leak);
 	}
 }

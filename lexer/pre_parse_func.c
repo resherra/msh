@@ -12,14 +12,6 @@
 
 #include "../init.h"
 
-static int	join_check(t_token *token)
-{
-	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE
-		|| token->type == ENV)
-		return (1);
-	return (0);
-}
-
 void	safejoin(t_token **curr, char **str, bool is_quotes_case)
 {
 	char	*tmp;
@@ -33,18 +25,12 @@ void	safejoin(t_token **curr, char **str, bool is_quotes_case)
 	*curr = (*curr)->next;
 }
 
-int	handle_single_dollar(t_token **curr)
+void	quote_case_wrapper(bool after_heredoc, bool *flag, t_token **curr,
+		char **str)
 {
-	if (ft_strlen((*curr)->str) == 1)
-	{
-		if (((*curr)->type == ENV && (*curr)->state == GENERAL) && (*curr)->next
-			&& ((*curr)->next->type == D_QUOTE
-				|| (*curr)->next->type == S_QUOTE))
-		{
-			return (1);
-		}
-	}
-	return (0);
+	if (after_heredoc)
+		*flag = true;
+	safejoin(curr, str, true);
 }
 
 static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
@@ -55,27 +41,48 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 			continue ;
 		if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
 		{
-		    if (after_heredoc)
-		        *flag = true;
-			safejoin(&curr, str, true);
+			quote_case_wrapper(after_heredoc, flag, &curr, str);
 			continue ;
 		}
 		else if (curr->type == S_QUOTE && curr->next
 				&& curr->next->type == S_QUOTE)
 		{
-		    if (after_heredoc)
-		        *flag = true;
-			safejoin(&curr, str, true);
+			quote_case_wrapper(after_heredoc, flag, &curr, str);
 			continue ;
 		}
 		else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 		{
-		    if (after_heredoc)
-		        *flag = true;
+			if (after_heredoc)
+				*flag = true;
 			curr = curr->next;
 			continue ;
 		}
 		safejoin(&curr, str, false);
+	}
+	return (curr);
+}
+
+static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
+		char **str, bool *flag)
+{
+	t_token	*node;
+
+	node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
+	lst_add_back(new, node);
+	if (curr->type == HERE_DOC)
+	{
+		curr = curr->next;
+		while (curr && curr->type == SPACES)
+			curr = curr->next;
+		curr = join(curr, str, true, flag);
+		if (*str)
+		{
+			if (flag)
+				node = lst_new(*str, WORD, IN_DOUBLE_Q);
+			else
+				node = lst_new(*str, WORD, GENERAL);
+			lst_add_back(new, node);
+		}
 	}
 	return (curr);
 }
@@ -85,8 +92,9 @@ void	sanitize(t_token *head, t_token **new)
 	t_token	*curr;
 	t_token	*node;
 	char	*str;
-    bool flag = false;
+	bool	flag;
 
+	flag = false;
 	curr = head;
 	while (curr)
 	{
@@ -98,25 +106,7 @@ void	sanitize(t_token *head, t_token **new)
 			lst_add_back(new, node);
 		}
 		if (curr && curr->type != SPACES)
-		{
-			node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
-			lst_add_back(new, node);
-			if (curr->type == HERE_DOC)
-            {
-			    curr = curr->next;
-			    while (curr && curr->type == SPACES)
-			        curr = curr->next;
-			    curr = join(curr, &str, true, &flag);
-			    if (str)
-                {
-			        if (flag)
-                        node = lst_new(str, WORD, IN_DOUBLE_Q);
-			        else
-                        node = lst_new(str, WORD, GENERAL);
-			        lst_add_back(new, node);
-                }
-            }
-		}
+			curr = handle_ope_and_delimiter(curr, new, &str, &flag);
 		if (curr)
 			curr = curr->next;
 	}

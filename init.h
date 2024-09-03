@@ -140,6 +140,11 @@ int						check_operator(char *str, int i);
 int						check(char *str, int tmp);
 
 
+
+int	join_check(t_token *token);
+int	handle_single_dollar(t_token **curr);
+
+
 void					lstclear(t_token **head);
 
 //Built-ins
