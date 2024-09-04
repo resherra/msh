@@ -1,38 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens_content_utils.c                             :+:      :+:    :+:   */
+/*   sanitize_miscs.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/02 17:17:01 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/02 17:17:03 by recherra         ###   ########.fr       */
+/*   Created: 2024/09/03 18:20:59 by recherra          #+#    #+#             */
+/*   Updated: 2024/09/03 18:21:09 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-char	*char_to_str(char c)
+int	handle_single_dollar(t_token **curr)
 {
-	char	*new;
-
-	new = malloc(sizeof(char) * 2);
-	if (!new)
-		exit(1);
-	new[0] = c;
-	new[1] = 0;
-	return (new);
+	if (ft_strlen((*curr)->str) == 1)
+	{
+		if (((*curr)->type == ENV && (*curr)->state == GENERAL) && (*curr)->next
+			&& ((*curr)->next->type == D_QUOTE
+				|| (*curr)->next->type == S_QUOTE))
+		{
+			return (1);
+		}
+	}
+	return (0);
 }
 
-char	*double_to_str(char *str, int i)
+int	join_check(t_token *token)
 {
-	char	*new;
-
-	new = malloc(sizeof(char) * 3);
-	if (!new)
-		exit(1);
-	new[0] = *(str + i);
-	new[1] = *(str + i + 1);
-	new[2] = 0;
-	return (new);
+	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE
+		|| token->type == ENV)
+		return (1);
+	return (0);
 }

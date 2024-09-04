@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 10:46:53 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/02 03:04:33 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/04 19:40:54 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int check_identifier(char *str)
 	return(1);
 }
 
-bool    unset(t_env **envs, char **vars)
+int   unset(t_env **envs, char **vars)
 {
     int i = 1;
     int state;

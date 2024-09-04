@@ -1,38 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
+/*   ambegious.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/26 21:33:01 by recherra          #+#    #+#             */
-/*   Updated: 2024/01/04 21:34:07 by recherra         ###   ########.fr       */
+/*   Created: 2024/09/02 17:27:26 by recherra          #+#    #+#             */
+/*   Updated: 2024/09/02 17:27:29 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../init.h"
 
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+static int	check_n_files(char *str)
 {
-	t_list	*ne;
-	t_list	*ne_node;
-	void	*ptr;
+	char	*new;
+	char	**res;
+	int		i;
 
-	ne = NULL;
-	if (!lst || !f || !del)
-		return (NULL);
-	while (lst)
+	new = ft_strtrim(str, "\x03");
+	res = ft_split(new, ' ');
+	free(new);
+	i = 0;
+	while (res[i])
 	{
-		ptr = f(lst->content);
-		ne_node = ft_lstnew(ptr);
-		if (!ne_node)
-		{
-			del(ptr);
-			ft_lstclear(&ne, del);
-			return (NULL);
-		}
-		ft_lstadd_back(&ne, ne_node);
-		lst = lst->next;
+		free(res[i]);
+		i++;
 	}
-	return (ne);
+	free(res);
+	return (i);
+}
+
+int	check_ambg(char *str, t_env *envs)
+{
+	if (check_in_env(str, envs))
+	{
+		if (!ft_strcmp(str, "\x03") || check_n_files(str) > 1)
+			return (1);
+	}
+	return (0);
 }

@@ -6,30 +6,12 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/02 00:14:05 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/04 19:38:12 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "./init.h"
-
-
-int ft_strcmp(char *str1, char *str2)
-{
-	if (!str1 || !str2)
-		return(1);
-    while (*str1 && *str2 && *str1 == *str2)
-    {
-        str2++;
-        str1++;
-    }
-    if (*str1 > *str2)
-        return (1);
-    else if (*str1 < *str2)
-        return (-1);
-    return (0);
-}
-
 
 const char	*format_type(int type)
 {
@@ -93,11 +75,9 @@ void	traverse_env_list(t_env *env)
 	while (curr)
 	{
 		printf("key: %s | value: %s\n", curr->key, curr->value);
-//        printf("%s=%s\n", curr->key, curr->value);
         curr = curr->next;
 	}
 }
-
 
 void	traverse_parse_list(t_cmd *cmd)
 {
@@ -119,30 +99,16 @@ void	traverse_parse_list(t_cmd *cmd)
 		while (tmp)
 		{
 			printf("\tredirection file: %s\n\tredirection type: %s\n", tmp->red_file, format_type(tmp->red_type));
+            if (tmp->red_type == HERE_DOC)
+            {
+                if (tmp->expanded)
+                    printf("\texpanded: %s\n", "true");
+                else
+                    printf("\texpanded: %s\n", "false");
+            }
 			tmp = tmp->next;
 		}
 
 		curr = curr->next;
 	}
 }
-
-
-
-// int test_builtins(char *str, t_env **envs, t_cmd *cmd)
-// {
-
-// 	write(1, "12\n", 3);
-// 	if (cmd && cmd->cmd && !strcmp("exit", cmd->cmd))
-// 		exit(1);
-// 	else if (!cmd->next && !strcmp("cd", cmd->cmd))
-// 	{
-// 		// write(1, cmd->args[1], 2);
-// 		// write(1, "1\n", 2);
-// 		ft_cd(cmd->args[1]);
-// 		cmd = cmd->next;
-// 		//return ( 1);
-// 	}
-// 	excution(envs, cmd);
-	
-//     return 0;
-// }

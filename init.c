@@ -114,20 +114,12 @@ void	free_cmd_list(t_cmd **cmds)
 	}
 	*cmds = NULL;
 }
+
 void leak()
 {
 	system("leaks ms");
 }
 
-typedef struct s_data
-{
-    t_env	*envs;
-    t_token	*head;
-    t_token	*pre;
-    t_cmd *cmd;
-    char **paths;
-    char	*str;
-} t_data;
 
 void handler(int sign)
 {
@@ -186,7 +178,8 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-//        traverse_primary_tokens_list(data.head);
+//      traverse_primary_tokens_list(data.head);
+//		printf("\n\n");
         lstclear(&data.head);
 		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
@@ -196,12 +189,14 @@ int	main(int ac, char **av, char **envp)
             continue;
         }
 //        traverse_primary_tokens_list(data.pre);
+//		printf("\n\n");
 //        traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
 		free(data.str);
+//		system("leaks -q ms");
        // atexit(leak);
 	}
 }

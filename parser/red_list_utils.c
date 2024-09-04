@@ -12,28 +12,34 @@
 
 #include "../init.h"
 
-t_red *lst_new_red(t_type red_type, char *red_file)
+t_red	*lst_new_red(t_type red_type, char *red_file, bool expanded)
 {
-    t_red *new = malloc(sizeof(t_red));
-    new->red_type = red_type;
-    new->red_file = red_file;
-    new->is_ambegious = false;
-    new->next = NULL;
-    return new;
+	t_red	*new;
+
+	new = malloc(sizeof(t_red));
+	if (!new)
+		exit(1);
+	new->red_type = red_type;
+	new->red_file = red_file;
+	new->is_ambegious = false;
+	new->expanded = expanded;
+	new->next = NULL;
+	return (new);
 }
 
-void    red_add_back(t_red **redirections, t_red *new)
+void	red_add_back(t_red **redirections, t_red *new)
 {
-    if (!redirections)
-        return;
-    if (!(*redirections))
-    {
-        *redirections = new;
-        return;
-    }
+	t_red	*curr;
 
-    t_red *curr = *redirections;
-    while (curr->next)
-        curr = curr->next;
-    curr->next = new;
+	if (!redirections)
+		return ;
+	if (!(*redirections))
+	{
+		*redirections = new;
+		return ;
+	}
+	curr = *redirections;
+	while (curr->next)
+		curr = curr->next;
+	curr->next = new;
 }

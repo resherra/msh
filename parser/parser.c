@@ -6,196 +6,96 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/02 19:13:46 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/04 19:41:59 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-
-char **lst_to_arr(int size, t_args *args_list)
+void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 {
-    char **args = malloc((sizeof(char *) * (size + 1)));
-    t_args *curr = args_list;
-    int i = 0;
-    while (curr)
-    {
-        args[i++] = ft_strdup(curr->str);
-        curr = curr->next;
-    }
-    args[i] = NULL;
-    return args;
+	int	tmp;
+
+	tmp = 0;
+	if (new_cmd->args_list && check_in_env(new_cmd->args_list->str, envs))
+		tmp = treat_env(&new_cmd->args_list);
+	new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp,
+								new_cmd->args_list);
+	new_cmd->cmd = new_cmd->args[0];
+	new_cmd->path = extract_path(new_cmd->cmd, paths);
+	cmd_add_back(cmd, new_cmd);
 }
 
-char    *extract_path(char *cmd, char **paths)
+t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 {
-    char *pre_path = NULL;
-    char *path = NULL;
-    int i = 0;
-    if (!cmd)
-        return NULL;
-	
-    pre_path = ft_strjoin("/", cmd);
-    if (!paths)
-    {
-        return NULL;
-    }
-    while (paths[i])
-    {
-        path = ft_strjoin(paths[i], pre_path);
-        if (!access(path, F_OK))
-        {
-            free(pre_path);
-            return path;
-        }
-        free(path);
-        i++;
-    }
-	free(pre_path);
-    if (!access(cmd, F_OK))
-		return (cmd);
-	//perror("msh-0.1$: ");
-    return (strdup("bgf"));
+	while (curr && curr->type == WORD)
+	{
+		arg = new_arg(ft_strdup(curr->str));
+		arg_add_back(&new_cmd->args_list, arg);
+		new_cmd->args_lst_size++;
+		curr = curr->next;
+	}
+	return (curr);
 }
 
-
-
-void	arg_add_front(t_args **lst, t_args *new)
+t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
+		t_env *envs)
 {
-    if (!lst)
-        return ;
-    if (*lst && new)
-    {
-        new->next = *lst;
-        *lst = new;
-    }
-    else
-        *lst = new;
+	if (curr->next->state == IN_DOUBLE_Q)
+		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
+	else
+		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
+	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
+	{
+		printf("msh: ambiguous redirect\n");
+		new_red->is_ambegious = true;
+	}
+	red_add_back(&new_cmd->redirections, new_red);
+	curr = curr->next;
+	return (curr);
 }
 
-int treat_env(t_args **args_list)
+t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
+		t_env *envs)
 {
-    t_args *tm = NULL;
-    char *new = ft_strtrim((*args_list)->str, "\x03");
-    char **res = ft_split(new, ' ');
-    free(new);
-    int i = 0;
-    while (res[i])
-        i++;
-    if (i > 0)
-    {
-        tm = *args_list;
-        *args_list = (*args_list)->next;
-        free(tm->str);
-        free(tm);
-    }
-    int tmp = i;
-    tmp--;
-    while (tmp >= 0)
-    {
-        arg_add_front(args_list, new_arg(res[tmp]));
-        tmp--;
-    }
-    free(res);
-    return i;
+	if (curr && curr->next && curr->next->type == WORD)
+		curr = get_redirections(curr, new_red, new_cmd, envs);
+	else if (curr && curr->next && curr->next->type != WORD)
+	{
+		printf("msh: syntax error near unexpected token `%s'\n",
+				curr->next->str);
+		//        return (1);
+	}
+	else if (curr && !curr->next)
+		new_cmd->unclosed = true;
+	return (curr);
 }
 
-int check_in_env(char *str, t_env *envs)
+int	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
-    t_env *curr = envs;
+	t_token	*curr;
+	t_red	*new_red;
+	t_cmd	*new_cmd;
+	t_args	*arg;
 
-    while (curr)
-    {
-        if (!ft_strcmp(str, curr->value))
-            return 1;
-        curr = curr->next;
-    }
-    return 0;
-}
-
-
-int check_n_files(char *str)
-{
-    char *new = ft_strtrim(str, "\x03");
-    char **res = ft_split(new, ' ');
-    free(new);
-    int i = 0;
-
-    while (res[i])
-    {
-        free(res[i]);
-        i++;
-    }
-    free(res);
-    return i;
-}
-
-int check_ambg(char *str, t_env *envs)
-{
-
-    if (check_in_env(str, envs))
-    {
-        if (!ft_strcmp(str, "\x03") || check_n_files(str) > 1)
-            return 1;
-    }
-    return 0;
-}
-
-int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
-{
-    t_token *curr = NULL;
-    t_red *new_red = NULL;
-    t_cmd *new_cmd = NULL;
-    t_args *arg = NULL;
-    int tmp = 0;
-
-    curr = *pre;
-    while (curr)
-    {
-        new_cmd = lst_new_cmd();
-        while (curr && curr->type != PIPE)
-        {
-            while (curr && curr->type == WORD)
-            {
-                arg = new_arg(ft_strdup(curr->str));
-                arg_add_back(&new_cmd->args_list, arg);
-                new_cmd->args_lst_size++;
-                curr = curr->next;
-            }
-            if (curr && curr->type == PIPE)
-                break;
-            if (curr && curr->next && curr->next->type == WORD)
-            {
-                new_red = lst_new_red(curr->type, ft_strdup(curr->next->str));
-                if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
-                {
-                    //printf("msh: ambiguous redirect\n");
-                    new_red->is_ambegious = true;
-                   // return 2;
-                }
-                red_add_back(&new_cmd->redirections, new_red);
-                curr = curr->next;
-            }
-            else if (curr && curr->next &&  curr->next->type != WORD)
-            {
-                printf("msh: syntax error near unexpected token `%s'\n", curr->next->str);
-                return 1;
-            }
-            else if (curr && !curr->next)
-                new_cmd->unclosed = true;
-            if (curr)
-                curr = curr->next;
-        }
-        tmp = 0;
-        if (new_cmd->args_list && check_in_env( new_cmd->args_list->str, envs))
-            tmp = treat_env(&new_cmd->args_list);
-        new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
-        new_cmd->cmd = new_cmd->args[0];
-        new_cmd->path = extract_path(new_cmd->cmd, paths);
-        cmd_add_back(cmd, new_cmd);
-        if (curr)
-            curr = curr->next;
-    }
-
-    return 0;
+	arg = NULL;
+	new_red = NULL;
+	curr = *pre;
+	while (curr)
+	{
+		new_cmd = lst_new_cmd();
+		while (curr && curr->type != PIPE)
+		{
+			curr = get_args(curr, arg, new_cmd);
+			if (curr && curr->type == PIPE)
+				break ;
+			curr = heredoc_special_handling(curr, new_red, new_cmd, envs);
+			if (curr)
+				curr = curr->next;
+		}
+		fill_cmd(cmd, new_cmd, envs, paths);
+		if (curr)
+			curr = curr->next;
+	}
+	return (0);
 }

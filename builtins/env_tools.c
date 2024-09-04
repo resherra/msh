@@ -5,6 +5,8 @@ t_env	*new_env_export(char *key, char *value)
 {
     t_env	*new;
     new = malloc(sizeof(t_env));
+    if (!new)
+        exit(1);
     new->key = key;
     new->value = value;
     if (!value)

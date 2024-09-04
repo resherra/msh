@@ -21,7 +21,7 @@ static t_token	*double_quote_check(t_token *curr, bool *flag, t_env *env)
 		while (curr && curr->type != D_QUOTE)
 		{
 			if (curr->type == ENV)
-				expansion(curr, env);
+				expansion(curr, env, true);
 			else
 				curr->type = WORD;
 			curr->state = IN_DOUBLE_Q;
@@ -66,7 +66,7 @@ int	set_state(t_token *head, t_env *env)
 		curr = single_quote_check(curr, &sing_quote_flag);
 		if (curr && curr->type == ENV)
 		{
-			expansion(curr, env);
+			expansion(curr, env, false);
 		}
 		if (doub_quote_flag == true || sing_quote_flag == true)
 			return (1);
