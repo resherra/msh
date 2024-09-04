@@ -35,7 +35,24 @@ static t_token	*join(t_token *curr, char **str)
 				continue ;
 			}
 		}
-		if (curr->type == D_QUOTE || curr->type == S_QUOTE)
+
+        if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
+        {
+            tmp = *str;
+            *str = ft_strjoin(*str, "");
+            free(tmp);
+            curr = curr->next;
+            continue;
+        }
+        else if (curr->type == S_QUOTE && curr->next && curr->next->type == S_QUOTE)
+        {
+            tmp = *str;
+            *str = ft_strjoin(*str, "");
+            free(tmp);
+            curr = curr->next;
+            continue;
+        }
+        else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 		{
 			curr = curr->next;
 			continue ;

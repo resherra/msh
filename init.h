@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/31 14:00:21 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/04 19:19:03 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void    freed(void *str);
 
 //Built-ins
-int		unset(t_env **envs, char **vars);
+bool		unset(t_env **envs, char **vars);
 int		env(t_env *envs);
 int		ft_export(t_env *envs, char **args);
 int		ft_echo(char **str);
@@ -193,6 +193,7 @@ typedef struct s_red
 {
 	t_type red_type;
 	char *red_file;
+	bool is_ambegious;
 	struct s_red *next;
 } t_red;
 
@@ -206,7 +207,6 @@ typedef struct s_cmd
 {
 	char *cmd; //command
 	char *path; //command path
-	int pipes;
 	t_args *args_list; //arguments in a list (command uncluded) to be converted to 2d arr
 	int	args_lst_size; //argument list size
 	char **args; //2d arr of args
@@ -241,13 +241,27 @@ void	traverse_parse_list(t_cmd *cmd);
 //PARSING
 
 // excution
+typedef struct execution_tools
+{
+	char *red_out;
+	char *herdc_content;
+	int number_of_herd;
+	char *red_input;
+	int fd_out;
+	int prev;
+	int fd_inp;
+	char *error;
+	int fd[2];
+}t_red_info;
 void excution(t_env **env, t_cmd *cmd, char **envp, int *pid);
-int implement_redirections(t_red *redrctns);
+int implement_redirections(t_red *redr, t_red_info *red_infom , int *pid);
 int is_bultin(t_env **envs, t_cmd *cmd);
 int sample_bultin(t_env **envs, t_cmd *cmd);
 
 // free
 void	free_cmd_list(t_cmd **cmds);
+
+t_env	*new_env_export(char *key, char *value);
 
 
 #endif

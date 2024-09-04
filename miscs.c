@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/19 00:51:28 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/02 00:14:05 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 int ft_strcmp(char *str1, char *str2)
 {
+	if (!str1 || !str2)
+		return(1);
     while (*str1 && *str2 && *str1 == *str2)
     {
         str2++;
@@ -104,7 +106,7 @@ void	traverse_parse_list(t_cmd *cmd)
 	curr = cmd;
 	while (curr)
 	{
-		printf("\n\n\nUnclosed heredoc: %d\n\nPipes: %d\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", cmd->unclosed, cmd->pipes, curr->cmd, curr->path, curr->args_lst_size);
+		printf("\n\n\nUnclosed heredoc: %d\n\ncommand: %s\n\npath: %s\n\narg list size: %d\n\n", cmd->unclosed, curr->cmd, curr->path, curr->args_lst_size);
 		printf("arguments: ");
 		int i = 0;
 		while (curr->args[i])

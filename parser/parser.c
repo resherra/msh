@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/21 13:05:33 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/02 19:13:46 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char    *extract_path(char *cmd, char **paths)
     if (!access(cmd, F_OK))
 		return (cmd);
 	//perror("msh-0.1$: ");
-    return NULL;
+    return (strdup("bgf"));
 }
 
 
@@ -147,7 +147,6 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
     t_red *new_red = NULL;
     t_cmd *new_cmd = NULL;
     t_args *arg = NULL;
-    int pipes = -1;
     int tmp = 0;
 
     curr = *pre;
@@ -170,8 +169,9 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 new_red = lst_new_red(curr->type, ft_strdup(curr->next->str));
                 if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
                 {
-                    printf("msh: ambiguous redirect\n");
-                    return 1;
+                    //printf("msh: ambiguous redirect\n");
+                    new_red->is_ambegious = true;
+                   // return 2;
                 }
                 red_add_back(&new_cmd->redirections, new_red);
                 curr = curr->next;
@@ -187,8 +187,7 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
                 curr = curr->next;
         }
         tmp = 0;
-        pipes++;
-        if (check_in_env(new_cmd->args_list->str, envs))
+        if (new_cmd->args_list && check_in_env( new_cmd->args_list->str, envs))
             tmp = treat_env(&new_cmd->args_list);
         new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp, new_cmd->args_list);
         new_cmd->cmd = new_cmd->args[0];
@@ -197,7 +196,6 @@ int    parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
         if (curr)
             curr = curr->next;
     }
-    if (*cmd)
-        (*cmd)->pipes = pipes;
+
     return 0;
 }

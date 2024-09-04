@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 10:46:53 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/30 16:25:10 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/02 03:04:33 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,39 @@ void    func(void *content)
 {
     free(content);
 }
+int check_identifier(char *str)
+{
+	int var_len;
 
-int    unset(t_env **envs, char **vars)
+	var_len = 0;
+	if (str[var_len] != '_' && !ft_isalpha(str[var_len++]))
+	{
+		printf("unset: `%s' : not a valid identifier\n", str);	
+		return (1);
+	}
+	while (str[var_len] != 0 && (ft_isalnum(str[var_len]) || str[var_len] == '_'))
+    {
+		var_len++;
+    }
+	if (str[var_len] == 0)
+		return (0);
+	printf("unset: `%s' : not a valid identifier\n", str);	
+	return(1);
+}
+
+bool    unset(t_env **envs, char **vars)
 {
     int i = 1;
+    int state;
     t_env *curr;
     t_env *prev;
 
+    state = 0;
     while (vars[i])
     {
         curr = *envs;
         prev = curr;
+        state += check_identifier(vars[i]);
         while (curr)
         {
             if (!ft_strcmp(vars[i], curr->key))
@@ -44,5 +66,5 @@ int    unset(t_env **envs, char **vars)
         }
         i++;
     }
-    return (0);
+    return (state > 0);
 }

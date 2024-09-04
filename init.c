@@ -6,14 +6,14 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/01 18:37:08 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/04 17:59:42 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
 
 
-int pid;
+int  pid;
 
 void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 {
@@ -84,7 +84,6 @@ void    clear_args_list(t_args **head)
 	*head = NULL;
 }
 
-
 void	free_all(t_cmd *cmd)
 {
 	int i = 0;
@@ -130,26 +129,33 @@ typedef struct s_data
     char	*str;
 } t_data;
 
-//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/history.h"
-//#include "/Users/recherra/goinfre/homebrew/Cellar/readline/8.2.13/include/readline/readline.h"
-
 void handler(int sign)
 {
+	printf("%i\n", pid);
     (void)sign;
-//	printf("--->%i\n", pid);
-	printf("\n");
-	 if (pid != -1)
-	 {
-		//printf("pa. = %i\n", pid);
+    printf("\n");
+	 if (pid > -1)
 		kill(pid, SIGTERM);
-	 }
-	 else
+	 else if (pid == -1)
 	 {
+		printf("n\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
    		rl_redisplay();	
 	 }
+	//  else
+	//  {
+	// 	int f = dup(STDIN_FILENO);
+	// 	close(STDIN_FILENO);
+	// 	dup2(f, STDIN_FILENO);
+	// 	dup2(0, STDIN_FILENO);
+	// 	rl_replace_line("", 0);
+	// 	rl_on_new_line();
+   	// 	rl_redisplay();	
+	//  	pid = -2;
+	//  }
 }
+//"< aka < $fshjks" hadi machi ambiguous a redouan ///
 
 int	main(int ac, char **av, char **envp)
 {	
@@ -169,7 +175,10 @@ int	main(int ac, char **av, char **envp)
 		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
 		if (data.str == NULL)
+		{
+			write(1, "ys\n", 3);
 			ft_exit(&data.cmd) ;
+		}
 		if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
             lstclear(&data.head);
@@ -177,15 +186,18 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-		lstclear(&data.head);
-		if (parser(&data.cmd, &data.pre, data.paths, data.envs))
+//        traverse_primary_tokens_list(data.head);
+        lstclear(&data.head);
+		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
             lstclear(&data.pre);
             free_cmd_list(&data.cmd);
             free(data.str);
             continue;
         }
-		lstclear(&data.pre);
+//        traverse_primary_tokens_list(data.pre);
+//        traverse_parse_list(data.cmd);
+        lstclear(&data.pre);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		add_history(data.str);
