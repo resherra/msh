@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/04 17:59:42 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/05 16:27:20 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,29 +123,16 @@ void leak()
 
 void handler(int sign)
 {
-	printf("%i\n", pid);
     (void)sign;
     printf("\n");
 	 if (pid > -1)
 		kill(pid, SIGTERM);
 	 else if (pid == -1)
 	 {
-		printf("n\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
    		rl_redisplay();	
 	 }
-	//  else
-	//  {
-	// 	int f = dup(STDIN_FILENO);
-	// 	close(STDIN_FILENO);
-	// 	dup2(f, STDIN_FILENO);
-	// 	dup2(0, STDIN_FILENO);
-	// 	rl_replace_line("", 0);
-	// 	rl_on_new_line();
-   	// 	rl_redisplay();	
-	//  	pid = -2;
-	//  }
 }
 //"< aka < $fshjks" hadi machi ambiguous a redouan ///
 
@@ -168,7 +155,6 @@ int	main(int ac, char **av, char **envp)
 		data.str = readline("msh-0.1$ ");
 		if (data.str == NULL)
 		{
-			write(1, "ys\n", 3);
 			ft_exit(&data.cmd) ;
 		}
 		if (lexer(data.str, &data.head, data.envs, &data.pre))

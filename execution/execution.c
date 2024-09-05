@@ -5,24 +5,18 @@
 		
 void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp)
 {
-	// if (cmd->redirections && !implement_redirections(cmd->redirections))
-	// {
-	// 	return ;
-	// }
-	if (red_info->herdc_content /*&& !cmd->next*/)
+	if (red_info->herdc_content )
 	{
 		close(red_info->fd[1]);
 		dup2(red_info->fd[0], STDIN_FILENO);
 		close(red_info->fd[0]);
 	 }
-	 if (red_info->fd_out != -1)
+	if (red_info->fd_out != -1)
 	 	dup2(red_info->fd_out, STDOUT_FILENO);
 	else if (cmd->next)
 		dup2(pfds[1],STDOUT_FILENO);
 	if (red_info->red_input)
-	{
 		dup2(red_info->fd_inp, STDIN_FILENO);
-	}
      else if (red_info->prev > 0 )
 		dup2(red_info->prev,STDIN_FILENO);
 	close(pfds[0]);
@@ -73,26 +67,28 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     while (cmd)
     {
 		red_info.herdc_content = NULL;
-		if (cmd->redirections && !implement_redirections(cmd->redirections , &red_info, k))
-		{
-			//write(2, "her\n", 4);
-			return ;
-		}
-		if (red_info.herdc_content)
-			pipe(red_info.fd);
+		red_info.red_input = NULL;
+		red_info.fd_out = -1;
 		pipe(pfds);
         id = fork();
 		*pid = id;
         if (id == 0)
 		{
+			if (cmd->redirections && !implement_redirections(cmd->redirections , &red_info, k))
+				exit(1);
+			if (cmd->unclosed)
+			{
+				write(2, "msh-01$: syntax error near unexpected token `newline'\n", 54);
+				exit(1);
+			}
+			if (red_info.herdc_content)
+			{
+				pipe(red_info.fd);
+		 		write(red_info.fd[1], red_info.herdc_content, ft_strlen(red_info.herdc_content));
+			}
 			child(cmd, pfds, &red_info, env, envp);
+			
 		}
-		if (red_info.herdc_content)
-		 {
-		 	close(red_info.fd[0]); 
-		 	write(red_info.fd[1], red_info.herdc_content, ft_strlen(red_info.herdc_content));
-		 	close(red_info.fd[1]); 
-		 }
 		if (i++ > 0 )
 			close(red_info.prev);
 		if (cmd->next)

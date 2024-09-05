@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/04 19:37:46 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/05 18:27:58 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int						ft_cd(char *path);
 int						pwd(void);
 void					ft_exit(t_cmd **cmd);
 
-//PARSING
+//PARSINGd
 typedef struct s_red
 {
 	t_type				red_type;

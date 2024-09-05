@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/04 19:41:59 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/05 18:12:16 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
 	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
 	{
-		printf("msh: ambiguous redirect\n");
 		new_red->is_ambegious = true;
 	}
 	red_add_back(&new_cmd->redirections, new_red);
