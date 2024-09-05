@@ -136,15 +136,14 @@ int implement_redirections(t_red *redr, t_red_info *red_info, int *pid)
 	while(redr)
 	{
 		//write(2, "yes\n", 4);
-		if (cur->is_ambegious)
+		if (redr->is_ambegious)
 		{
 			//write(2, "y\n", 2);
 			red_info->error = "msh-0.1$ : ambiguous redirect\n";
-			//continue;
 		}
 		if (redr->red_type == HERE_DOC)
 			red_info->number_of_herd++;
-		else if (redr->red_type == RED_OUT)
+		else if (!redr->is_ambegious && redr->red_type == RED_OUT)
 		{
 			red_info->red_out = redr->red_file;
 			 fd = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC, S_IWUSR | S_IRUSR);
@@ -152,7 +151,7 @@ int implement_redirections(t_red *redr, t_red_info *red_info, int *pid)
             	return (perror("msh-0.1$ "), 1);
 			red_info->fd_out = -3;
 		}
-		else if (redr->red_type == RED_APP)
+		else if (!redr->is_ambegious && redr->red_type == RED_APP)
 		{
 			red_info->red_out = redr->red_file;
 			 fd = open(redr->red_file, O_CREAT | O_RDWR | O_APPEND, S_IWUSR | S_IRUSR);
@@ -160,7 +159,7 @@ int implement_redirections(t_red *redr, t_red_info *red_info, int *pid)
             return (perror("msh-0.1$ "), 1);
 			red_info->fd_out = -2;
 		}
-		else if (red_info->number_of_herd == 0)
+		else if (redr->red_type == RED_IN && red_info->number_of_herd == 0)
 			red_info->red_input = redr->red_file;
 		 close(fd);
 		redr = redr->next;
@@ -170,13 +169,13 @@ int implement_redirections(t_red *redr, t_red_info *red_info, int *pid)
 		*pid = -3;
 		red_info->red_input = NULL;
 		heredoc(cur,red_info, pid);
-		if (red_info->error)
-		{
-			write(2, "msh-0.1$ : ambiguous redirect\n", 31);
-			return(0);
-		}
 		if (!red_info->herdc_content)
 			red_info->herdc_content = ft_strdup("");
+	}
+	if (red_info->error)
+	{
+		write(2, "msh-0.1$ : ambiguous redirect\n", 31);
+		return(0);
 	}
 	if (red_info->fd_out == -2)
 		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);
