@@ -25,15 +25,22 @@ static void	get_full_var(char *str, t_tokenizer_vars *vars)
 	vars->i--;
 }
 
+static int sm_check(int type)
+{
+    if (type == SPACES || type == S_QUOTE || type == D_QUOTE || type == WORD)
+        return 1;
+    return 0;
+}
+
 static int	handle_env(char *str, t_tokenizer_vars *vars, t_token **head)
 {
 	t_token	*last_node;
 
 	get_full_var(str, vars);
 	last_node = get_last_node(head);
-	while (last_node && last_node->type != HERE_DOC)
+	while (last_node && sm_check(last_node->type))
 		last_node = last_node->prev;
-	if (last_node)
+	if (last_node && last_node->type == HERE_DOC)
 	{
 		if (check(str, vars->tmp))
 		{
