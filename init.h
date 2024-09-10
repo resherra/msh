@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/05 18:27:58 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/09 14:30:49 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 typedef struct s_cmd	t_cmd;
 
 # include "libft/libft.h"
+#include "string.h"
 # include <curses.h>
 # include <dirent.h>
 # include <errno.h>
@@ -152,7 +153,7 @@ int						unset(t_env **envs, char **vars);
 int						env(t_env *envs);
 int						ft_export(t_env *envs, char **args);
 int						ft_echo(char **str);
-int						ft_cd(char *path);
+int						ft_cd(char *path, t_env *env);
 int						pwd(void);
 void					ft_exit(t_cmd **cmd);
 
@@ -214,24 +215,25 @@ typedef struct s_data
 }						t_data;
 
 // excution
+ 
+
 typedef struct execution_tools
 {
 	char *red_out;
 	char *herdc_content;
-	int number_of_herd;
 	char *red_input;
+	int number_of_herd;
 	int fd_out;
 	int prev;
 	int fd_inp;
-	char *error;
 	int fd[2];
 }t_red_info;
 
 void					excution(t_env **env, t_cmd *cmd, char **envp,
 							int *pid);
-int						implement_redirections(t_red *redr, t_red_info *red_infom , int *pid);
+int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env);
 int						is_bultin(t_env **envs, t_cmd *cmd);
-int						sample_bultin(t_env **envs, t_cmd *cmd);
+int						sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *red_info);
 
 void					free_cmd_list(t_cmd **cmds);
 

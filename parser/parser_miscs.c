@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_miscs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 17:28:46 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/02 17:28:47 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/06 06:25:29 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*extract_path(char *cmd, char **paths)
 		i++;
 	}
 	free(pre_path);
-	if (!access(cmd, F_OK))
-		return (cmd);
-	return (NULL);
+	// if (!access(cmd, F_OK))
+	// 	return (cmd);
+	return (cmd);
 }
