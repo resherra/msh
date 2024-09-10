@@ -164,8 +164,8 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-        traverse_primary_tokens_list(data.head);
-		printf("\n\n");
+//      traverse_primary_tokens_list(data.head);
+//		printf("\n\n");
         lstclear(&data.head);
 		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
