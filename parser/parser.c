@@ -45,10 +45,8 @@ t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
 	else
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
-	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
-	{
+	if (check_ambg(new_red->red_file, envs))
 		new_red->is_ambegious = true;
-	}
 	red_add_back(&new_cmd->redirections, new_red);
 	curr = curr->next;
 	return (curr);
