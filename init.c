@@ -162,19 +162,14 @@ int	main(int ac, char **av, char **envp)
         {
             lstclear(&data.head);
             lstclear(&data.pre);
+            add_history(data.str);
             free(data.str);
             continue;
         }
      	// traverse_primary_tokens_list(data.head);
 		// printf("\n\n");
         lstclear(&data.head);
-		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
-        {
-            lstclear(&data.pre);
-            free_cmd_list(&data.cmd);
-            free(data.str);
-            continue;
-        }
+		parser(&data.cmd, &data.pre, data.paths, data.envs);
     //  traverse_primary_tokens_list(data.pre);
 //		printf("\n\n");
     //	traverse_parse_list(data.cmd);

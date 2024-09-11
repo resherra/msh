@@ -35,15 +35,30 @@ int	syntax_check(t_token *pre)
 		if (check_redirections(curr))
 		{
 			if (!curr->next || curr->next->type != WORD)
-				return (print_syntax_error(curr->str));
+            {
+                if (curr->prev && curr->prev->type != HERE_DOC)
+                    (print_syntax_error(curr->str));
+                else
+                    return print_syntax_error(curr->str);
+            }
 		}
 		if (curr->type == PIPE)
 		{
 			if (!curr->prev || curr->prev->type != WORD)
-				return (print_syntax_error(curr->str));
+            {
+                if (curr->prev && curr->prev->type != HERE_DOC)
+                    (print_syntax_error(curr->str));
+                else
+                    return print_syntax_error(curr->str);
+            }
 			if (!curr->next || (curr->next->type != WORD
 					&& !check_redirections(curr->next)))
-				return (print_syntax_error(curr->str));
+            {
+                if (curr->prev && curr->prev->type != HERE_DOC)
+                    (print_syntax_error(curr->str));
+                else
+                    return print_syntax_error(curr->str);
+            }
 		}
 		curr = curr->next;
 	}
@@ -60,6 +75,6 @@ int	lexer(char *str, t_token **head, t_env *env, t_token **pre)
 	}
 	sanitize(*head, pre);
 	if (syntax_check(*pre))
-		return (1);
+        return (1);
 	return (0);
 }

@@ -58,13 +58,19 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 	if (curr && curr->next && curr->next->type == WORD)
         curr = get_redirections(curr, new_red, new_cmd, envs);
 	else if (curr && curr->next && curr->next->type != WORD)
-		new_cmd->unclosed = true;
-	else if (curr && !curr->next)
+    {
+        printf("msh: syntax error near unexpected token `%s'\n", curr->str);
         new_cmd->unclosed = true;
+    }
+	else if (curr && curr->type == HERE_DOC &&  !curr->next)
+    {
+	    write(2, "msh-01$: syntax error near unexpected token `newline'\n", 54);
+        new_cmd->unclosed = true;
+    }
 	return (curr);
 }
 
-int	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
+void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
 	t_token	*curr;
 	t_red	*new_red;
@@ -90,5 +96,4 @@ int	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 		if (curr)
 			curr = curr->next;
 	}
-	return (0);
 }

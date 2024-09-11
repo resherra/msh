@@ -186,7 +186,7 @@ typedef struct s_cmd
 	struct s_cmd		*next;
 }						t_cmd;
 
-int						parser(t_cmd **cmd, t_token **pre, char **paths,
+void						parser(t_cmd **cmd, t_token **pre, char **paths,
 							t_env *envs);
 
 t_cmd					*lst_new_cmd(void);
