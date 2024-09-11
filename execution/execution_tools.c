@@ -29,49 +29,124 @@ static char	*ft_join(char const *s1, char const *s2)
 	return (res);
 }
 
-int terminate_red(t_red *herdc)
+char *extract_value(char *value, int start, int end, char *str)
 {
-	static int in_fd;
-	static int out_fd;
+	char *res;
+	char *var;
 
-	if (herdc->red_type == RED_IN)
-    {
-		if (in_fd > 0)
-			close(in_fd);
-		in_fd = open(herdc->red_file, O_RDWR);
-		if (in_fd < 0)
-            return (perror("msh-0.1$ "), false);
-		dup2(in_fd, STDIN_FILENO);
-		//close(in_fd);
-	}
-	else if (herdc->red_type == RED_OUT)
+		str[start - 1] = 0;
+		res = ft_strjoin(str, value);
+		var = res;
+		if (res && str[end])
+		{
+			res = ft_strjoin(res, str + end);
+			free(var);
+			if (!res)
+				return (NULL);
+		}
+		return(free(str),res);
+}
+static char	*is_exist(t_env *env, char *str, int start, int end)
+{
+	char *var;
+
+	var = ft_substr(str, start, (end - start));
+	if (!var)
+		return (NULL);
+	while (env)
 	{
-		if (out_fd > 0)
-			close(in_fd);
-		out_fd = open(herdc->red_file, O_CREAT | O_RDWR | O_TRUNC, S_IWUSR | S_IRUSR);
-		if (out_fd < 0)
-            return (perror("msh-0.1$ "), false);
-		dup2(out_fd, STDOUT_FILENO);
-				//close(out_fd);
-
+		if (!ft_strcmp(var, env->key))
+		{
+			free(var);
+	
+			return (extract_value(env->value, start, end, str));
+		}
+		env = env->next;
 	}
-	return(1);
+	while (str[end])
+	{
+		str[start - 1] = str[end++];
+		start++;
+	}
+	str[start - 1] = 0;
+	return(str);
 }
 
+void	cat_variable(int j, int i, char *str)
+{
+	while (str[j])
+	{
+		str[i - 1] = str[++j];
+		i++;
+	}
+	str[i] = 0;
+}
+char	*expand(char *str, t_env *env)
+{
+	char *tmp;
+	int j;
+	int i;
 
-static int heredoc(t_red *hrdc, t_red_info *red_info, int *pid)
+	tmp = str;	
+	i = 0;
+	while (tmp[i] != '$' && tmp[i])
+		i++;
+	if (!tmp[i++])
+		return (str);
+	j = i;
+	if (tmp[j] == '_' || ft_isalpha(tmp[j]))
+		j++;
+	else if (ft_isdigit(tmp[j]))
+		return (cat_variable(j, i, str), str);
+	else
+		return(str);
+	while (ft_isalnum(tmp[j]) || tmp[j] == '_')
+		j++;
+	tmp = is_exist(env, str, i, j);
+	if (!tmp)
+	{
+		return(free(str), perror("msh-0.1$ "), NULL);
+	}
+	return(tmp);
+}
+
+void	save_herdoc_data(t_env *env, t_red *hrdc, char *input, t_red_info *red_info)
+{
+	char	*tmp;
+
+	if (hrdc->expanded)
+	{
+		input = expand(input, env);
+		if (!input)
+		{
+			free(red_info->herdc_content);
+			exit(1);
+		}
+	}
+	tmp = red_info->herdc_content;
+	red_info->herdc_content = ft_join(red_info->herdc_content, input);
+	if (!red_info->herdc_content)
+	{
+		free(tmp);
+		free(input);
+		perror("msh-0.1$ ");
+		exit(1);
+	}
+	free(tmp);
+	free(input);
+}
+static int heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
 {
     char    *input;
-	char	*tmp;
 
 	while (hrdc->red_type != HERE_DOC)
 		hrdc = hrdc->next;
     while (1)
     {
         input = readline(">");
-        if (!input )
-			return( 0);	
-        if (!strcmp(input , hrdc->red_file))
+        if (!input)
+			return(0);	
+        if (!ft_strcmp(input , hrdc->red_file))
         {
 			red_info->number_of_herd--;
             if (red_info->number_of_herd == 0)
@@ -82,108 +157,107 @@ static int heredoc(t_red *hrdc, t_red_info *red_info, int *pid)
         }
 		else if (red_info->number_of_herd == 1) 
 		{
-			tmp = red_info->herdc_content;
-			red_info->herdc_content = ft_join(red_info->herdc_content, input);
-			free(tmp);
+			save_herdoc_data(env, hrdc, input, red_info);
 		}
     }
 	return(0);
 }
 
-
-// int implement_redirections(t_red *redrctns, t_red_info *red_info)
-// {
-// 	int check_ambg;
-// 	t_red *tmp;
-
-// 	tmp = redrctns;
-// 	check_ambg = redrctns->is_ambegious;
-// 	// while (tmp)
-// 	// {
-// 	// }
-	
-//     while (redrctns)
-// 	{
-// 		if (redrctns->red_type == HERE_DOC)
-// 		{
-// 			heredoc(&redrctns);
-// 			if (check_ambg)
-// 			{
-// 				write(2, "ambiguous redirect\n", 19);
-// 				return (0);
-// 			}
-// 		}
-// 		else if (redrctns->red_type == RED_APP)
-// 			red_append(redrctns->red_file);
-// 		else
-// 			terminate_red(redrctns);
-// 		redrctns = redrctns->next;
-// 	}
-// 	return (1);
-// }
-
-int implement_redirections(t_red *redr, t_red_info *red_info, int *pid)
+int red_out(t_red *redir, t_red_info *redir_info)
 {
-//khes redouan yesla7 hadi cat << a < $gxfg
-	red_info->number_of_herd = 0 ;
-	red_info->red_out = NULL;
-	red_info->red_input = NULL;
-	red_info->fd_out = -1;
-	red_info->error = NULL;
-	int fd = -1;
-	t_red *cur= redr;
-	
+	int fd;
+
+	fd = -1;
+	if (redir->red_type == RED_OUT)
+	{
+		redir_info->red_out = redir->red_file;
+		fd = open(redir_info->red_out, O_CREAT | O_RDWR | O_TRUNC, S_IWUSR | S_IRUSR);
+		if (fd < 0)
+        	return (perror("msh-0.1$ "), 0);
+		redir_info->fd_out = -3;
+	}
+	else if (redir->red_type == RED_APP)
+	{
+		redir_info->red_out = redir->red_file;
+		 fd = open(redir->red_file, O_CREAT | O_RDWR | O_APPEND, S_IWUSR | S_IRUSR);
+		if (fd < 0)
+       		return (perror("msh-0.1$ "), 0);
+		redir_info->fd_out = -2;
+	}
+	close(fd);
+	return(1);
+}
+int	open_files(t_red *redir, t_red_info *redir_info)
+{
+	int fd;
+
+	while (redir)
+	{
+		if (redir->is_ambegious)
+		{
+			write(2, "msh-0.1$ : ambiguous redirect\n", 31);
+			return(free(redir_info->herdc_content),exit(1), 0);
+		}
+		else if (redir->red_type == RED_IN)
+		{
+			fd = open(redir->red_file, O_RDWR);
+			if (fd < 0)
+				return(perror("msh-0.1$ "),free(redir_info->herdc_content), exit(1) ,0);
+			redir_info->red_input = redir->red_file;
+		}
+		else if (!red_out(redir, redir_info))
+			return (free(redir_info->herdc_content), exit(1), 0);
+		redir = redir->next;
+	}
+	return (1);
+}
+
+void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env)
+{
+	t_red *cur;
+
+	cur = redr;
 	while(redr)
 	{
-		//write(2, "yes\n", 4);
-		if (redr->is_ambegious)
-		{
-			//write(2, "y\n", 2);
-			red_info->error = "msh-0.1$ : ambiguous redirect\n";
-		}
 		if (redr->red_type == HERE_DOC)
 			red_info->number_of_herd++;
-		else if (!redr->is_ambegious && redr->red_type == RED_OUT)
-		{
-			red_info->red_out = redr->red_file;
-			 fd = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC, S_IWUSR | S_IRUSR);
-			if (fd < 0)
-            	return (perror("msh-0.1$ "), 1);
-			red_info->fd_out = -3;
-		}
-		else if (!redr->is_ambegious && redr->red_type == RED_APP)
-		{
-			red_info->red_out = redr->red_file;
-			 fd = open(redr->red_file, O_CREAT | O_RDWR | O_APPEND, S_IWUSR | S_IRUSR);
-			if (fd < 0)
-            return (perror("msh-0.1$ "), 1);
-			red_info->fd_out = -2;
-		}
-		else if (redr->red_type == RED_IN && red_info->number_of_herd == 0)
-			red_info->red_input = redr->red_file;
-		 close(fd);
 		redr = redr->next;
 	}
 	if (red_info->number_of_herd)
 	{
-		*pid = -3;
 		red_info->red_input = NULL;
-		heredoc(cur,red_info, pid);
+		heredoc(cur,red_info, env);
 		if (!red_info->herdc_content)
 			red_info->herdc_content = ft_strdup("");
 	}
-	if (red_info->error)
-	{
-		write(2, "msh-0.1$ : ambiguous redirect\n", 31);
-		return(0);
-	}
+}
+int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env)
+{
+	red_info->number_of_herd = 0 ;
+	red_info->red_out = NULL;
+	red_info->red_input = NULL;
+	red_info->fd_out = -5;
+	
+	implement_heredoc(redr, red_info, env);
+	open_files(redr, red_info);
 	if (red_info->fd_out == -2)
 		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);
 	else if (red_info->fd_out == -3)
 		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC);
-	else if (red_info->red_input)
+	if (red_info->fd_out == -1)
+		return(perror("msh-0.1$ "), 0);
+	if (red_info->red_input)
 	{
 		red_info->fd_inp = open(red_info->red_input, O_RDWR);
+		if (red_info->fd_inp < 0)
+			return(perror("msh-0.1$ "),  0);
+		if (red_info->herdc_content)
+		{
+			red_info->red_input = NULL;
+			close(red_info->fd_inp);
+			return (1);
+		}
 	}
 	return (1);
 }
+

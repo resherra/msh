@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/05 16:27:20 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/11 17:49:43 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,15 +124,16 @@ void leak()
 void handler(int sign)
 {
     (void)sign;
+
     printf("\n");
-	 if (pid > -1)
+	if (pid > -1)
 		kill(pid, SIGTERM);
-	 else if (pid == -1)
-	 {
+	else if (pid == -1)
+	{
 		rl_replace_line("", 0);
 		rl_on_new_line();
    		rl_redisplay();	
-	 }
+	}
 }
 //"< aka < $fshjks" hadi machi ambiguous a redouan ///
 
@@ -147,7 +148,7 @@ int	main(int ac, char **av, char **envp)
 	sig.sa_handler = &handler;
 	
 	init_env(&data.envs, envp, &data.paths);
-	
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		pid = -1;
@@ -164,8 +165,8 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-//      traverse_primary_tokens_list(data.head);
-//		printf("\n\n");
+     	// traverse_primary_tokens_list(data.head);
+		// printf("\n\n");
         lstclear(&data.head);
 		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
@@ -174,13 +175,13 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-//        traverse_primary_tokens_list(data.pre);
+    //  traverse_primary_tokens_list(data.pre);
 //		printf("\n\n");
-//        traverse_parse_list(data.cmd);
+    //	traverse_parse_list(data.cmd);
         lstclear(&data.pre);
+		add_history(data.str);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
-		add_history(data.str);
 		free(data.str);
 //		system("leaks -q ms");
        // atexit(leak);
