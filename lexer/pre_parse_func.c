@@ -66,6 +66,7 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		char **str, bool *flag)
 {
 	t_token	*node;
+	t_token *tmp = NULL;
 
 	node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
 	lst_add_back(new, node);
@@ -74,6 +75,7 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		curr = curr->next;
 		while (curr && curr->type == SPACES)
 			curr = curr->next;
+		tmp = curr;
 		curr = join(curr, str, true, flag);
 		if (*str)
 		{
@@ -84,7 +86,12 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 			lst_add_back(new, node);
 		}
 	}
-	return (curr);
+	if (curr && tmp == curr)
+    {
+        node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
+        lst_add_back(new, node);
+    }
+    return (curr);
 }
 
 void	sanitize(t_token *head, t_token **new)

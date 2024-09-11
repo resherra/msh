@@ -138,6 +138,7 @@ t_token					*get_last_node(t_token **head);
 //operator checks & others
 int						check_operator(char *str, int i);
 int						check(char *str, int tmp);
+int	sm_check(int type);
 
 
 

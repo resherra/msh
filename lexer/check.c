@@ -48,3 +48,10 @@ int	check(char *str, int tmp)
 	}
 	return (0);
 }
+
+int	sm_check(int type)
+{
+	if (type == SPACES || type == S_QUOTE || type == D_QUOTE || type == WORD)
+		return (1);
+	return (0);
+}

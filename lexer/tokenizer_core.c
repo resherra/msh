@@ -25,13 +25,6 @@ static void	get_full_var(char *str, t_tokenizer_vars *vars)
 	vars->i--;
 }
 
-static int sm_check(int type)
-{
-    if (type == SPACES || type == S_QUOTE || type == D_QUOTE || type == WORD)
-        return 1;
-    return 0;
-}
-
 static int	handle_env(char *str, t_tokenizer_vars *vars, t_token **head)
 {
 	t_token	*last_node;
