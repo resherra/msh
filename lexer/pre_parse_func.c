@@ -77,7 +77,7 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		curr = join(curr, str, true, flag);
 		if (*str)
 		{
-			if (flag)
+			if (*flag)
 				node = lst_new(*str, WORD, IN_DOUBLE_Q);
 			else
 				node = lst_new(*str, WORD, GENERAL);
