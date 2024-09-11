@@ -196,7 +196,7 @@ int	open_files(t_red *redir, t_red_info *redir_info)
 		if (redir->is_ambegious)
 		{
 			write(2, "msh-0.1$ : ambiguous redirect\n", 31);
-			return(0);
+			return(free(redir_info->herdc_content),exit(1), 0);
 		}
 		else if (redir->red_type == RED_IN)
 		{
