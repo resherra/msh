@@ -17,10 +17,9 @@ int env(t_env *envs)
 {
     t_env *curr = envs;
 
-     curr = curr->next;
+    curr = curr->next;
     while (curr)
     {
-         curr = curr->next;
         if (!curr->in_export)
             printf("%s=%s\n", curr->key, curr->value);
         curr = curr->next;
