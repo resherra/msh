@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/08 16:30:49 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/11 13:29:24 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-//      traverse_primary_tokens_list(data.head);
-//		printf("\n\n");
+     	// traverse_primary_tokens_list(data.head);
+		// printf("\n\n");
         lstclear(&data.head);
 		if (parser(&data.cmd, &data.pre, data.paths, data.envs) == 1)
         {
@@ -175,12 +175,12 @@ int	main(int ac, char **av, char **envp)
             free(data.str);
             continue;
         }
-       //traverse_primary_tokens_list(data.pre);
+    //  traverse_primary_tokens_list(data.pre);
 //		printf("\n\n");
-   //   traverse_parse_list(data.cmd);
+    	traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
-		excution(&data.envs, data.cmd, envp, &pid);
+		// excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
 //		system("leaks -q ms");
