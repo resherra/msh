@@ -53,16 +53,16 @@ int	syntax_check(t_token *pre)
 	return (0);
 }
 
-int	lexer(char *str, t_token **head, t_env *env, t_token **pre, bool *hdoc_exist)
+int	lexer(t_data *data)
 {
-	tokenize(str, head);
-	if (set_state(*head, env))
-	{
-	    ft_putendl_fd("Syntax Error: unclosed quotes\n", 2);
-		return (1);
-	}
-	sanitize(*head, pre, hdoc_exist);
-	if (syntax_check(*pre) && !(*hdoc_exist))
+    tokenize(data->str, &data->head);
+    if (set_state(data->head,  data->envs))
+    {
+        ft_putendl_fd("Syntax Error: unclosed quotes\n", 2);
         return (1);
-	return (0);
+    }
+    sanitize(data->head, &data->pre, &data->hdoc_exist);
+    if (syntax_check(data->pre) && !(data->hdoc_exist))
+        return (1);
+    return (0);
 }

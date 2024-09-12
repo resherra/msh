@@ -104,8 +104,6 @@ void					tokenize(char *str, t_token **head);
 
 void					skip_spaces(char *str, t_tokenizer_vars *vars);
 
-int						lexer(char *str, t_token **head, t_env *env,
-							t_token **pre, bool *hdoc_exist);
 
 //state function
 int						set_state(t_token *head, t_env *env);
@@ -230,6 +228,9 @@ typedef struct execution_tools
 	int fd_inp;
 	int fd[2];
 }t_red_info;
+
+
+int						lexer(t_data *data);
 
 void					excution(t_env **env, t_cmd *cmd, char **envp,
 							int *pid);

@@ -61,7 +61,7 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
         new_cmd->unclosed = true;
 	else if (curr && curr->type == HERE_DOC &&  !curr->next)
     {
-	    ft_putendl_fd("msh-01$: syntax error near unexpected token `newline'\n", 2);
+	    ft_putendl_fd("msh-01$: syntax error near unexpected token `newline'", 2);
         new_cmd->unclosed = true;
     }
 	return (curr);

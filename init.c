@@ -156,7 +156,7 @@ int	main(int ac, char **av, char **envp)
 		data.str = readline("msh-0.1$ ");
 		if (data.str == NULL)
 			ft_exit(&data.cmd) ;
-		if (lexer(data.str, &data.head, data.envs, &data.pre, &data.hdoc_exist))
+        if (lexer(&data))
         {
             lstclear(&data.head);
             lstclear(&data.pre);
