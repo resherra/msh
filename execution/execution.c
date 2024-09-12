@@ -73,7 +73,6 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	}
 	if (cmd->unclosed)
 	{
-//		write(2, "msh-01$: syntax error near unexpected token `newline'\n", 54);
 		free(red_info->herdc_content);
 		exit(1);
 	}

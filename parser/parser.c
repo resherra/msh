@@ -58,13 +58,10 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 	if (curr && curr->next && curr->next->type == WORD)
         curr = get_redirections(curr, new_red, new_cmd, envs);
 	else if (curr && curr->next && curr->next->type != WORD)
-    {
-        printf("msh: syntax error near unexpected token `%s'\n", curr->str);
         new_cmd->unclosed = true;
-    }
 	else if (curr && curr->type == HERE_DOC &&  !curr->next)
     {
-	    write(2, "msh-01$: syntax error near unexpected token `newline'\n", 54);
+	    ft_putendl_fd("msh-01$: syntax error near unexpected token `newline'\n", 2);
         new_cmd->unclosed = true;
     }
 	return (curr);

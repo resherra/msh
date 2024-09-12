@@ -105,7 +105,7 @@ void					tokenize(char *str, t_token **head);
 void					skip_spaces(char *str, t_tokenizer_vars *vars);
 
 int						lexer(char *str, t_token **head, t_env *env,
-							t_token **pre);
+							t_token **pre, bool *hdoc_exist);
 
 //state function
 int						set_state(t_token *head, t_env *env);
@@ -124,7 +124,7 @@ void					init_env(t_env **env, char **envp, char ***paths);
 void					ft_env_addback(t_env **env, t_env *new);
 
 //pre-parse functions
-void					sanitize(t_token *head, t_token **new);
+void					sanitize(t_token *head, t_token **new, bool *hdoc_exist);
 
 //env list utils
 t_env					*new_env(char *key, char *value);
@@ -213,6 +213,7 @@ typedef struct s_data
 	t_cmd				*cmd;
 	char				**paths;
 	char				*str;
+	bool				hdoc_exist;
 }						t_data;
 
 // excution

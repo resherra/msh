@@ -21,7 +21,10 @@ int	check_redirections(t_token *curr)
 
 int	print_syntax_error(char *token)
 {
-	printf("msh: syntax error near unexpected token `%s'\n", token);
+    ft_putstr_fd("msh: syntax error near unexpected token ", 2);
+    ft_putstr_fd("`", 2);
+    ft_putstr_fd(token, 2);
+    ft_putendl_fd("'", 2);
 	return (1);
 }
 
@@ -35,46 +38,31 @@ int	syntax_check(t_token *pre)
 		if (check_redirections(curr))
 		{
 			if (!curr->next || curr->next->type != WORD)
-            {
-                if (curr->prev && curr->prev->type != HERE_DOC)
-                    (print_syntax_error(curr->str));
-                else
-                    return print_syntax_error(curr->str);
-            }
+			    return (print_syntax_error(curr->str));
 		}
 		if (curr->type == PIPE)
 		{
 			if (!curr->prev || curr->prev->type != WORD)
-            {
-                if (curr->prev && curr->prev->type != HERE_DOC)
-                    (print_syntax_error(curr->str));
-                else
-                    return print_syntax_error(curr->str);
-            }
+			    return (print_syntax_error(curr->str));
 			if (!curr->next || (curr->next->type != WORD
 					&& !check_redirections(curr->next)))
-            {
-                if (curr->prev && curr->prev->type != HERE_DOC)
-                    (print_syntax_error(curr->str));
-                else
-                    return print_syntax_error(curr->str);
-            }
+			    return (print_syntax_error(curr->str));
 		}
 		curr = curr->next;
 	}
 	return (0);
 }
 
-int	lexer(char *str, t_token **head, t_env *env, t_token **pre)
+int	lexer(char *str, t_token **head, t_env *env, t_token **pre, bool *hdoc_exist)
 {
 	tokenize(str, head);
 	if (set_state(*head, env))
 	{
-		printf("Syntax Error: unclosed quotes\n");
+	    ft_putendl_fd("Syntax Error: unclosed quotes\n", 2);
 		return (1);
 	}
-	sanitize(*head, pre);
-	if (syntax_check(*pre))
+	sanitize(*head, pre, hdoc_exist);
+	if (syntax_check(*pre) && !(*hdoc_exist))
         return (1);
 	return (0);
 }
