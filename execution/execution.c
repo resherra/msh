@@ -82,6 +82,15 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	excute(cmd, pfds, red_info, env, envp);
 }
 
+static void free_envp(char **envp)
+{
+    int i = 0;
+
+    while (envp[i])
+        free(envp[i++]);
+    free(envp);
+}
+
 void excution(t_env **env, t_cmd *cmd, int *pid)
 {
     int pfds[2];
@@ -103,7 +112,6 @@ void excution(t_env **env, t_cmd *cmd, int *pid)
 
 		*pid = fork();
 		// fork protection! //failed == no minishell exit
-        // to_be_freed;
 		new_envp = lst_to_envp(*env);
         if (*pid == 0)
             child(cmd, pfds, &red_info, env, new_envp);
@@ -113,6 +121,7 @@ void excution(t_env **env, t_cmd *cmd, int *pid)
 			red_info.prev = dup(pfds[0]);
 		close(pfds[0]);
 		close(pfds[1]);
+		free_envp(new_envp);
 		cmd = cmd->next;
     }
 	while (wait(&sta) >= 0)

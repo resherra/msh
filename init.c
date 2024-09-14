@@ -206,11 +206,11 @@ int	main(int ac, char **av, char **envp)
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
         lstclear(&data.pre);
 		add_history(data.str);
-		traverse_parse_list(data.cmd);
+//		traverse_parse_list(data.cmd);
         excution(&data.envs, data.cmd, &pid);
         free_cmd_list(&data.cmd);
 		free(data.str);
-//		system("leaks -q ms");
+		system("leaks -q ms");
        // atexit(leak);
 	}
 }
