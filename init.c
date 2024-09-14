@@ -144,6 +144,39 @@ static void clear_all(t_data *data)
     free(data->str);
 }
 
+
+char **lst_to_envp(t_env *envs)
+{
+    int i = 0;
+    t_env *curr = envs;
+    while (curr)
+    {
+        i++;
+        curr = curr->next;
+    }
+    char **res = malloc(sizeof(char *) * (i + 1));
+    if (!res)
+        exit(1);
+
+    i = 0;
+    t_env *new = envs;
+    new = new->next;
+    while (new)
+    {
+        if (new->in_export == FALSE)
+        {
+            char *trimmed_value = ft_strtrim(new->value, "\x03");
+            char *full_key = ft_strjoin(new->key, "=");
+            res[i++] = ft_strjoin(full_key, trimmed_value);
+            free(trimmed_value);
+            free(full_key);
+        }
+        new = new->next;
+    }
+    res[i] = 0;
+    return res;
+}
+
 int	main(int ac, char **av, char **envp)
 {	
 	(void)ac;
@@ -173,10 +206,11 @@ int	main(int ac, char **av, char **envp)
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
         lstclear(&data.pre);
 		add_history(data.str);
-		excution(&data.envs, data.cmd, envp, &pid);
-		free_cmd_list(&data.cmd);
+//		excution(&data.envs, data.cmd, new_envp, &pid);
+        excution(&data.envs, data.cmd, &pid);
+        free_cmd_list(&data.cmd);
 		free(data.str);
-		system("leaks -q ms");
+//		system("leaks -q ms");
        // atexit(leak);
 	}
 }

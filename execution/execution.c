@@ -8,7 +8,7 @@ void	error(int err, char *path)
 	int prev_errno = err;
 	if (opendir(path))
 	{
-		printf("msh-0.1$: %s: is a directory\n", path);
+		printf("msh-0.1$:$$$ %s: is a directory\n", path);
 		exit(126);
 	}
 	else if (!ft_strchr(path,'/') && prev_errno == ENOENT)
@@ -56,7 +56,7 @@ void excute(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **env
 		exit(1) ;
 	else if (!state)
 		exit(0);
-	if (execve(cmd->path, cmd->args,envp) == -1)
+	if (execve(cmd->path, cmd->args, envp) == -1)
 		error(errno, cmd->path);
 }
 
@@ -82,13 +82,14 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	excute(cmd, pfds, red_info, env, envp);
 }
 
-void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
+void excution(t_env **env, t_cmd *cmd, int *pid)
 {
     int pfds[2];
 	int i;
 	int sta;
 	t_red_info red_info;
     char *tmp = NULL;
+    char **new_envp = NULL;
 
     i = 0;
 	red_info.prev = -1;
@@ -99,9 +100,13 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     while (cmd)
     {
 		pipe(pfds);
+
 		*pid = fork();
+		// fork protection! //failed == no minishell exit
+        // to_be_freed;
+		new_envp = lst_to_envp(*env);
         if (*pid == 0)
-			child(cmd, pfds, &red_info, env, envp);
+            child(cmd, pfds, &red_info, env, new_envp);
 		if (i++ > 0 )
 			close(red_info.prev);
 		if (cmd->next)

@@ -30,6 +30,17 @@ void	env_add_front(t_env **env, t_env *new)
 		*env = new;
 }
 
+void    incr_lvl(t_env **var)
+{
+    char *tmp = NULL;
+    int curr_value = ft_atoi((*var)->value);
+    tmp = (*var)->value;
+    char *itoi_return = ft_itoa(curr_value + 1);
+    (*var)->value = ft_strjoin(itoi_return, "\x03");
+    free(itoi_return);
+    free(tmp);
+}
+
 static void	extract_env(t_env **envs, char *str, char ***paths)
 {
 	int		i;
@@ -39,6 +50,10 @@ static void	extract_env(t_env **envs, char *str, char ***paths)
 	while (str[i] && str[i] != '=')
 		i++;
 	new = new_env(ft_substr(str, 0, i), ft_substr(str, i + 1, ft_strlen(str)));
+	if (!ft_strcmp("SHLVL", new->key))
+    {
+	    incr_lvl(&new);
+    }
 	if (!ft_strcmp("PATH", new->key))
 	{
 		get_paths(new->value, paths);
