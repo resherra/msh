@@ -135,7 +135,14 @@ void handler(int sign)
    		rl_redisplay();	
 	}
 }
-//"< aka < $fshjks" hadi machi ambiguous a redouan ///
+
+static void clear_all(t_data *data)
+{
+    lstclear(&data->head);
+    lstclear(&data->pre);
+    add_history(data->str);
+    free(data->str);
+}
 
 int	main(int ac, char **av, char **envp)
 {	
@@ -144,9 +151,10 @@ int	main(int ac, char **av, char **envp)
     static t_data data;
 	struct sigaction sig;
 
+	if (ac > 1)
+	    return 1;
 	sig.sa_flags = 0;
 	sig.sa_handler = &handler;
-	
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
@@ -154,30 +162,21 @@ int	main(int ac, char **av, char **envp)
 		pid = -1;
 		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
-		if (data.str == NULL)
-			ft_exit(&data.cmd) ;
-//        if (lexer(&data))
+		if (!data.str)
+			ft_exit(&data.cmd);
         if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
-            lstclear(&data.head);
-            lstclear(&data.pre);
-            add_history(data.str);
-            free(data.str);
+            clear_all(&data);
             continue;
         }
-//		traverse_primary_tokens_list(data.head);
-//		printf("\n\n");
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-    //  traverse_primary_tokens_list(data.pre);
-//		printf("\n\n");
-    //	traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-//		system("leaks -q ms");
+		system("leaks -q ms");
        // atexit(leak);
 	}
 }

@@ -56,5 +56,6 @@ void	init_env(t_env **env, char **envp, char ***paths)
 		extract_env(env, envp[i], paths);
 		i++;
 	}
-	env_add_front(env, new_env(ft_strdup("?"), ft_strdup("0")));
+	t_env *new = new_env(ft_strdup("?"), ft_strdup("0"));
+	env_add_front(env, new);
 }
