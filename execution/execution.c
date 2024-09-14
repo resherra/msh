@@ -41,7 +41,7 @@ void excute(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **env
 		dup2(red_info->fd[0], STDIN_FILENO);
 		close(red_info->fd[0]);
 	}
-	if (red_info->fd_out != -1)
+	if (red_info->fd_out != -5)
 	 	dup2(red_info->fd_out, STDOUT_FILENO);
 	else if (cmd->next)
 		dup2(pfds[1],STDOUT_FILENO);
@@ -92,20 +92,25 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     int pfds[2];
 	int i;
 	int sta;
+	int is_the_frist;
 	t_red_info red_info;
 
 	i = 0;
 	red_info.prev = -1;
 	sta = 0;
-	if (cmd && cmd->cmd && !cmd->next)
-		if (sample_bultin(env, cmd, &red_info))
-			cmd = cmd->next;
+	is_the_frist = 0;
+	if (!cmd->next)
+		is_the_frist = 1;
     while (cmd)
     {
 		pipe(pfds);
 		*pid = fork();
         if (*pid == 0)
 			child(cmd, pfds, &red_info, env, envp);
+		if (cmd->redirections)
+			wait(NULL); 
+		if (is_the_frist && !cmd->unclosed && cmd && cmd->cmd && !cmd->next) 
+			sample_bultin(env, cmd, &red_info);
 		if (i++ > 0 )
 			close(red_info.prev);
 		if (cmd->next)
