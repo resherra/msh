@@ -228,7 +228,7 @@ typedef struct execution_tools
 }t_red_info;
 
 
-int						lexer(t_data *data);
+int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 void					excution(t_env **env, t_cmd *cmd, char **envp,
 							int *pid);
