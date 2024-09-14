@@ -122,7 +122,7 @@ void					init_env(t_env **env, char **envp, char ***paths);
 void					ft_env_addback(t_env **env, t_env *new);
 
 //pre-parse functions
-void					sanitize(t_token *head, t_token **new, bool *hdoc_exist);
+void					sanitize(t_token *head, t_token **new);
 
 //env list utils
 t_env					*new_env(char *key, char *value);
@@ -180,7 +180,6 @@ typedef struct s_cmd
 	int					args_lst_size;
 	char				**args;
 	t_red				*redirections;
-	bool				unclosed;
 	struct s_cmd		*next;
 }						t_cmd;
 
@@ -211,7 +210,6 @@ typedef struct s_data
 	t_cmd				*cmd;
 	char				**paths;
 	char				*str;
-	bool				hdoc_exist;
 }						t_data;
 
 // excution
@@ -242,6 +240,7 @@ void					free_cmd_list(t_cmd **cmds);
 
 t_env					*new_env_export(char *key, char *value);
 
+int print_syntax_error(char *str);
 //miscs
 const char				*format_state(int type);
 const char				*format_type(int type);

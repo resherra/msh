@@ -63,7 +63,7 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 }
 
 static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
-		char **str, bool *flag, bool *hdoc_exits)
+		char **str, bool *flag)
 {
 	t_token	*node;
 	t_token *tmp = NULL;
@@ -85,7 +85,6 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 				node = lst_new(*str, WORD, GENERAL);
 			lst_add_back(new, node);
 		}
-		*hdoc_exits = true;
 	}
 	if (curr && tmp == curr)
     {
@@ -95,7 +94,7 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
     return (curr);
 }
 
-void	sanitize(t_token *head, t_token **new, bool *hdoc_exist)
+void	sanitize(t_token *head, t_token **new)
 {
 	t_token	*curr;
 	t_token	*node;
@@ -114,7 +113,7 @@ void	sanitize(t_token *head, t_token **new, bool *hdoc_exist)
 			lst_add_back(new, node);
 		}
 		if (curr && curr->type != SPACES)
-			curr = handle_ope_and_delimiter(curr, new, &str, &flag, hdoc_exist);
+			curr = handle_ope_and_delimiter(curr, new, &str, &flag);
 		if (curr)
 			curr = curr->next;
 	}

@@ -14,7 +14,7 @@
 
 int	check_redirections(t_token *curr)
 {
-	if (curr->type == RED_IN || curr->type == RED_OUT || curr->type == RED_APP)
+	if (curr->type == RED_IN || curr->type == RED_OUT || curr->type == RED_APP || curr->type == HERE_DOC)
 		return (1);
 	return (0);
 }
@@ -43,10 +43,10 @@ int	syntax_check(t_token *pre)
 		if (curr->type == PIPE)
 		{
 			if (!curr->prev || curr->prev->type != WORD)
-			    return (print_syntax_error(curr->str));
+                    return (print_syntax_error(curr->str));
 			if (!curr->next || (curr->next->type != WORD
 					&& !check_redirections(curr->next)))
-			    return (print_syntax_error(curr->str));
+                    return (print_syntax_error(curr->str));
 		}
 		curr = curr->next;
 	}
@@ -61,8 +61,8 @@ int	lexer(t_data *data)
         ft_putendl_fd("Syntax Error: unclosed quotes\n", 2);
         return (1);
     }
-    sanitize(data->head, &data->pre, &data->hdoc_exist);
-    if (syntax_check(data->pre) && !(data->hdoc_exist))
+    sanitize(data->head, &data->pre);
+    if (syntax_check(data->pre))
         return (1);
     return (0);
 }

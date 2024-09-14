@@ -71,11 +71,6 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 		free(red_info->herdc_content);
 		exit(1);
 	}
-	if (cmd->unclosed)
-	{
-		free(red_info->herdc_content);
-		exit(1);
-	}
 	if (!cmd->cmd)
 		exit(0);
 	if (red_info->herdc_content)
