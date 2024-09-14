@@ -88,8 +88,9 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
 	int i;
 	int sta;
 	t_red_info red_info;
+    char *tmp = NULL;
 
-	i = 0;
+    i = 0;
 	red_info.prev = -1;
 	sta = 0;
 	if (cmd && cmd->cmd && !cmd->next)
@@ -111,5 +112,7 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     }
 	while (wait(&sta) >= 0)
 	{}
+	tmp = (*env)->value;
 	(*env)->value = ft_itoa(WEXITSTATUS(sta));
+	free(tmp);
 }
