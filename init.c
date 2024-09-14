@@ -206,7 +206,7 @@ int	main(int ac, char **av, char **envp)
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
         lstclear(&data.pre);
 		add_history(data.str);
-//		excution(&data.envs, data.cmd, new_envp, &pid);
+		traverse_parse_list(data.cmd);
         excution(&data.envs, data.cmd, &pid);
         free_cmd_list(&data.cmd);
 		free(data.str);

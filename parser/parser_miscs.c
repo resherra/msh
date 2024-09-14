@@ -53,7 +53,7 @@ char	*extract_path(char *cmd, char **paths)
 	int		i;
 
 	i = 0;
-	if (!cmd)
+	if (!cmd || !(*cmd))
 		return (NULL);
 	pre_path = ft_strjoin("/", cmd);
 	if (!paths)
