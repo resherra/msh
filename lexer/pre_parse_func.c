@@ -66,8 +66,9 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		char **str, bool *flag)
 {
 	t_token	*node;
-	t_token *tmp = NULL;
+	t_token	*tmp;
 
+	tmp = NULL;
 	node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
 	lst_add_back(new, node);
 	if (curr->type == HERE_DOC)
@@ -87,11 +88,8 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		}
 	}
 	if (curr && tmp == curr)
-    {
-        node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
-        lst_add_back(new, node);
-    }
-    return (curr);
+		special_case(curr, new, &node);
+	return (curr);
 }
 
 void	sanitize(t_token *head, t_token **new)

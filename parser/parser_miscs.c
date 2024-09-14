@@ -70,7 +70,5 @@ char	*extract_path(char *cmd, char **paths)
 		i++;
 	}
 	free(pre_path);
-	// if (!access(cmd, F_OK))
-	// 	return (cmd);
 	return (cmd);
 }

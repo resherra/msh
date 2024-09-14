@@ -56,7 +56,7 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
 	if (curr && curr->next && curr->next->type == WORD)
-        curr = get_redirections(curr, new_red, new_cmd, envs);
+		curr = get_redirections(curr, new_red, new_cmd, envs);
 	return (curr);
 }
 

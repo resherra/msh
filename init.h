@@ -228,6 +228,10 @@ typedef struct execution_tools
 }t_red_info;
 
 
+
+
+void	special_case(t_token *curr, t_token **new, t_token **node);
+
 int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 void					excution(t_env **env, t_cmd *cmd, char **envp,
