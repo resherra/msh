@@ -237,7 +237,7 @@ void	special_case(t_token *curr, t_token **new, t_token **node);
 
 int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
-void					excution(t_env **env, t_cmd *cmd, char **envp,
+void					excution(t_env **env, t_cmd *cmd,
 							int *pid);
 int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env);
 int						is_bultin(t_env **envs, t_cmd *cmd, int is_one_cmd);
@@ -246,6 +246,9 @@ int						sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *red_info);
 void					free_cmd_list(t_cmd **cmds);
 
 t_env					*new_env_export(char *key, char *value);
+
+
+char **lst_to_envp(t_env *envs);
 
 int print_syntax_error(char *str);
 //miscs

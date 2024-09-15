@@ -6,12 +6,12 @@
 void	error(int err, char *path)
 {
 	int prev_errno = err;
-	 // *DIR
+
+	 if (!path)
+	 	exit(0);
 	if (opendir(path) != NULL)
 	{
-		printf("ana hnaaa\n");
-		printf("msh-0.1$: %s: is a directory\n", path);
-		//free()
+		printf("msh-0.1$:$$$ %s: is a directory\n", path);
 		exit(126);
 	}
 	else if (!ft_strchr(path,'/') && prev_errno == ENOENT)
@@ -59,7 +59,7 @@ void excute(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **env
 		exit(1) ;
 	else if (!state )
 		exit(0);
-	if (execve(cmd->path, cmd->args,envp) == -1)
+	if (execve(cmd->path, cmd->args, envp) == -1)
 		error(errno, cmd->path);
 }
 
@@ -68,7 +68,7 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	red_info->herdc_content = NULL;
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
-	red_info->fd_out = -1;
+	red_info->fd_out = -5;
 	if (cmd->redirections && red_info->check_sig && !implement_redirections(cmd->redirections , red_info, *env))
 	{
 		free(red_info->herdc_content);
@@ -85,27 +85,40 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	excute(cmd, pfds, red_info, env, envp);
 }
 
-void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
+static void free_envp(char **envp)
+{
+    int i = 0;
+
+    while (envp[i])
+        free(envp[i++]);
+    free(envp);
+}
+
+void excution(t_env **env, t_cmd *cmd, int *pid)
 {
     int pfds[2];
 	int i;
 	int sta;
 	t_red_info red_info;
     char *tmp = NULL;
+    char **new_envp = NULL;
 
     i = 0;
 	red_info.check_sig = 1;
 	red_info.prev = -1;
 	sta = 0;
 	red_info.is_one_cmd = false;
-	if (!cmd->next)
+	if (cmd && !cmd->next)
 		red_info.is_one_cmd = true;
     while (cmd)
     {
 		pipe(pfds);
+
 		*pid = fork();
+		// fork protection! //failed == no minishell exit
+		new_envp = lst_to_envp(*env);
         if (*pid == 0)
-			child(cmd, pfds, &red_info, env, envp);
+            child(cmd, pfds, &red_info, env, new_envp);
 		if (cmd->redirections)
 			wait(NULL); 
 		if (*pid == -42)
@@ -118,6 +131,7 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
 			red_info.prev = dup(pfds[0]);
 		close(pfds[0]);
 		close(pfds[1]);
+		free_envp(new_envp);
 		cmd = cmd->next;
     }
 	while (wait(&sta) >= 0)

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 17:28:46 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/15 02:20:48 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/15 03:14:33 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,15 @@ char	*extract_path(char *cmd, char **paths)
 {
 	char	*pre_path;
 	char	*path;
-	char	*cur;
 	int		i;
 
 	i = 0;
-	if (!cmd)
+	if (!cmd || !(*cmd))
 		return (NULL);
 
-	pre_path = ft_strjoin("/", cmd);
 	if (cmd[0] &&  cmd[0] == '.' && cmd[1] == '/')
-	{
-		cur = getcwd(NULL, 0);
-		path = ft_strjoin(cur, pre_path);
-		free(cur);
-		return (free(pre_path), path);
-	}
+		return (cmd);
+	pre_path = ft_strjoin("/", cmd);
 	if (!paths)
 		return (NULL);
 	while (paths[i])
