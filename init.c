@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/14 09:34:43 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/15 00:14:05 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,10 +124,15 @@ void leak()
 void handler(int sign)
 {
     (void)sign;
-
+	int save_pid;
+	
+	save_pid = pid;
     printf("\n");
 	if (pid > -1)
-		kill(pid, SIGTERM);
+	{
+		pid = -42;
+		kill(save_pid, SIGTERM);
+	}
 	else if (pid == -1)
 	{
 		rl_replace_line("", 0);
@@ -135,7 +140,14 @@ void handler(int sign)
    		rl_redisplay();	
 	}
 }
-//"< aka < $fshjks" hadi machi ambiguous a redouan ///
+
+static void clear_all(t_data *data)
+{
+    lstclear(&data->head);
+    lstclear(&data->pre);
+    add_history(data->str);
+    free(data->str);
+}
 
 int	main(int ac, char **av, char **envp)
 {	
@@ -144,9 +156,10 @@ int	main(int ac, char **av, char **envp)
     static t_data data;
 	struct sigaction sig;
 
+	if (ac > 1)
+	    return 1;
 	sig.sa_flags = 0;
 	sig.sa_handler = &handler;
-	
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
@@ -154,29 +167,22 @@ int	main(int ac, char **av, char **envp)
 		pid = -1;
 		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
-		if (data.str == NULL)
-			ft_exit(&data.cmd) ;
-        if (lexer(&data))
+		if (!data.str)
+			ft_exit(&data.cmd);
+        if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
-            lstclear(&data.head);
-            lstclear(&data.pre);
-            add_history(data.str);
-            free(data.str);
+            clear_all(&data);
             continue;
         }
-//		traverse_primary_tokens_list(data.head);
-//		printf("\n\n");
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-    //  traverse_primary_tokens_list(data.pre);
-//		printf("\n\n");
-    //	traverse_parse_list(data.cmd);
+		// traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, envp, &pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-//		system("leaks -q ms");
+		//system("leaks -q ms");
        // atexit(leak);
 	}
 }

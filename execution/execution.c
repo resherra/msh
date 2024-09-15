@@ -6,9 +6,12 @@
 void	error(int err, char *path)
 {
 	int prev_errno = err;
-	if (opendir(path))
+	 // *DIR
+	if (opendir(path) != NULL)
 	{
+		printf("ana hnaaa\n");
 		printf("msh-0.1$: %s: is a directory\n", path);
+		//free()
 		exit(126);
 	}
 	else if (!ft_strchr(path,'/') && prev_errno == ENOENT)
@@ -51,10 +54,10 @@ void excute(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **env
 		dup2(red_info->prev,STDIN_FILENO);
 	close(pfds[0]);
 	close(pfds[1]);
-	state = is_bultin(env, cmd);
+	state = is_bultin(env, cmd, red_info->is_one_cmd);
 	if (state == 1)
 		exit(1) ;
-	else if (!state)
+	else if (!state )
 		exit(0);
 	if (execve(cmd->path, cmd->args,envp) == -1)
 		error(errno, cmd->path);
@@ -66,12 +69,7 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -1;
-	if (cmd->redirections && !implement_redirections(cmd->redirections , red_info, *env))
-	{
-		free(red_info->herdc_content);
-		exit(1);
-	}
-	if (cmd->unclosed)
+	if (cmd->redirections && red_info->check_sig && !implement_redirections(cmd->redirections , red_info, *env))
 	{
 		free(red_info->herdc_content);
 		exit(1);
@@ -92,15 +90,16 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     int pfds[2];
 	int i;
 	int sta;
-	int is_the_frist;
 	t_red_info red_info;
+    char *tmp = NULL;
 
-	i = 0;
+    i = 0;
+	red_info.check_sig = 1;
 	red_info.prev = -1;
 	sta = 0;
-	is_the_frist = 0;
+	red_info.is_one_cmd = false;
 	if (!cmd->next)
-		is_the_frist = 1;
+		red_info.is_one_cmd = true;
     while (cmd)
     {
 		pipe(pfds);
@@ -109,7 +108,9 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
 			child(cmd, pfds, &red_info, env, envp);
 		if (cmd->redirections)
 			wait(NULL); 
-		if (is_the_frist && !cmd->unclosed && cmd && cmd->cmd && !cmd->next) 
+		if (*pid == -42)
+			red_info.check_sig = 0;
+		if (red_info.check_sig && red_info.is_one_cmd && cmd && cmd->cmd)
 			sample_bultin(env, cmd, &red_info);
 		if (i++ > 0 )
 			close(red_info.prev);
@@ -121,5 +122,7 @@ void excution(t_env **env, t_cmd *cmd, char **envp, int *pid)
     }
 	while (wait(&sta) >= 0)
 	{}
+	tmp = (*env)->value;
 	(*env)->value = ft_itoa(WEXITSTATUS(sta));
+	free(tmp);
 }

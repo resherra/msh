@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/09 14:30:49 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/14 21:03:29 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_cmd	t_cmd;
 //macros for errors
 # define not_valid_idntf -2
 # define allocation_error -3
+# define send_figint -42
 
 //tokens
 typedef enum e_type
@@ -122,7 +123,7 @@ void					init_env(t_env **env, char **envp, char ***paths);
 void					ft_env_addback(t_env **env, t_env *new);
 
 //pre-parse functions
-void					sanitize(t_token *head, t_token **new, bool *hdoc_exist);
+void					sanitize(t_token *head, t_token **new);
 
 //env list utils
 t_env					*new_env(char *key, char *value);
@@ -180,7 +181,6 @@ typedef struct s_cmd
 	int					args_lst_size;
 	char				**args;
 	t_red				*redirections;
-	bool				unclosed;
 	struct s_cmd		*next;
 }						t_cmd;
 
@@ -211,7 +211,6 @@ typedef struct s_data
 	t_cmd				*cmd;
 	char				**paths;
 	char				*str;
-	bool				hdoc_exist;
 }						t_data;
 
 // excution
@@ -219,29 +218,36 @@ typedef struct s_data
 
 typedef struct execution_tools
 {
-	char *red_out;
-	char *herdc_content;
-	char *red_input;
-	int number_of_herd;
-	int fd_out;
-	int prev;
-	int fd_inp;
-	int fd[2];
-}t_red_info;
+	char	*red_out;
+	char 	*herdc_content;
+	char 	*red_input;
+	int		is_one_cmd;
+	int 	number_of_herd;
+	int 	fd_out;
+	int		check_sig;
+	int 	prev;
+	int 	fd_inp;
+	int 	fd[2];
+}			t_red_info;
 
 
-int						lexer(t_data *data);
+
+
+void	special_case(t_token *curr, t_token **new, t_token **node);
+
+int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 void					excution(t_env **env, t_cmd *cmd, char **envp,
 							int *pid);
 int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env);
-int						is_bultin(t_env **envs, t_cmd *cmd);
+int						is_bultin(t_env **envs, t_cmd *cmd, int is_one_cmd);
 int						sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *red_info);
 
 void					free_cmd_list(t_cmd **cmds);
 
 t_env					*new_env_export(char *key, char *value);
 
+int print_syntax_error(char *str);
 //miscs
 const char				*format_state(int type);
 const char				*format_type(int type);
