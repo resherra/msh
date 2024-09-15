@@ -1,0 +1,16 @@
+         
+CMakeLists.txt
+Makefile
+builtins
+cmake-build-debug
+execution
+init.c
+init.h
+init.o
+lexer
+libft
+ls
+miscs.c
+miscs.o
+ms
+parser

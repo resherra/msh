@@ -35,7 +35,7 @@ int	check_ambg(char *str, t_env *envs)
 {
 	if (check_in_env(str, envs))
 	{
-		if (!ft_strcmp(str, "\x03") || check_n_files(str) > 1)
+		if (!ft_strcmp(str, "\x03") || check_n_files(str) != 1)
 			return (1);
 	}
 	return (0);
