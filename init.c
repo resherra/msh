@@ -209,10 +209,10 @@ int	main(int ac, char **av, char **envp)
         }
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-		// traverse_parse_list(data.cmd);
+//		traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
-//		traverse_parse_list(data.cmd);
+		traverse_parse_list(data.cmd);
         excution(&data.envs, data.cmd, &pid);
         free_cmd_list(&data.cmd);
 		free(data.str);

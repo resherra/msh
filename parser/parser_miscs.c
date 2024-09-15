@@ -46,20 +46,52 @@ char	**lst_to_arr(int size, t_args *args_list)
 	return (args);
 }
 
+char *abslt_rltv(char *pre_path)
+{
+    char *path = NULL;
+    char *cwd = getcwd(NULL, 0);
+    path = ft_strjoin(cwd, pre_path);
+
+    if (!access(path, F_OK))
+    {
+        free(cwd);
+        return path;
+    }
+
+    free(cwd);
+    free(path);
+    path = NULL;
+    return path;
+}
+
 char	*extract_path(char *cmd, char **paths)
 {
 	char	*pre_path;
 	char	*path;
+    char    *curr_pth;
 	int		i;
 
 	i = 0;
 	if (!cmd || !(*cmd))
 		return (NULL);
 
-	if (cmd[0] &&  cmd[0] == '.' && cmd[1] == '/')
-		return (cmd);
 	pre_path = ft_strjoin("/", cmd);
-	if (!paths)
+    if (*cmd == '/')
+    {
+        free(pre_path);
+        return cmd;
+    }
+    if (*cmd == '.')
+    {
+        curr_pth = abslt_rltv(pre_path);
+        if (curr_pth)
+        {
+            free(pre_path);
+            return curr_pth;
+        }
+    }
+
+    if (!paths)
 		return (NULL);
 	while (paths[i])
 	{
