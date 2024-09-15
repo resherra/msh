@@ -11,7 +11,7 @@ void	error(int err, char *path)
 	 	exit(0);
 	if (opendir(path) != NULL)
 	{
-		printf("msh-0.1$:$$$ %s: is a directory\n", path);
+		printf("msh-0.1$: %s: is a directory\n", path);
 		exit(126);
 	}
 	else if (!ft_strchr(path,'/') && prev_errno == ENOENT)
@@ -69,7 +69,7 @@ void child(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
-	if (cmd->redirections && red_info->check_sig && !implement_redirections(cmd->redirections , red_info, *env))
+	if (cmd->redirections && !implement_redirections(cmd->redirections , red_info, *env))
 	{
 		free(red_info->herdc_content);
 		exit(1);
@@ -89,6 +89,8 @@ static void free_envp(char **envp)
 {
     int i = 0;
 
+	if (!envp)
+		return ;
     while (envp[i])
         free(envp[i++]);
     free(envp);
@@ -98,45 +100,56 @@ void excution(t_env **env, t_cmd *cmd, int *pid)
 {
     int pfds[2];
 	int i;
-	int sta;
+	int state;
 	t_red_info red_info;
     char *tmp = NULL;
     char **new_envp = NULL;
 
     i = 0;
-	red_info.check_sig = 1;
 	red_info.prev = -1;
-	sta = 0;
+	state = 0;
 	red_info.is_one_cmd = false;
 	if (cmd && !cmd->next)
 		red_info.is_one_cmd = true;
     while (cmd)
     {
-		pipe(pfds);
-
+		if (pipe(pfds) == -1)
+		{
+			state = errno;
+			perror("msh-0.1$ ");
+			free_envp(new_envp);
+			break;
+		}
 		*pid = fork();
-		// fork protection! //failed == no minishell exit
+		if (*pid == -1)
+		{
+			state = errno;
+			free_envp(new_envp);
+			perror("msh-0.1$ ");
+			close(pfds[0]);
+			close(pfds[1]);
+			break;
+		}
 		new_envp = lst_to_envp(*env);
         if (*pid == 0)
             child(cmd, pfds, &red_info, env, new_envp);
 		if (cmd->redirections)
 			wait(NULL); 
-		if (*pid == -42)
-			red_info.check_sig = 0;
-		if (red_info.check_sig && red_info.is_one_cmd && cmd && cmd->cmd)
+		if (*pid != -42 && red_info.is_one_cmd && cmd && cmd->cmd)
 			sample_bultin(env, cmd, &red_info);
-		if (i++ > 0 )
+		if (i++ > 0)
 			close(red_info.prev);
-		if (cmd->next)
+		if (*pid != -42 && cmd->next)
 			red_info.prev = dup(pfds[0]);
 		close(pfds[0]);
 		close(pfds[1]);
-		free_envp(new_envp);
+		if (*pid == -42)
+			break;
 		cmd = cmd->next;
     }
-	while (wait(&sta) >= 0)
+	while (wait(&state) >= 0)
 	{}
 	tmp = (*env)->value;
-	(*env)->value = ft_itoa(WEXITSTATUS(sta));
+	(*env)->value = ft_itoa(WEXITSTATUS(state));
 	free(tmp);
 }
