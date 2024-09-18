@@ -210,7 +210,7 @@ int	open_files(t_red *redir, t_red_info *redir_info)
 	return (1);
 }
 
-void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env)
+void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int herdc_child)
 {
 	t_red *cur;
 
@@ -224,19 +224,21 @@ void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env)
 	if (red_info->number_of_herd)
 	{
 		red_info->red_input = NULL;
-		heredoc(cur,red_info, env);
-		if (!red_info->herdc_content)
+		if (herdc_child)
+			heredoc(cur,red_info, env);
+		if (herdc_child && !red_info->herdc_content)
 			red_info->herdc_content = ft_strdup("");
 	}
 }
-int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env)
+int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int herdc_child)
 {
 	red_info->number_of_herd = 0 ;
 	red_info->red_out = NULL;
 	red_info->red_input = NULL;
 	red_info->fd_out = -5;
 	
-	implement_heredoc(redr, red_info, env);
+	
+	implement_heredoc(redr, red_info, env, herdc_child);
 	open_files(redr, red_info);
 	if (red_info->fd_out == -2)
 		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);

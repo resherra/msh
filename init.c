@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/15 14:48:32 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/18 19:20:22 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,8 +200,12 @@ int	main(int ac, char **av, char **envp)
 		pid = -2;
 		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
+		//printf ("dozt\n");
 		if (!data.str)
+		{
+			//printf("mehna kandkhol\n");
 			ft_exit(&data.cmd);
+		}
         if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
             clear_all(&data);
@@ -212,8 +216,8 @@ int	main(int ac, char **av, char **envp)
 //		traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
-		traverse_parse_list(data.cmd);
-        excution(&data.envs, data.cmd, &pid);
+	//	traverse_parse_list(data.cmd);
+        excution(&data.envs, data.cmd, &pid, envp);
         free_cmd_list(&data.cmd);
 		free(data.str);
 		//system("leaks -q ms");

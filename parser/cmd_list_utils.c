@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_list_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 14:38:36 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/10 14:38:49 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:26:49 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ t_cmd	*lst_new_cmd(void)
 	new->args = NULL;
 	new->redirections = NULL;
 	new->args_lst_size = 0;
+	new->nmbr_of_herdc = 0;
 	new->next = NULL;
+	new->is_herdc = false;
 	return (new);
 }
 

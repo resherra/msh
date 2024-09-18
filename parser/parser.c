@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/11 18:57:17 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/18 17:26:01 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,12 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 	t_red	*new_red;
 	t_cmd	*new_cmd;
 	t_args	*arg;
+	int		counter;
 
 	arg = NULL;
 	new_red = NULL;
 	curr = *pre;
+	counter = 0;
 	while (curr)
 	{
 		new_cmd = lst_new_cmd();
@@ -78,6 +80,11 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 			curr = get_args(curr, arg, new_cmd);
 			if (curr && curr->type == PIPE)
 				break ;
+			if (curr && !new_cmd->is_herdc && curr->type == HERE_DOC)
+			{
+				counter++;
+				new_cmd->is_herdc = true;
+			}
 			curr = heredoc_special_handling(curr, new_red, new_cmd, envs);
 			if (curr)
 				curr = curr->next;
@@ -86,4 +93,6 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 		if (curr)
 			curr = curr->next;
 	}
+	if (cmd && *cmd)
+		(*cmd)->nmbr_of_herdc = counter;
 }

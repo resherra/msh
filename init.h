@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/14 21:03:29 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/18 23:27:57 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,16 +173,36 @@ typedef struct s_args
 	struct s_args		*next;
 }						t_args;
 
+
+typedef struct s_dl
+{
+	char				*dilemeter;
+	int					expand;
+	struct s_dl		*next;
+}						t_delmtr;
+
 typedef struct s_cmd
 {
 	char				*cmd;
 	char				*path;
 	t_args				*args_list;
 	int					args_lst_size;
+	int					nmbr_of_herdc;
+	int					is_herdc;
 	char				**args;
 	t_red				*redirections;
 	struct s_cmd		*next;
 }						t_cmd;
+// typedef struct s_cmd
+// {
+// 	char				*cmd;
+// 	char				*path;
+// 	t_args				*args_list;
+// 	int					args_lst_size;
+// 	char				**args;
+// 	t_red				*redirections;
+// 	struct s_cmd		*next;
+// }						t_cmd;
 
 void						parser(t_cmd **cmd, t_token **pre, char **paths,
 							t_env *envs);
@@ -223,6 +243,7 @@ typedef struct execution_tools
 	char 	*red_input;
 	int		is_one_cmd;
 	int 	number_of_herd;
+	int		nmbr_cmd_herdc;
 	int 	fd_out;
 	int		check_sig;
 	int 	prev;
@@ -238,8 +259,8 @@ void	special_case(t_token *curr, t_token **new, t_token **node);
 int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
 
 void					excution(t_env **env, t_cmd *cmd,
-							int *pid);
-int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env);
+							int *pid, char **envp);
+int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env, int herdc_child);
 int						is_bultin(t_env **envs, t_cmd *cmd, int is_one_cmd);
 int						sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *red_info);
 
