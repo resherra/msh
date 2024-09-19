@@ -34,6 +34,7 @@ void	error(int err, char *path)
 	perror ("msh-0.1$ ");
 	exit(err);
 }
+
 void excute(t_cmd *cmd, int *pfds, t_red_info *red_info, t_env **env, char **envp)
 {
 	int state;
@@ -138,12 +139,11 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 	if (execve(cmd->path, cmd->args, envp) == -1)
 		error(errno, cmd->path);
 }
+
 void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, char **envp)
 {
 	
 	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
-	while (cmd && cmd->is_herdc != true)
-		cmd = cmd->next;
 	while (cmd)
 	{
 		if (cmd->is_herdc == true)
@@ -159,14 +159,15 @@ void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, ch
 			if (*pid == 0)
 				herdc_child(cmd, red_info, *env, envp);
 			red_info->nmbr_cmd_herdc--;
-		}
 		if (cmd->is_herdc)
 			wait(NULL); 
+		}
 		if (*pid == -42)
 			break;
 		cmd = cmd->next;
 	}
 }
+
 void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 {
     int pfds[2];
