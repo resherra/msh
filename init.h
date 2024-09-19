@@ -13,6 +13,8 @@
 #ifndef INIT_H
 # define INIT_H
 
+
+
 typedef struct s_cmd	t_cmd;
 
 # include "libft/libft.h"

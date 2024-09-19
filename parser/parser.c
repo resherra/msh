@@ -30,6 +30,11 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 {
 	while (curr && curr->type == WORD)
 	{
+		if (!(*curr->str))
+		{
+			curr = curr->next;
+			continue;
+		}
 		arg = new_arg(ft_strdup(curr->str));
 		arg_add_back(&new_cmd->args_list, arg);
 		new_cmd->args_lst_size++;
