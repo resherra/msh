@@ -201,7 +201,9 @@ int	open_files(t_red *redir, t_red_info *redir_info)
 			fd = open(redir->red_file, O_RDWR);
 			if (fd < 0)
 				return(perror("msh-0.1$ "),free(redir_info->herdc_content), exit(1) ,0);
-			redir_info->red_input = redir->red_file;
+			redir_info->fd_inp = fd;
+			if (redir_info->number_of_herd == 0)
+				redir_info->red_input = redir->red_file;
 		}
 		else if (!red_out(redir, redir_info))
 			return (free(redir_info->herdc_content), exit(1), 0);
@@ -210,7 +212,7 @@ int	open_files(t_red *redir, t_red_info *redir_info)
 	return (1);
 }
 
-void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int herdc_child)
+void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int in_herdc_child)
 {
 	t_red *cur;
 
@@ -224,13 +226,13 @@ void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int herdc_
 	if (red_info->number_of_herd)
 	{
 		red_info->red_input = NULL;
-		if (herdc_child)
+		if (in_herdc_child)
 			heredoc(cur,red_info, env);
-		if (herdc_child && !red_info->herdc_content)
+		if (in_herdc_child && !red_info->herdc_content)
 			red_info->herdc_content = ft_strdup("");
 	}
 }
-int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int herdc_child)
+int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int in_herdc_child)
 {
 	red_info->number_of_herd = 0 ;
 	red_info->red_out = NULL;
@@ -238,25 +240,28 @@ int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int he
 	red_info->fd_out = -5;
 	
 	
-	implement_heredoc(redr, red_info, env, herdc_child);
-	open_files(redr, red_info);
-	if (red_info->fd_out == -2)
-		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);
-	else if (red_info->fd_out == -3)
-		red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC);
-	if (red_info->fd_out == -1)
-		return(perror("msh-0.1$ "), 0);
-	if (red_info->red_input)
+	implement_heredoc(redr, red_info, env, in_herdc_child);
+	if (red_info->nmbr_cmd_herdc != 1  || !in_herdc_child)
 	{
-		red_info->fd_inp = open(red_info->red_input, O_RDWR);
-		if (red_info->fd_inp < 0)
-			return(perror("msh-0.1$ "),  0);
-		if (red_info->herdc_content)
-		{
-			red_info->red_input = NULL;
-			close(red_info->fd_inp);
-			return (1);
-		}
+		open_files(redr, red_info);
+		if (red_info->fd_out == -2)
+			red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);
+		else if (red_info->fd_out == -3)
+			red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC);
+		if (red_info->fd_out == -1)
+			return(perror("msh-0.1$ "), 0);
+		// if (red_info->red_input)
+		// {
+		// 	red_info->fd_inp = open(red_info->red_input, O_RDWR);
+		// 	if (red_info->fd_inp < 0)
+		// 		return(perror("msh-0.1$ "),  0);
+		// 	if (red_info->herdc_content)
+		// 	{
+		// 		red_info->red_input = NULL;
+		// 		close(red_info->fd_inp);
+		// 		return (1);
+		// 	}
+		// }
 	}
 	return (1);
 }

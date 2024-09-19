@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/19 04:49:45 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/19 18:20:22 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,13 @@ void handler(int sign)
 	int save_pid;
 	
 	save_pid = pid;
+	printf("pid ==== %i\n", pid);
     printf("\n");
 	if (pid != -2)
 	{
+		rl_replace_line("", 0);
+		rl_on_new_line();
+   		rl_redisplay();	
 		pid = -42;
 		kill(save_pid, SIGTERM);
 	}

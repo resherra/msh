@@ -104,10 +104,7 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 
 	counter =  red_info->nmbr_cmd_herdc;
 	if (cmd->redirections && !implement_redirections(cmd->redirections , red_info, env, true))
-	{
-		free(red_info->herdc_content);
-		exit(1);
-	}
+		return(free(red_info->herdc_content), exit(1));
 	if (!cmd->cmd)
 		exit(0);
 	if (red_info->herdc_content)
@@ -160,7 +157,11 @@ void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, ch
 				herdc_child(cmd, red_info, *env, envp);
 			red_info->nmbr_cmd_herdc--;
 		if (cmd->is_herdc)
-			wait(NULL); 
+		{
+			printf("pid == %i\n", *pid);
+			waitpid(*pid, NULL, 0); 
+			printf("fin\n");
+		}
 		}
 		if (*pid == -42)
 			break;
@@ -190,10 +191,15 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 		pipe(red_info.fd);
 		excute_heredocs(env, cmd, pid,  &red_info, envp);
 		close(red_info.fd[1]);
+		printf("go\n");
 	}
 		red_info.nmbr_cmd_herdc = cmd->nmbr_of_herdc;
 	if (*pid == -42)
+	{
+		//printf("ab\n");
+		close(red_info.fd[0]);
 		return ;
+	}
     while (cmd)
     {
 		if (cmd && cmd->is_herdc == true && red_info.nmbr_cmd_herdc != 1)
