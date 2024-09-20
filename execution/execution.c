@@ -122,8 +122,8 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 			write(fd[1], red_info->herdc_content, ft_strlen(red_info->herdc_content));
 		else
 		{
-			write(fd[1], "", 1);
 			dup2(fd[1], STDOUT_FILENO);
+			write(fd[1], "", 1);
 		}
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);

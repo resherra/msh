@@ -39,7 +39,7 @@ int sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
     (void)redir_info;
 	state[1] = 0;
 	if (!ft_strcmp("exit", cmd->cmd))
-		ft_exit(&cmd);
+		ft_exit(cmd, envs);
     else if (!strcmp("export", cmd->cmd))
     {
 		state[0] = ft_export(*envs, cmd->args) + 48 ;

@@ -55,10 +55,7 @@ int    ft_export(t_env *envs, char **args)
 	if (args[i])
 	{
 		while (args[i])
-		{
-			state += add_in_env(args[i], envs);
-			i++;
-		}
+			state += add_in_env(args[i++], envs);
 		if(state != (i - 1))
 			return(1);
 		return (0);

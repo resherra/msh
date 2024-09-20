@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/19 19:34:59 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/20 18:51:19 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int						ft_export(t_env *envs, char **args);
 int						ft_echo(char **str);
 int						ft_cd(char *path, t_env *env);
 int						pwd(void);
-void					ft_exit(t_cmd **cmd);
+void					ft_exit(t_cmd *cmd, t_env **env);
 
 //PARSINGd
 typedef struct s_red

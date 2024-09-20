@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/20 02:04:24 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/20 13:11:28 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ int	main(int ac, char **av, char **envp)
 
 	if (ac > 1)
 	    return 1;
-	
+
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
@@ -192,7 +192,10 @@ int	main(int ac, char **av, char **envp)
 		pid = -2;
 		data.str = readline("msh-0.1$ ");
 		if (!data.str)
-			ft_exit(&data.cmd);
+		{
+			printf("exit\n");
+			exit(1);
+		}
         if (lexer(data.str, &data.head, data.envs, &data.pre))
         {
             clear_all(&data);
