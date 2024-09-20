@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/18 23:27:57 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/19 19:34:59 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_cmd	t_cmd;
 # define allocation_error -3
 # define send_figint -42
 
+int  pid;
 //tokens
 typedef enum e_type
 {

@@ -6,14 +6,12 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/19 18:20:22 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/20 02:04:24 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
 
-
-int  pid;
 
 void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 {
@@ -124,19 +122,10 @@ void leak()
 void handler(int sign)
 {
     (void)sign;
-	int save_pid;
 	
-	save_pid = pid;
-	printf("pid ==== %i\n", pid);
-    printf("\n");
+   printf("\n");
 	if (pid != -2)
-	{
-		rl_replace_line("", 0);
-		rl_on_new_line();
-   		rl_redisplay();	
 		pid = -42;
-		kill(save_pid, SIGTERM);
-	}
 	else
 	{
 		rl_replace_line("", 0);
@@ -191,18 +180,16 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
     static t_data data;
-	struct sigaction sig;
 
 	if (ac > 1)
 	    return 1;
-	sig.sa_flags = 0;
-	sig.sa_handler = &handler;
+	
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handler);
 	while (1)
 	{
 		pid = -2;
-		sigaction(SIGINT, &sig, NULL);
 		data.str = readline("msh-0.1$ ");
 		if (!data.str)
 			ft_exit(&data.cmd);
