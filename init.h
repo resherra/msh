@@ -256,6 +256,7 @@ typedef struct execution_tools
 
 
 
+char	*free_and_return(char *pre_path, char *to_return);
 
 void	special_case(t_token *curr, t_token **new, t_token **node);
 

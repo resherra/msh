@@ -30,15 +30,18 @@ void	env_add_front(t_env **env, t_env *new)
 		*env = new;
 }
 
-void    incr_lvl(t_env **var)
+void	incr_lvl(t_env **var)
 {
-    char *tmp = NULL;
-    int curr_value = ft_atoi((*var)->value);
-    tmp = (*var)->value;
-    char *itoi_return = ft_itoa(curr_value + 1);
-    (*var)->value = ft_strjoin(itoi_return, "\x03");
-    free(itoi_return);
-    free(tmp);
+	char	*tmp;
+	int		curr_value;
+
+	tmp = NULL;
+	curr_value = ft_atoi((*var)->value);
+	tmp = (*var)->value;
+	char *itoi_return (= ft_itoa(curr_value + 1));
+	(*var)->value = ft_strjoin(itoi_return, "\x03");
+	free(itoi_return);
+	free(tmp);
 }
 
 static void	extract_env(t_env **envs, char *str, char ***paths)
@@ -51,9 +54,9 @@ static void	extract_env(t_env **envs, char *str, char ***paths)
 		i++;
 	new = new_env(ft_substr(str, 0, i), ft_substr(str, i + 1, ft_strlen(str)));
 	if (!ft_strcmp("SHLVL", new->key))
-    {
-	    incr_lvl(&new);
-    }
+	{
+		incr_lvl(&new);
+	}
 	if (!ft_strcmp("PATH", new->key))
 	{
 		get_paths(new->value, paths);
@@ -63,7 +66,8 @@ static void	extract_env(t_env **envs, char *str, char ***paths)
 
 void	init_env(t_env **env, char **envp, char ***paths)
 {
-	int	i;
+	int		i;
+	t_env	*new;
 
 	i = 0;
 	while (envp[i])
@@ -71,6 +75,6 @@ void	init_env(t_env **env, char **envp, char ***paths)
 		extract_env(env, envp[i], paths);
 		i++;
 	}
-	t_env *new = new_env(ft_strdup("?"), ft_strdup("0"));
+	new = new_env(ft_strdup("?"), ft_strdup("0"));
 	env_add_front(env, new);
 }

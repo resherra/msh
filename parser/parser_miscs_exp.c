@@ -17,3 +17,9 @@ void	special_case(t_token *curr, t_token **new, t_token **node)
 	*node = lst_new(ft_strdup(curr->str), curr->type, curr->state);
 	lst_add_back(new, *node);
 }
+
+char	*free_and_return(char *pre_path, char *to_return)
+{
+	free(pre_path);
+	return (to_return);
+}

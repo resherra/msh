@@ -189,7 +189,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGINT, handler);
 	while (1)
 	{
-		pid = -2;
+        pid = -2;
 		data.str = readline("msh-0.1$ ");
 		if (!data.str)
 			exit(1);
@@ -208,6 +208,6 @@ int	main(int ac, char **av, char **envp)
         free_cmd_list(&data.cmd);
 		free(data.str);
 		//system("leaks -q ms");
-       // atexit(leak);
 	}
+	return ft_atoi(data.envs->value);
 }

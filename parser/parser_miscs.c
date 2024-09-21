@@ -46,64 +46,61 @@ char	**lst_to_arr(int size, t_args *args_list)
 	return (args);
 }
 
-char *abslt_rltv(char *pre_path)
+char	*abslt_rltv(char *pre_path)
 {
-    char *path = NULL;
-    char *cwd = getcwd(NULL, 0);
-    path = ft_strjoin(cwd, pre_path);
+	char	*path;
+	char	*cwd;
 
-    if (!access(path, F_OK))
-    {
-        free(cwd);
-        return path;
-    }
+	cwd = getcwd(NULL, 0);
+	path = ft_strjoin(cwd, pre_path);
+	if (!access(path, F_OK))
+	{
+		free(cwd);
+		return (path);
+	}
+	free(cwd);
+	free(path);
+	path = NULL;
+	return (path);
+}
 
-    free(cwd);
-    free(path);
-    path = NULL;
-    return path;
+int	pth(char *paths, char **path, char **pre_path)
+{
+	*path = ft_strjoin(paths, *pre_path);
+	if (!access(*path, F_OK))
+	{
+		free(*pre_path);
+		return (1);
+	}
+	free(*path);
+	return (0);
 }
 
 char	*extract_path(char *cmd, char **paths)
 {
-	char	*pre_path;
-	char	*path;
-    char    *curr_pth;
-	int		i;
+	char		*pre_path;
+	char		*path;
+	char		*curr_pth;
+	static int	i;
 
-	i = 0;
 	if (!cmd || !(*cmd))
 		return (NULL);
-
 	pre_path = ft_strjoin("/", cmd);
-    if (*cmd == '/')
-    {
-        free(pre_path);
-        return cmd;
-    }
-    if (*cmd == '.')
-    {
-        curr_pth = abslt_rltv(pre_path);
-        if (curr_pth)
-        {
-            free(pre_path);
-            return curr_pth;
-        }
-    }
-
-    if (!paths)
+	if (*cmd == '/')
+		return (free_and_return(pre_path, cmd));
+	if (*cmd == '.')
+	{
+		curr_pth = abslt_rltv(pre_path);
+		if (curr_pth)
+			return (free_and_return(pre_path, curr_pth));
+	}
+	if (!paths)
 		return (NULL);
 	while (paths[i])
 	{
-		path = ft_strjoin(paths[i], pre_path);
-		if (!access(path, F_OK))
-		{
-			free(pre_path);
+		if (pth(paths[i], &path, &pre_path))
 			return (path);
-		}
-		free(path);
 		i++;
 	}
-	free(pre_path);
-	return (cmd);
+	return (free_and_return(pre_path, cmd));
 }
