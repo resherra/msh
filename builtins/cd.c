@@ -24,7 +24,7 @@ static int	up_date(t_env *env, char **old, char **curr, char *old_path)
 		free(*old);
 		*old = old_path;
 	}
-	return (1);
+	return (0);
 }
 
 int ft_cd(char *path, t_env *env)
@@ -45,6 +45,5 @@ int ft_cd(char *path, t_env *env)
 	}
 	else if (chdir(path))
 		return (perror("cd"), 1);
-	up_date(env, old, curr, old_Path);
-	return (0);
+	return (up_date(env, old, curr, old_Path));
 }

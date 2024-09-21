@@ -5,7 +5,7 @@ int is_bultin(t_env **envs, t_cmd *cmd, int is_one)
 	if (!ft_strcmp("exit", cmd->cmd))
 		return (0);
     if (!ft_strcmp("env", cmd->cmd))
-        return (env(*envs)); 
+        return (env(*envs, cmd)); 
 	else if (!ft_strcmp("echo", cmd->cmd))
 		return (ft_echo(cmd->args));
     else if (!ft_strcmp("export", cmd->cmd))
@@ -39,24 +39,19 @@ int sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
     (void)redir_info;
 	state[1] = 0;
 	if (!ft_strcmp("exit", cmd->cmd))
-		ft_exit(cmd, envs);
+		return (ft_exit(cmd));
     else if (!strcmp("export", cmd->cmd))
     {
-		state[0] = ft_export(*envs, cmd->args) + 48 ;
-		(*envs)->value = ft_strdup(state);
-        return (1);
+        return (ft_export(*envs, cmd->args));
     }
     else if (!ft_strcmp("unset", cmd->cmd))
     {
-		state[0] = unset(envs, cmd->args) + 48;
-        (*envs)->value = ft_strdup(state);
-		return (1);
+		return (unset(envs, cmd->args));
     } 
 	else if (!ft_strcmp("cd", cmd->cmd))
 	{
-		state[0] = ft_cd(cmd->args[1], *envs) + 48;
-		(*envs)->value = ft_strdup(state);
-		return (1);
+		
+		return (ft_cd(cmd->args[1], *envs));
 	}
-	return(0);
+	return(2);
 }

@@ -100,6 +100,7 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
 	int fd[2];
+	int out[2];
 	int counter;
 	int state;
 
@@ -122,8 +123,11 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 			write(fd[1], red_info->herdc_content, ft_strlen(red_info->herdc_content));
 		else
 		{
-			dup2(fd[1], STDOUT_FILENO);
 			write(fd[1], "", 1);
+			pipe(out);
+			dup2(out[1], STDOUT_FILENO);
+			close(out[0]);
+			close(out[1]);
 		}
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
@@ -176,11 +180,13 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
     int pfds[2];
 	int i;
 	int state;
+	int sampel_state;
 	t_red_info red_info;
     char *tmp = NULL;
     char **new_envp = NULL;
 
     i = 0;
+	sampel_state = -1;
 	red_info.prev = -1;
 	state = 0;
 	red_info.is_one_cmd = false;
@@ -234,7 +240,7 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 			red_info.nmbr_cmd_herdc--;
 		}
 		if (*pid != -42 && red_info.is_one_cmd && cmd && cmd->cmd)
-			sample_bultin(env, cmd, &red_info);
+			sampel_state = sample_bultin(env, cmd, &red_info);
 		if (i++ > 0)
 			close(red_info.prev);
 		if (*pid != -42 && cmd->next)
@@ -248,7 +254,11 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	while (wait(&state) >= 0)
 	{}
 	tmp = (*env)->value;
-	(*env)->value = ft_itoa(WEXITSTATUS(state));
+	if (sampel_state != -1 && sampel_state != 2)
+		state = sampel_state;
+	else
+		state = WEXITSTATUS(state);
+	(*env)->value = ft_itoa(state);
 	free(tmp);
 	free_envp(new_envp);
 }
