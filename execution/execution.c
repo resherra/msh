@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/22 21:19:09 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:52:49 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void handle_herdc_inp(int *fd, int *out,t_red_info *red_info)
 	if (red_info->red_input)
 		dup2(red_info->fd_inp, STDIN_FILENO);
 }
+
 void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 {
 	red_info->herdc_content = NULL;
@@ -176,6 +177,8 @@ void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, ch
 {
 	pipe(red_info->fd);
 	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
+	if (cmd && !cmd->next)
+		red_info->is_one_cmd = true;
 	while (cmd)
 	{
 		if (cmd->is_herdc == true)
@@ -215,8 +218,6 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	red_info.is_one_cmd = false;
 	if (!cmd)
 		return ;
-	if (cmd && !cmd->next)
-		red_info.is_one_cmd = true;
 	new_envp = lst_to_envp(*env);
 	if (cmd && cmd->nmbr_of_herdc)
 	{
