@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/21 01:14:38 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/22 01:11:53 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ int	main(int ac, char **av, char **envp)
         }
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-//		traverse_parse_list(data.cmd);
+	//	traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
 		//traverse_parse_list(data.cmd);

@@ -27,12 +27,27 @@ static int	up_date(t_env *env, char **old, char **curr, char *old_path)
 	return (0);
 }
 
+void search_path(t_env *env, char **home)
+{
+	*home = NULL;
+	while (env)
+	{
+		if (!ft_strcmp(env->key, "HOME"))
+		{
+			*home = env->value;
+			break;
+		}
+		env = env->next;
+	}
+}
 int ft_cd(char *path, t_env *env)
 {
-	char **old;
-	char **curr;
-	char *old_Path;
+	char	**old;
+	char	**curr;
+	char	*old_Path;
+	char	*home_path;
 
+	search_path(env, &home_path);
 	old = NULL;
 	curr = NULL;
 	old_Path = getcwd(NULL, 0);
@@ -40,10 +55,14 @@ int ft_cd(char *path, t_env *env)
 		return (perror("msh-0.1$ "), 1);
 	if (!path)
 	{
-		if (chdir(getenv("HOME")))
-			return (perror("msh-0.1$: cd"), 1);
+		if (home_path == NULL || chdir(home_path))
+			return (printf("msh-0.1$: HOME not set\n"), 1);
 	}
 	else if (chdir(path))
+	{
+		printf("c == %i\n", path[12]);	
+		printf("%s, size == %i\n", path, ft_strlen(path));
 		return (perror("cd"), 1);
+	}
 	return (up_date(env, old, curr, old_Path));
 }

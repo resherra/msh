@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 10:46:53 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/04 19:40:54 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/22 02:38:20 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ int   unset(t_env **envs, char **vars)
         {
             if (!ft_strcmp(vars[i], curr->key))
             {   
-                if (!ft_strcmp(vars[i], (*envs)->key))
-                    *envs = curr->next;
-                else
-                    prev->next = curr->next;
+				prev->next = curr->next;
                 env_delone(curr, func);
                 break;
             }

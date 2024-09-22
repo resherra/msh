@@ -1,29 +1,31 @@
 #include "../init.h"
 
+
 int ft_echo(char **str)
 {
-	char	**args;
 	int		option;
+	int		i;
+	int		j;
 
-	option = 1;
-	args = str + 1;
-
-	
-	if (*args && !ft_strcmp(str[1], "-n"))
+	i = 1;
+	option = 0;
+	while (*str && str[i][0] == '-' && str[i][1] == 'n')
 	{
-		option = 0;
-		args = str + 2;
+		j = 1;
+		while (str[i][j] == 'n')
+			j++;
+		if (str[i][j] != 0)
+			break;
+		option = 1;
+		i++;
 	}
-	
-	while (*args)
+	while (str[i])
 	{
-		write(STDOUT_FILENO, *args, ft_strlen(*args));
-		args++;
-		if (*args)
+		write(STDOUT_FILENO, str[i], ft_strlen(str[i]));
+		if (str[++i])
 			write(STDOUT_FILENO, " ", 1);
 	}
-	
-	if (option)
+	if (!option)
 		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
