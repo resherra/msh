@@ -102,7 +102,8 @@ void handle_herdc_inp(int *fd, int *out,t_red_info *red_info)
 	else
 	{
 		write(fd[1], "", 1);
-		pipe(out);
+		if (pipe(fd) < 0)
+			return (perror("msh-01$: "), exit(errno));
 		dup2(out[1], STDOUT_FILENO);
 		close(out[0]);
 		close(out[1]);
@@ -168,6 +169,19 @@ void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, ch
 	}
 }
 
+void exit_state(t_env **env, int state, int smpl_state, char **envp)
+{
+	char	*tmp;
+
+	tmp = (*env)->value;
+	if (smpl_state != -1 && smpl_state != 2)
+		state = smpl_state;
+	else
+		state = WEXITSTATUS(state);
+	(*env)->value = ft_itoa(state);
+	free(tmp);
+	free_envp(envp);
+}
 void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 {
     int pfds[2];
@@ -246,12 +260,5 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
     }
 	while (wait(&state) >= 0)
 	{}
-	tmp = (*env)->value;
-	if (sampel_state != -1 && sampel_state != 2)
-		state = sampel_state;
-	else
-		state = WEXITSTATUS(state);
-	(*env)->value = ft_itoa(state);
-	free(tmp);
-	free_envp(new_envp);
+	exit_state(env, state, sampel_state, new_envp);
 }

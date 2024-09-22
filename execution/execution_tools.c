@@ -142,9 +142,9 @@ static int heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
     while (1)
     {
         input = readline(">");
-        if (!input)
-			return(0);	
-        if (!ft_strcmp(input , hrdc->red_file))
+        // if (!input)
+		// 	return(0);	
+        if (!input && !ft_strcmp(input , hrdc->red_file))
         {
 			red_info->number_of_herd--;
             if (red_info->number_of_herd == 0)
