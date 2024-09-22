@@ -59,10 +59,6 @@ int ft_cd(char *path, t_env *env)
 			return (printf("msh-0.1$: HOME not set\n"), 1);
 	}
 	else if (chdir(path))
-	{
-		printf("c == %i\n", path[12]);	
-		printf("%s, size == %i\n", path, ft_strlen(path));
 		return (perror("cd"), 1);
-	}
 	return (up_date(env, old, curr, old_Path));
 }
