@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
+/*   Updated: 2024/09/22 21:10:29 by schakkou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../init.h"
 
 #define sa_handler __sigaction_u.__sa_handler
@@ -143,32 +155,6 @@ void herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 		error(errno, cmd->path);
 }
 
-void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, char **envp)
-{
-	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
-	while (cmd)
-	{
-		if (cmd->is_herdc == true)
-		{
-			*pid = fork();
-			if (*pid == -1)
-			{
-			//	state = errno;
-				//free_envp(new_envp);
-				perror("msh-0.1$ ");
-				break;
-			}
-			if (*pid == 0)
-				herdc_child(cmd, red_info, *env, envp);
-			red_info->nmbr_cmd_herdc--;
-			waitpid(*pid, NULL, 0); 
-		}
-		if (*pid == -42)
-			break;
-		cmd = cmd->next;
-	}
-}
-
 void exit_state(t_env **env, int state, int smpl_state, char **envp)
 {
 	char	*tmp;
@@ -182,6 +168,34 @@ void exit_state(t_env **env, int state, int smpl_state, char **envp)
 	free(tmp);
 	free_envp(envp);
 }
+
+void excute_heredocs(t_env **env, t_cmd *cmd, int *pid, t_red_info *red_info, char **envp)
+{
+	pipe(red_info->fd);
+	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
+	while (cmd)
+	{
+		if (cmd->is_herdc == true)
+		{
+			*pid = fork();
+			if (*pid == -1)
+				return (perror("msh-0.1$ "), exit_state(env, 1, -1, envp));
+			if (*pid == 0)
+				herdc_child(cmd, red_info, *env, envp);
+			red_info->nmbr_cmd_herdc--;
+			waitpid(*pid, NULL, 0); 
+		}
+		if (*pid == -42)
+		{
+			exit_state(env, 1, -1, envp);
+			close(red_info->fd[0]);
+			break;
+		}
+		cmd = cmd->next;
+	}
+}
+
+
 void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 {
     int pfds[2];
@@ -189,7 +203,6 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	int state;
 	int sampel_state;
 	t_red_info red_info;
-    char *tmp = NULL;
     char **new_envp = NULL;
 
     i = 0;
@@ -204,18 +217,12 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	new_envp = lst_to_envp(*env);
 	if (cmd && cmd->nmbr_of_herdc)
 	{
-		pipe(red_info.fd);
-		excute_heredocs(env, cmd, pid,  &red_info, envp);
+		excute_heredocs(env, cmd, pid, &red_info, envp);
 		close(red_info.fd[1]);
 	}
-		red_info.nmbr_cmd_herdc = cmd->nmbr_of_herdc;
-	if (*pid == -42)
+	red_info.nmbr_cmd_herdc = cmd->nmbr_of_herdc;
+	while (*pid != -42 && cmd)
 	{
-		close(red_info.fd[0]);
-		return ;
-	}
-    while (cmd)
-    {
 		if (cmd && cmd->is_herdc == true && red_info.nmbr_cmd_herdc != 1)
 		{
 			red_info.nmbr_cmd_herdc--;
@@ -223,29 +230,14 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 			continue;
 		}
 		if (pipe(pfds) == -1)
-		{
-			state = errno;
-			perror("msh-0.1$ ");
-			free_envp(new_envp);
-			break;
-		}
+			return (perror("msh-0.1$ "), exit_state(env, errno, -1, envp));
 		*pid = fork();
 		if (*pid == -1)
-		{
-			state = errno;
-			free_envp(new_envp);
-			perror("msh-0.1$ ");
-			close(pfds[0]);
-			close(pfds[1]);
-			break;
-		}
+			return (close(pfds[0]),close(pfds[1]),perror("msh-0.1$ "), exit_state(env, errno, -1, envp));
         if (*pid == 0)
-            child(cmd, pfds, &red_info, env, new_envp);
-		if (cmd->is_herdc == true && red_info.nmbr_cmd_herdc == 1)
-		{
+			child(cmd, pfds, &red_info, env, new_envp);
+		if (cmd->is_herdc == true && red_info.nmbr_cmd_herdc == 1 && red_info.nmbr_cmd_herdc--)
 			close(red_info.fd[0]);
-			red_info.nmbr_cmd_herdc--;
-		}
 		if (*pid != -42 && red_info.is_one_cmd && cmd && cmd->cmd)
 			sampel_state = sample_bultin(env, cmd, &red_info);
 		if (i++ > 0)
@@ -254,8 +246,6 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 			red_info.prev = dup(pfds[0]);
 		close(pfds[0]);
 		close(pfds[1]);
-		if (*pid == -42)
-			break;
 		cmd = cmd->next;
     }
 	while (wait(&state) >= 0)
