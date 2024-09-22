@@ -38,7 +38,7 @@ void	incr_lvl(t_env **var)
 	tmp = NULL;
 	curr_value = ft_atoi((*var)->value);
 	tmp = (*var)->value;
-	char *itoi_return (= ft_itoa(curr_value + 1));
+	char *itoi_return = ft_itoa(curr_value + 1);
 	(*var)->value = ft_strjoin(itoi_return, "\x03");
 	free(itoi_return);
 	free(tmp);

@@ -21,7 +21,8 @@ t_cmd	*lst_new_cmd(void)
 		exit(1);
 	new->args_list = NULL;
 	new->cmd = NULL;
-	new->path = NULL;
+	new->
+	path = NULL;
 	new->args = NULL;
 	new->redirections = NULL;
 	new->args_lst_size = 0;

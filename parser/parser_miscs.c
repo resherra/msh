@@ -81,7 +81,7 @@ char	*extract_path(char *cmd, char **paths)
 	char		*pre_path;
 	char		*path;
 	char		*curr_pth;
-	static int	i;
+	int	i = 0;
 
 	if (!cmd || !(*cmd))
 		return (NULL);

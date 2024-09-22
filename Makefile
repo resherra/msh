@@ -16,8 +16,6 @@ OBJS=$(SRC:.c=.o)
 NAME=ms
 LIBFT=libft/libft.a
 
-
-
 all: $(NAME)
 
 $(NAME):  init.h $(LIBFT)  $(OBJS)
