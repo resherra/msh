@@ -14,10 +14,10 @@
 
 void	free_cmd_list(t_cmd **cmds)
 {
-	t_cmd *tmp;
+	t_cmd	*tmp;
 
 	if (!cmds)
-		return;
+		return ;
 	if (*cmds)
 	{
 		while (*cmds)
@@ -33,12 +33,12 @@ void	free_cmd_list(t_cmd **cmds)
 	*cmds = NULL;
 }
 
-void lstclear(t_token **head)
+void	lstclear(t_token **head)
 {
-	t_token *ne;
+	t_token	*ne;
 
 	if (!head || !*head)
-		return;
+		return ;
 	while (*head)
 	{
 		ne = *head;
@@ -51,7 +51,7 @@ void lstclear(t_token **head)
 	*head = NULL;
 }
 
-void    clear_args_list(t_args **head)
+void	clear_args_list(t_args **head)
 {
 	t_args	*ne;
 
@@ -91,7 +91,9 @@ void	clear_redirections(t_red **head)
 
 void	free_all(t_cmd *cmd)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (cmd->args[i])
 		free(cmd->args[i++]);
 	free(cmd->args);

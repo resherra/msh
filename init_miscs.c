@@ -12,22 +12,20 @@
 
 #include "init.h"
 
-
-void init_all(t_data *data)
+void	init_all(t_data *data)
 {
-    data->envs = NULL;
-    data->cmd = NULL;
-    data->head = NULL;
-    data->paths = NULL;
-    data->pre = NULL;
-    data->str = NULL;
+	data->envs = NULL;
+	data->cmd = NULL;
+	data->head = NULL;
+	data->paths = NULL;
+	data->pre = NULL;
+	data->str = NULL;
 }
 
-
-void clear_all(t_data *data)
+void	clear_all(t_data *data)
 {
-    lstclear(&data->head);
-    lstclear(&data->pre);
-    add_history(data->str);
-    free(data->str);
+	lstclear(&data->head);
+	lstclear(&data->pre);
+	add_history(data->str);
+	free(data->str);
 }

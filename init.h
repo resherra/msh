@@ -151,6 +151,12 @@ typedef struct s_data
 	char				*str;
 }						t_data;
 
+typedef struct s_util_vars
+{
+	char *trimmed_value;
+	char	*full_key;
+} t_util_vars;
+
 void 	lstclear(t_token **head);
 void    clear_args_list(t_args **head);
 void	clear_redirections(t_red **head);
