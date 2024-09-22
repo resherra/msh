@@ -203,7 +203,7 @@ int	main(int ac, char **av, char **envp)
 //		traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
-		//traverse_parse_list(data.cmd);
+//		traverse_parse_list(data.cmd);
         excution(&data.envs, data.cmd, &pid, envp);
         free_cmd_list(&data.cmd);
 		free(data.str);
