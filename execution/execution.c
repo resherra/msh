@@ -6,14 +6,14 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/22 21:10:29 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/22 21:19:09 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-#define sa_handler __sigaction_u.__sa_handler
-#define sa_sigaction __sigaction_u.__sa_sigaction
+// #define sa_handler __sigaction_u.__sa_handler
+// #define sa_sigaction __sigaction_u.__sa_sigaction
 		
 void	error(int err, char *path)
 {
@@ -96,7 +96,10 @@ static void free_envp(char **envp)
 	if (!envp)
 		return ;
     while (envp[i])
-        free(envp[i++]);
+	{
+        free(envp[i]);
+		i++;
+	}
     free(envp);
 }
 

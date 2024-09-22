@@ -34,10 +34,7 @@ int is_bultin(t_env **envs, t_cmd *cmd, int is_one)
 
 int sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
 {
-	char	state[2];
-
     (void)redir_info;
-	state[1] = 0;
 	if (!ft_strcmp("exit", cmd->cmd))
 		return (ft_exit(cmd));
     else if (!strcmp("export", cmd->cmd))
