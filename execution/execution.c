@@ -1,7 +1,7 @@
 #include "../init.h"
 
-#define sa_handler __sigaction_u.__sa_handler
-#define sa_sigaction __sigaction_u.__sa_sigaction
+// #define sa_handler __sigaction_u.__sa_handler
+// #define sa_sigaction __sigaction_u.__sa_sigaction
 		
 void	error(int err, char *path)
 {
@@ -84,7 +84,10 @@ static void free_envp(char **envp)
 	if (!envp)
 		return ;
     while (envp[i])
-        free(envp[i++]);
+	{
+        free(envp[i]);
+		i++;
+	}
     free(envp);
 }
 
@@ -189,7 +192,6 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	int state;
 	int sampel_state;
 	t_red_info red_info;
-    char *tmp = NULL;
     char **new_envp = NULL;
 
     i = 0;
@@ -211,6 +213,7 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 		red_info.nmbr_cmd_herdc = cmd->nmbr_of_herdc;
 	if (*pid == -42)
 	{
+		free_envp(new_envp);
 		close(red_info.fd[0]);
 		return ;
 	}

@@ -13,8 +13,6 @@
 #ifndef INIT_H
 # define INIT_H
 
-
-
 typedef struct s_cmd	t_cmd;
 
 # include "libft/libft.h"
@@ -39,7 +37,7 @@ typedef struct s_cmd	t_cmd;
 # define allocation_error -3
 # define send_figint -42
 
-int  pid;
+// int  pid;
 //tokens
 typedef enum e_type
 {
@@ -80,6 +78,8 @@ typedef struct s_env_token_utils
 	int					tmp;
 }						t_env_token_utils;
 
+
+
 typedef struct s_tokenizer_vars
 {
 	int					i;
@@ -103,6 +103,49 @@ typedef struct s_env
 	bool				in_export;
 	struct s_env		*next;
 }						t_env;
+
+
+typedef struct s_red
+{
+	t_type				red_type;
+	char				*red_file;
+	bool				is_ambegious;
+	bool                expanded;
+	struct s_red		*next;
+}						t_red;
+
+typedef struct s_args
+{
+	char				*str;
+	struct s_args		*next;
+}						t_args;
+
+
+typedef struct s_dl
+{
+	char				*dilemeter;
+	int					expand;
+	struct s_dl		*next;
+}						t_delmtr;
+
+typedef struct s_cmd
+{
+	char				*cmd;
+	char				*path;
+	t_args				*args_list;
+	int					args_lst_size;
+	int					nmbr_of_herdc;
+	int					is_herdc;
+	char				**args;
+	t_red				*redirections;
+	struct s_cmd		*next;
+}						t_cmd;
+
+
+void 	lstclear(t_token **head);
+void    clear_args_list(t_args **head);
+void	clear_redirections(t_red **head);
+void	free_all(t_cmd *cmd);
 
 void					tokenize(char *str, t_token **head);
 
@@ -161,55 +204,10 @@ int						pwd(void);
 int						ft_exit(t_cmd *cmd);
 
 //PARSINGd
-typedef struct s_red
-{
-	t_type				red_type;
-	char				*red_file;
-	bool				is_ambegious;
-	bool                expanded;
-	struct s_red		*next;
-}						t_red;
 
-typedef struct s_args
-{
-	char				*str;
-	struct s_args		*next;
-}						t_args;
-
-
-typedef struct s_dl
-{
-	char				*dilemeter;
-	int					expand;
-	struct s_dl		*next;
-}						t_delmtr;
-
-typedef struct s_cmd
-{
-	char				*cmd;
-	char				*path;
-	t_args				*args_list;
-	int					args_lst_size;
-	int					nmbr_of_herdc;
-	int					is_herdc;
-	char				**args;
-	t_red				*redirections;
-	struct s_cmd		*next;
-}						t_cmd;
-// typedef struct s_cmd
-// {
-// 	char				*cmd;
-// 	char				*path;
-// 	t_args				*args_list;
-// 	int					args_lst_size;
-// 	char				**args;
-// 	t_red				*redirections;
-// 	struct s_cmd		*next;
-// }						t_cmd;
 
 void						parser(t_cmd **cmd, t_token **pre, char **paths,
 							t_env *envs);
-
 t_cmd					*lst_new_cmd(void);
 void					cmd_add_back(t_cmd **cmd, t_cmd *new);
 
@@ -237,8 +235,6 @@ typedef struct s_data
 }						t_data;
 
 // excution
- 
-
 typedef struct execution_tools
 {
 	char	*red_out;
@@ -284,5 +280,9 @@ void					traverse_env_list(t_env *env);
 int						test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void					freed(void *str);
 void					traverse_parse_list(t_cmd *cmd);
+
+
+// free all
+
 
 #endif
