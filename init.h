@@ -141,11 +141,26 @@ typedef struct s_cmd
 	struct s_cmd		*next;
 }						t_cmd;
 
+typedef struct s_data
+{
+	t_env				*envs;
+	t_token				*head;
+	t_token				*pre;
+	t_cmd				*cmd;
+	char				**paths;
+	char				*str;
+}						t_data;
 
 void 	lstclear(t_token **head);
 void    clear_args_list(t_args **head);
 void	clear_redirections(t_red **head);
 void	free_all(t_cmd *cmd);
+void	free_cmd_list(t_cmd **cmds);
+
+void init_all(t_data *data);
+void clear_all(t_data *data);
+
+char **lst_to_envp(t_env *envs);
 
 void					tokenize(char *str, t_token **head);
 
@@ -224,15 +239,7 @@ int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
-typedef struct s_data
-{
-	t_env				*envs;
-	t_token				*head;
-	t_token				*pre;
-	t_cmd				*cmd;
-	char				**paths;
-	char				*str;
-}						t_data;
+
 
 // excution
 typedef struct execution_tools

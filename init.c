@@ -12,10 +12,10 @@
 
 #include "init.h"
 
-
-
 int pid;
 
+
+//to be deleted
 void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 {
 	(void)head;
@@ -28,35 +28,6 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
 	// traverse_parse_list(cmd);
 	// printf("\n\n\n");
 }
-
-
-
-void	free_cmd_list(t_cmd **cmds)
-{
-	t_cmd *tmp;
-
-	if (!cmds)
-		return;
-	if (*cmds)
-	{
-		while (*cmds)
-		{
-			tmp = *cmds;
-			*cmds = (*cmds)->next;
-			if (tmp->cmd != tmp->path)
-				free(tmp->path);
-			free_all(tmp);
-			free(tmp);
-		}
-	}
-	*cmds = NULL;
-}
-
-void leak()
-{
-	system("leaks ms");
-}
-
 
 void handler(int sign)
 {
@@ -73,56 +44,7 @@ void handler(int sign)
 	}
 }
 
-static void clear_all(t_data *data)
-{
-    lstclear(&data->head);
-    lstclear(&data->pre);
-    add_history(data->str);
-    free(data->str);
-}
 
-
-char **lst_to_envp(t_env *envs)
-{
-    int i = 0;
-    t_env *curr = envs;
-    while (curr)
-    {
-        i++;
-        curr = curr->next;
-    }
-    char **res = malloc(sizeof(char *) * (i + 1));
-    if (!res)
-        exit(1);
-
-    i = 0;
-    t_env *new = envs;
-    new = new->next;
-    while (new)
-    {
-        if (new->in_export == FALSE)
-        {
-            char *trimmed_value = ft_strtrim(new->value, "\x03");
-            char *full_key = ft_strjoin(new->key, "=");
-            res[i++] = ft_strjoin(full_key, trimmed_value);
-            free(trimmed_value);
-            free(full_key);
-        }
-        new = new->next;
-    }
-    res[i] = 0;
-    return res;
-}
-
-static void init_all(t_data *data)
-{
-    data->envs = NULL;
-    data->cmd = NULL;
-    data->head = NULL;
-    data->paths = NULL;
-    data->pre = NULL;
-    data->str = NULL;
-}
 
 int	main(int ac, char **av, char **envp)
 {	

@@ -12,6 +12,27 @@
 
 #include "init.h"
 
+void	free_cmd_list(t_cmd **cmds)
+{
+	t_cmd *tmp;
+
+	if (!cmds)
+		return;
+	if (*cmds)
+	{
+		while (*cmds)
+		{
+			tmp = *cmds;
+			*cmds = (*cmds)->next;
+			if (tmp->cmd != tmp->path)
+				free(tmp->path);
+			free_all(tmp);
+			free(tmp);
+		}
+	}
+	*cmds = NULL;
+}
+
 void lstclear(t_token **head)
 {
 	t_token *ne;
