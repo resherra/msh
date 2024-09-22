@@ -175,21 +175,31 @@ char **lst_to_envp(t_env *envs)
     return res;
 }
 
+static void init_all(t_data *data)
+{
+    data->envs = NULL;
+    data->cmd = NULL;
+    data->head = NULL;
+    data->paths = NULL;
+    data->pre = NULL;
+    data->str = NULL;
+}
+
 int	main(int ac, char **av, char **envp)
 {	
 	(void)ac;
 	(void)av;
-    static t_data data;
+    t_data data;
 
 	if (ac > 1)
 	    return 1;
-	
+	init_all(&data);
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)
 	{
-		pid = -2;
+        pid = -2;
 		data.str = readline("msh-0.1$ ");
 		if (!data.str)
 			exit(1);
@@ -203,11 +213,11 @@ int	main(int ac, char **av, char **envp)
 	//	traverse_parse_list(data.cmd);
         lstclear(&data.pre);
 		add_history(data.str);
-		//traverse_parse_list(data.cmd);
+//		traverse_parse_list(data.cmd);
         excution(&data.envs, data.cmd, &pid, envp);
         free_cmd_list(&data.cmd);
 		free(data.str);
 		//system("leaks -q ms");
-       // atexit(leak);
 	}
+	return ft_atoi(data.envs->value);
 }
