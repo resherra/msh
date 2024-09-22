@@ -175,15 +175,25 @@ char **lst_to_envp(t_env *envs)
     return res;
 }
 
+static void init_all(t_data *data)
+{
+    data->envs = NULL;
+    data->cmd = NULL;
+    data->head = NULL;
+    data->paths = NULL;
+    data->pre = NULL;
+    data->str = NULL;
+}
+
 int	main(int ac, char **av, char **envp)
 {	
 	(void)ac;
 	(void)av;
-    static t_data data;
+    t_data data;
 
 	if (ac > 1)
 	    return 1;
-	
+	init_all(&data);
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
