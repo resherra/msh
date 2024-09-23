@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/18 17:26:01 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/22 21:17:09 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 			{
 				counter++;
 				new_cmd->is_herdc = true;
-			}
+			}     
 			curr = heredoc_special_handling(curr, new_red, new_cmd, envs);
 			if (curr)
 				curr = curr->next;

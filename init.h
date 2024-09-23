@@ -6,19 +6,15 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/21 00:41:28 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/23 18:38:43 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INIT_H
 # define INIT_H
 
-
-
-typedef struct s_cmd	t_cmd;
-
 # include "libft/libft.h"
-#include "string.h"
+# include "string.h"
 # include <curses.h>
 # include <dirent.h>
 # include <errno.h>
@@ -35,11 +31,15 @@ typedef struct s_cmd	t_cmd;
 # include <unistd.h>
 
 //macros for errors
-# define not_valid_idntf -2
-# define allocation_error -3
-# define send_figint -42
+# define NOT_VALID_IDNTF -2
+# define ALLOCATION_ERROR -3
+# define SEND_FIGINT -42
 
-int  pid;
+int pid;
+
+typedef struct s_cmd	t_cmd;
+
+// int  pid;
 //tokens
 typedef enum e_type
 {
@@ -94,7 +94,6 @@ typedef struct s_tokenizer_vars
 t_token					*lst_new(char *str, t_type type, t_state state);
 void					lst_add_back(t_token **head, t_token *node);
 
-
 //env
 typedef struct s_env
 {
@@ -104,10 +103,71 @@ typedef struct s_env
 	struct s_env		*next;
 }						t_env;
 
+typedef struct s_red
+{
+	t_type				red_type;
+	char				*red_file;
+	bool				is_ambegious;
+	bool				expanded;
+	struct s_red		*next;
+}						t_red;
+
+typedef struct s_args
+{
+	char				*str;
+	struct s_args		*next;
+}						t_args;
+
+typedef struct s_dl
+{
+	char				*dilemeter;
+	int					expand;
+	struct s_dl			*next;
+}						t_delmtr;
+
+typedef struct s_cmd
+{
+	char				*cmd;
+	char				*path;
+	t_args				*args_list;
+	int					args_lst_size;
+	int					nmbr_of_herdc;
+	int					is_herdc;
+	char				**args;
+	t_red				*redirections;
+	struct s_cmd		*next;
+}						t_cmd;
+
+typedef struct s_data
+{
+	t_env				*envs;
+	t_token				*head;
+	t_token				*pre;
+	t_cmd				*cmd;
+	char				**paths;
+	char				*str;
+}						t_data;
+
+typedef struct s_util_vars
+{
+	char				*trimmed_value;
+	char				*full_key;
+}						t_util_vars;
+
+void					lstclear(t_token **head);
+void					clear_args_list(t_args **head);
+void					clear_redirections(t_red **head);
+void					free_all(t_cmd *cmd);
+void					free_cmd_list(t_cmd **cmds);
+
+void					init_all(t_data *data);
+void					clear_all(t_data *data);
+
+char					**lst_to_envp(t_env *envs);
+
 void					tokenize(char *str, t_token **head);
 
 void					skip_spaces(char *str, t_tokenizer_vars *vars);
-
 
 //state function
 int						set_state(t_token *head, t_env *env);
@@ -141,13 +201,10 @@ t_token					*get_last_node(t_token **head);
 //operator checks & others
 int						check_operator(char *str, int i);
 int						check(char *str, int tmp);
-int	sm_check(int type);
+int						sm_check(int type);
 
-
-
-int	join_check(t_token *token);
-int	handle_single_dollar(t_token **curr);
-
+int						join_check(t_token *token);
+int						handle_single_dollar(t_token **curr);
 
 void					lstclear(t_token **head);
 
@@ -161,55 +218,9 @@ int						pwd(void);
 int						ft_exit(t_cmd *cmd);
 
 //PARSINGd
-typedef struct s_red
-{
-	t_type				red_type;
-	char				*red_file;
-	bool				is_ambegious;
-	bool                expanded;
-	struct s_red		*next;
-}						t_red;
 
-typedef struct s_args
-{
-	char				*str;
-	struct s_args		*next;
-}						t_args;
-
-
-typedef struct s_dl
-{
-	char				*dilemeter;
-	int					expand;
-	struct s_dl		*next;
-}						t_delmtr;
-
-typedef struct s_cmd
-{
-	char				*cmd;
-	char				*path;
-	t_args				*args_list;
-	int					args_lst_size;
-	int					nmbr_of_herdc;
-	int					is_herdc;
-	char				**args;
-	t_red				*redirections;
-	struct s_cmd		*next;
-}						t_cmd;
-// typedef struct s_cmd
-// {
-// 	char				*cmd;
-// 	char				*path;
-// 	t_args				*args_list;
-// 	int					args_lst_size;
-// 	char				**args;
-// 	t_red				*redirections;
-// 	struct s_cmd		*next;
-// }						t_cmd;
-
-void						parser(t_cmd **cmd, t_token **pre, char **paths,
+void					parser(t_cmd **cmd, t_token **pre, char **paths,
 							t_env *envs);
-
 t_cmd					*lst_new_cmd(void);
 void					cmd_add_back(t_cmd **cmd, t_cmd *new);
 
@@ -217,7 +228,8 @@ t_args					*new_arg(char *str);
 void					arg_add_front(t_args **lst, t_args *new);
 void					arg_add_back(t_args **args, t_args *new);
 
-t_red					*lst_new_red(t_type red_type, char *red_file, bool expanded);
+t_red					*lst_new_red(t_type red_type, char *red_file,
+							bool expanded);
 void					red_add_back(t_red **redirections, t_red *new);
 
 char					**lst_to_arr(int size, t_args *args_list);
@@ -226,56 +238,47 @@ int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
-typedef struct s_data
-{
-	t_env				*envs;
-	t_token				*head;
-	t_token				*pre;
-	t_cmd				*cmd;
-	char				**paths;
-	char				*str;
-}						t_data;
-
 // excution
- 
-
 typedef struct execution_tools
 {
-	char	*red_out;
-	char 	*herdc_content;
-	char 	*red_input;
-	int		is_one_cmd;
-	int 	number_of_herd;
-	int		nmbr_cmd_herdc;
-	int 	fd_out;
-	int		check_sig;
-	int 	prev;
-	int 	fd_inp;
-	int 	fd[2];
-}			t_red_info;
+	char				*red_out;
+	char				*herdc_content;
+	char				*red_input;
+	int					is_one_cmd;
+	int					number_of_herd;
+	int					nmbr_cmd_herdc;
+	int					fd_out;
+	int					check_sig;
+	int					prev;
+	int					fd_inp;
+	int					fd[2];
+	int					pfds[2];
+}						t_red_info;
 
+char					*free_and_return(char *pre_path, char *to_return);
 
+void					special_case(t_token *curr, t_token **new,
+							t_token **node);
 
-char	*free_and_return(char *pre_path, char *to_return);
+int						lexer(char *str, t_token **head, t_env *env,
+							t_token **pre);
 
-void	special_case(t_token *curr, t_token **new, t_token **node);
-
-int						lexer(char *str, t_token **head, t_env *env, t_token **pre);
-
-void					excution(t_env **env, t_cmd *cmd,
-							int *pid, char **envp);
-int						implement_redirections(t_red *redr, t_red_info *red_infom , t_env *env, int herdc_child);
+void					excution(t_env **env, t_cmd *cmd, int *pid);
+int						implement_redirections(t_red *redr,
+							t_red_info *red_infom,
+							t_env *env,
+							int herdc_child);
 int						is_bultin(t_env **envs, t_cmd *cmd, int is_one_cmd);
-int						sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *red_info);
+int						sample_bultin(t_env **envs, t_cmd *cmd,
+							t_red_info *red_info);
 
 void					free_cmd_list(t_cmd **cmds);
 
 t_env					*new_env_export(char *key, char *value);
 
+char					**lst_to_envp(t_env *envs);
 
-char **lst_to_envp(t_env *envs);
-
-int print_syntax_error(char *str);
+int						print_syntax_error(char *str);
 //miscs
 const char				*format_state(int type);
 const char				*format_type(int type);
@@ -284,5 +287,7 @@ void					traverse_env_list(t_env *env);
 int						test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void					freed(void *str);
 void					traverse_parse_list(t_cmd *cmd);
+
+// free all
 
 #endif

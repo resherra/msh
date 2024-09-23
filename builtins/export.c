@@ -8,14 +8,14 @@ int	cheek_idntf_error(char *str)
 	if (str[var_len] != '_' && !ft_isalpha(str[var_len++]))
 	{
 		printf("export: `%s' : not a valid identifier\n", str);	
-		return (not_valid_idntf);
+		return (NOT_VALID_IDNTF);
 	}
 	while (str[var_len] != 0 && str[var_len] != '=' && (ft_isalnum(str[var_len]) || str[var_len] == '_'))
 		var_len++;
 	if (str[var_len] == '=' || str[var_len] == 0)
 		return (var_len);
 	printf("export: `%s' : not a valid identifier\n", str);	
-	return(not_valid_idntf);
+	return(NOT_VALID_IDNTF);
 }
 
 int	add_in_env(char *var, t_env *envs)
@@ -29,15 +29,15 @@ int	add_in_env(char *var, t_env *envs)
 	var_value = NULL;
 	Name_var_len = cheek_idntf_error(var);
 	len_value = ft_strlen(var) - Name_var_len - 1;
-	if (Name_var_len  == not_valid_idntf)
-		return (not_valid_idntf);
+	if (Name_var_len  == NOT_VALID_IDNTF)
+		return (NOT_VALID_IDNTF);
 	var_name = ft_substr(var, 0, Name_var_len);
 	if (len_value >= 0)
 	{
 		var_value = ft_substr(var, Name_var_len + 1, len_value);
 	}
 	if (!var_name || (!var_value && len_value > 0))
-		return(allocation_error);
+		return(ALLOCATION_ERROR);
 	new_var = new_env_export(var_name, var_value);
 	ft_env_addback(&envs, new_var);
 	return (1);
