@@ -226,8 +226,8 @@ void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int in_her
 		red_info->red_input = NULL;
 		if (in_herdc_child)
 			heredoc(cur,red_info, env);
-		if (in_herdc_child && !red_info->herdc_content)
-			red_info->herdc_content = ft_strdup("");
+		// if (in_herdc_child && !red_info->herdc_content)
+		//  	red_info->herdc_content = ft_strdup("");
 	}
 }
 int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int in_herdc_child)
