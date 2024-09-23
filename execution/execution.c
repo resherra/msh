@@ -254,10 +254,26 @@ void excution(t_env **env, t_cmd *cmd, int *pid, char**envp)
 	while (wait(&state) >= 0)
 	{}
 	tmp = (*env)->value;
+	printf("---> %i\n", state);
+	if (WIFEXITED(state))
+	{
 	if (sampel_state != -1 && sampel_state != 2)
+	{
+		printf("here\n");
 		state = sampel_state;
+	}
 	else
+	{
+		printf("here1\n");
 		state = WEXITSTATUS(state);
+		printf("---> %i\n", state);
+	}
+	}
+	else
+	{
+		printf("3 ---> %i\n", state);
+		state = WTERMSIG(state);
+	}
 	(*env)->value = ft_itoa(state);
 	free(tmp);
 	free_envp(new_envp);
