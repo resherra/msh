@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/23 19:26:19 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/23 19:52:51 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,13 +197,11 @@ void excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info, char **envp)
 	}
 }
 
-void pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info, char **envp)
+char	**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info, char **envp)
 {
 	red_info->prev = -1;
 	red_info->is_one_cmd = false;
 	envp = lst_to_envp(*env);
-	if (!cmd)
-		return ;
 	if (cmd && !cmd->next)
 		red_info->is_one_cmd = true;
 	if (cmd && cmd->nmbr_of_herdc)
@@ -212,6 +210,7 @@ void pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info, char **envp)
 		close(red_info->fd[1]);
 	}
 	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
+	return (envp);
 }
 
 int logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
@@ -247,7 +246,9 @@ void excution(t_env **env, t_cmd *cmd, int *pid)
 
 	state = 0;
 	new_envp = NULL;
-	pre_excution(env, cmd, &red_info, new_envp);
+	if (!cmd)
+		return ;
+	new_envp =  pre_excution(env, cmd, &red_info, new_envp);
 	while (*pid != -42 && cmd)
 	{
 		if (cmd && cmd->is_herdc == true && red_info.nmbr_cmd_herdc != 1)
