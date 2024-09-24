@@ -83,20 +83,20 @@ int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	sampel_state = -1;
 	if (pipe(red_info->pfds) == -1)
 		return (perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -1);
-	pid = fork();
-	if (pid == -1)
+	g_pid = fork();
+	if (g_pid == -1)
 		return (close(red_info->pfds[0]), close(red_info->pfds[1]),
 			perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -1);
-	if (pid == 0)
+	if (g_pid == 0)
 		child(cmd, red_info, env, envp);
 	if (cmd->is_herdc == true && red_info->nmbr_cmd_herdc == 1
 		&& red_info->nmbr_cmd_herdc--)
 		close(red_info->fd[0]);
-	if (pid != -42 && red_info->is_one_cmd && cmd && cmd->cmd)
+	if (g_pid != -42 && red_info->is_one_cmd && cmd && cmd->cmd)
 		sampel_state = sample_bultin(env, cmd, red_info);
 	if (red_info->prev > -1)
 		close(red_info->prev);
-	if (pid != -42 && cmd->next)
+	if (g_pid != -42 && cmd->next)
 		red_info->prev = dup(red_info->pfds[0]);
 	close(red_info->pfds[0]);
 	close(red_info->pfds[1]);

@@ -112,3 +112,16 @@ void	traverse_parse_list(t_cmd *cmd)
 		curr = curr->next;
 	}
 }
+
+//to be deleted
+void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
+{
+    (void)head;
+    (void)pre;
+    (void)cmd;
+    //traverse_primary_tokens_list(head);
+    // traverse_primary_tokens_list(pre);
+    //clear the list
+    // traverse_parse_list(cmd);
+    // printf("\n\n\n");
+}

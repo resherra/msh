@@ -35,11 +35,10 @@
 # define ALLOCATION_ERROR -3
 # define SEND_FIGINT -42
 
-int pid;
+int						g_pid;
 
 typedef struct s_cmd	t_cmd;
 
-// int  pid;
 //tokens
 typedef enum e_type
 {
@@ -264,7 +263,7 @@ int						lexer(char *str, t_token **head, t_env *env,
 							t_token **pre);
 
 void					excution(t_env **env, t_cmd *cmd, int *pid);
-int						implement_redirections(t_red *redr,
+int	implement_redirections(t_red *redr,
 							t_red_info *red_infom,
 							t_env *env,
 							int herdc_child);
@@ -274,15 +273,15 @@ int						sample_bultin(t_env **envs, t_cmd *cmd,
 void					free_cmd_list(t_cmd **cmds);
 void					save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 							t_red_info *red_info);
-char					**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info,
-							char **envp);
+char					**pre_excution(t_env **env, t_cmd *cmd,
+							t_red_info *red_info, char **envp);
 t_env					*new_env_export(char *key, char *value);
 
 char					**lst_to_envp(t_env *envs);
 void					free_envp(char **envp);
 void					error(int err, char *path);
-void					exit_state(t_env **env, int state, int smpl_state, char **envp);
-
+void					exit_state(t_env **env, int state, int smpl_state,
+							char **envp);
 
 int						print_syntax_error(char *str);
 //miscs
