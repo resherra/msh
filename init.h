@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/23 18:38:43 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 04:48:08 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,12 +271,18 @@ int						implement_redirections(t_red *redr,
 int						is_bultin(t_env **envs, t_cmd *cmd, int is_one_cmd);
 int						sample_bultin(t_env **envs, t_cmd *cmd,
 							t_red_info *red_info);
-
 void					free_cmd_list(t_cmd **cmds);
-
+void					save_herdoc_data(t_env *env, t_red *hrdc, char *input,
+							t_red_info *red_info);
+char					**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info,
+							char **envp);
 t_env					*new_env_export(char *key, char *value);
 
 char					**lst_to_envp(t_env *envs);
+void					free_envp(char **envp);
+void					error(int err, char *path);
+void					exit_state(t_env **env, int state, int smpl_state, char **envp);
+
 
 int						print_syntax_error(char *str);
 //miscs

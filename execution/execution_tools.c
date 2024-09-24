@@ -1,266 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   excution_tools.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
+/*   Updated: 2024/09/24 04:26:11 by apple            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../init.h"
 
-static char	*ft_join(char const *s1, char const *s2)
+void	free_envp(char **envp)
 {
-	char	*res;
-	int		i;
-	int		j;
-	int		len;
+	int	i;
 
 	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	res = ft_calloc(len + 2, sizeof(char));
-	if (!res)
-		return (NULL);
-	while (s1 && s1[j])
+	if (!envp)
+		return ;
+	while (envp[i])
 	{
-		res[j] = s1[j];
-		j++;
-	}
-	while (s2 && s2[i])
-	{
-		res[j + i] = s2[i];
+		free(envp[i]);
 		i++;
 	}
-	res[j + i] = '\n';
-	return (res);
+	free(envp);
 }
 
-char *extract_value(char *value, int start, int end, char *str)
+void	error(int err, char *path)
 {
-	char *res;
-	char *var;
+	int	prev_errno;
 
-		str[start - 1] = 0;
-		res = ft_strjoin(str, value);
-		var = res;
-		if (res && str[end])
-		{
-			res = ft_strjoin(res, str + end);
-			free(var);
-			if (!res)
-				return (NULL);
-		}
-		return(free(str),res);
+	prev_errno = err;
+	if (!path)
+		exit(0);
+	if (opendir(path) != NULL)
+		return (printf("msh-0.1$: %s: is a directory\n", path), exit(126));
+	else if (!ft_strchr(path, '/') && prev_errno == ENOENT)
+	{
+		write(2, "msh-0.1$: ", 10);
+		write(2, path, ft_strlen(path));
+		write(2, ": command not found\n", 20);
+		exit(127);
+	}
+	else if (prev_errno == ENOENT)
+		return (perror("msh-0.1$ "), exit(127));
+	if (EACCES == prev_errno)
+	{
+		printf("msh-0.1$: %s\n", strerror(prev_errno));
+		exit(126);
+	}
+	perror("msh-0.1$ ");
+	exit(err);
 }
-static char	*is_exist(t_env *env, char *str, int start, int end)
+int	is_bultin(t_env **envs, t_cmd *cmd, int is_one)
 {
-	char *var;
+	int	sampel;
 
-	var = ft_substr(str, start, (end - start));
-	if (!var)
-		return (NULL);
-	while (env)
-	{
-		if (!ft_strcmp(var, env->key))
-		{
-			free(var);
-	
-			return (extract_value(env->value, start, end, str));
-		}
-		env = env->next;
-	}
-	while (str[end])
-	{
-		str[start - 1] = str[end++];
-		start++;
-	}
-	str[start - 1] = 0;
-	return(str);
+	sampel = 1;
+	if (!ft_strcmp("exit", cmd->cmd))
+		return (0);
+	if (!ft_strcmp("env", cmd->cmd))
+		return (env(*envs, cmd));
+	else if (!ft_strcmp("echo", cmd->cmd))
+		return (ft_echo(cmd->args));
+	else if (!ft_strcmp("export", cmd->cmd) && sampel-- && !is_one)
+		return (ft_export(*envs, cmd->args));
+	else if (!ft_strcmp("unset", cmd->cmd) && sampel-- && !is_one)
+		return (unset(envs, cmd->args));
+	else if (!ft_strcmp("cd", cmd->cmd) && sampel-- && !is_one)
+		return (ft_cd(cmd->args[1], *envs));
+	else if (!ft_strcmp("pwd", cmd->cmd))
+		return (pwd());
+	if (sampel == 0)
+		return (0);
+	return (2);
 }
 
-void	cat_variable(int j, int i, char *str)
+int	sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
 {
-	while (str[j])
+	(void)redir_info;
+	if (!ft_strcmp("exit", cmd->cmd))
+		return (ft_exit(cmd));
+	else if (!strcmp("export", cmd->cmd))
 	{
-		str[i - 1] = str[++j];
-		i++;
+		return (ft_export(*envs, cmd->args));
 	}
-	str[i] = 0;
+	else if (!ft_strcmp("unset", cmd->cmd))
+	{
+		return (unset(envs, cmd->args));
+	}
+	else if (!ft_strcmp("cd", cmd->cmd))
+	{
+		return (ft_cd(cmd->args[1], *envs));
+	}
+	return (2);
 }
-char	*expand(char *str, t_env *env)
-{
-	char *tmp;
-	int j;
-	int i;
-
-	tmp = str;	
-	i = 0;
-	while (tmp[i] != '$' && tmp[i])
-		i++;
-	if (!tmp[i++])
-		return (str);
-	j = i;
-	if (tmp[j] == '_' || ft_isalpha(tmp[j]))
-		j++;
-	else if (ft_isdigit(tmp[j]))
-		return (cat_variable(j, i, str), str);
-	else
-		return(str);
-	while (ft_isalnum(tmp[j]) || tmp[j] == '_')
-		j++;
-	tmp = is_exist(env, str, i, j);
-	if (!tmp)
-	{
-		return(free(str), perror("msh-0.1$ "), NULL);
-	}
-	return(tmp);
-}
-
-void	save_herdoc_data(t_env *env, t_red *hrdc, char *input, t_red_info *red_info)
-{
-	char	*tmp;
-
-	if (hrdc->expanded)
-	{
-		input = expand(input, env);
-		if (!input)
-		{
-			free(red_info->herdc_content);
-			exit(1);
-		}
-	}
-	tmp = red_info->herdc_content;
-	red_info->herdc_content = ft_join(red_info->herdc_content, input);
-	if (!red_info->herdc_content)
-	{
-		free(tmp);
-		free(input);
-		perror("msh-0.1$ ");
-		exit(1);
-	}
-	free(tmp);
-	free(input);
-}
-static int heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
-{
-    char    *input;
-
-	while (hrdc->red_type != HERE_DOC)
-		hrdc = hrdc->next;
-    while (1)
-    {
-        input = readline(">");
-        if (!input || !ft_strcmp(input , hrdc->red_file))
-        {
-			red_info->number_of_herd--;
-            if (red_info->number_of_herd == 0)
-				return (free(input), 1);
-			hrdc = hrdc->next;
-			while (hrdc->red_type != HERE_DOC)
-				hrdc = hrdc->next;			
-        }
-		else if (red_info->number_of_herd == 1) 
-		{
-			save_herdoc_data(env, hrdc, input, red_info);
-		}
-    }
-	return(0);
-}
-
-int red_out(t_red *redir, t_red_info *redir_info)
-{
-	int fd;
-
-	fd = -1;
-	if (redir->red_type == RED_OUT)
-	{
-		redir_info->red_out = redir->red_file;
-		fd = open(redir_info->red_out, O_CREAT | O_RDWR | O_TRUNC, S_IWUSR | S_IRUSR);
-		if (fd < 0)
-        	return (perror("msh-0.1$ "), 0);
-		redir_info->fd_out = -3;
-	}
-	else if (redir->red_type == RED_APP)
-	{
-		redir_info->red_out = redir->red_file;
-		 fd = open(redir->red_file, O_CREAT | O_RDWR | O_APPEND, S_IWUSR | S_IRUSR);
-		if (fd < 0)
-       		return (perror("msh-0.1$ "), 0);
-		redir_info->fd_out = -2;
-	}
-	close(fd);
-	return(1);
-}
-int	open_files(t_red *redir, t_red_info *redir_info)
-{
-	int fd;
-
-	while (redir)
-	{
-		if (redir->is_ambegious)
-		{
-			write(2, "msh-0.1$ : ambiguous redirect\n", 31);
-			return(free(redir_info->herdc_content),exit(1), 0);
-		}
-		else if (redir->red_type == RED_IN)
-		{
-			fd = open(redir->red_file, O_RDWR);
-			if (fd < 0)
-				return(perror("msh-0.1$ "),free(redir_info->herdc_content), exit(1) ,0);
-			redir_info->fd_inp = fd;
-			if (redir_info->number_of_herd == 0)
-				redir_info->red_input = redir->red_file;
-		}
-		else if (!red_out(redir, redir_info))
-			return (free(redir_info->herdc_content), exit(1), 0);
-		redir = redir->next;
-	}
-	return (1);
-}
-
-void implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env, int in_herdc_child)
-{
-	t_red *cur;
-
-	cur = redr;
-	while(redr)
-	{
-		if (redr->red_type == HERE_DOC)
-			red_info->number_of_herd++;
-		redr = redr->next;
-	}
-	if (red_info->number_of_herd)
-	{
-		red_info->red_input = NULL;
-		if (in_herdc_child)
-			heredoc(cur,red_info, env);
-		// if (in_herdc_child && !red_info->herdc_content)
-		//  	red_info->herdc_content = ft_strdup("");
-	}
-}
-int implement_redirections(t_red *redr, t_red_info *red_info, t_env *env, int in_herdc_child)
-{
-	red_info->number_of_herd = 0 ;
-	red_info->red_out = NULL;
-	red_info->red_input = NULL;
-	red_info->fd_out = -5;
-	
-	
-	implement_heredoc(redr, red_info, env, in_herdc_child);
-	if (red_info->nmbr_cmd_herdc != 1  || !in_herdc_child)
-	{
-		open_files(redr, red_info);
-		if (red_info->fd_out == -2)
-			red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_APPEND);
-		else if (red_info->fd_out == -3)
-			red_info->fd_out = open(red_info->red_out, O_CREAT | O_RDWR | O_TRUNC);
-		if (red_info->fd_out == -1)
-			return(perror("msh-0.1$ "), 0);
-		// if (red_info->red_input)
-		// {
-		// 	red_info->fd_inp = open(red_info->red_input, O_RDWR);
-		// 	if (red_info->fd_inp < 0)
-		// 		return(perror("msh-0.1$ "),  0);
-		// 	if (red_info->herdc_content)
-		// 	{
-		// 		red_info->red_input = NULL;
-		// 		close(red_info->fd_inp);
-		// 		return (1);
-		// 	}
-		// }
-	}
-	return (1);
-}
-

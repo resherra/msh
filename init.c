@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/23 18:44:37 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 05:07:51 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@ void handler(int sign)
     (void)sign;
 	
    printf("\n");
-	if (pid != -2)
+	if (pid != -2 && pid != -3)
 		pid = -42;
 	else
 	{
+		pid = -3;
 		rl_replace_line("", 0);
 		rl_on_new_line();
    		rl_redisplay();	
@@ -61,6 +62,8 @@ int	main(int ac, char **av, char **envp)
 	{
         pid = -2;
 		data.str = readline("msh-0.1$ ");
+		if (pid == -3)
+			data.envs->value = ft_strdup("1");
 		if (!data.str)
 			exit(1);
         if (lexer(data.str, &data.head, data.envs, &data.pre))
