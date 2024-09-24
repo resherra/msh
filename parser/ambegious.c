@@ -41,6 +41,8 @@ static int prr(char *str)
         {
             if (check_n_files(str) != 1)
                 return 1;
+            else
+                break;
         }
         i++;
     }
@@ -49,12 +51,8 @@ static int prr(char *str)
 
 int	check_ambg(char *str, t_env *envs)
 {
-    if (prr(str))
+    (void)envs;
+    if (!ft_strcmp(str, "\x03") || prr(str))
         return 1;
-	if (check_in_env(str, envs))
-	{
-		if (!ft_strcmp(str, "\x03") || check_n_files(str) != 1)
-			return (1);
-	}
 	return (0);
 }
