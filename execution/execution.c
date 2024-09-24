@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 19:37:22 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/24 20:54:21 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	char	*tmp;
 
 	tmp = (*env)->value;
-
 	if (smpl_state == -2)
 	{
 		(*env)->value = ft_strdup("1");
@@ -79,6 +78,7 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	(*env)->value = ft_itoa(state);
 	free(tmp);
 	free_envp(envp);
+	envp = NULL;
 }
 
 int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
@@ -87,11 +87,11 @@ int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 
 	sampel_state = -1;
 	if (pipe(red_info->pfds) == -1)
-		return (perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -1);
+		return (perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -33);
 	pid = fork();
 	if (pid == -1)
 		return (close(red_info->pfds[0]), close(red_info->pfds[1]),
-			perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -1);
+			perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -33);
 	if (pid == 0)
 		child(cmd, red_info, env, envp);
 	if (cmd->is_herdc == true && red_info->nmbr_cmd_herdc == 1
@@ -116,7 +116,6 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	char		**new_envp;
 
 	state = 0;
-	new_envp = NULL;
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
@@ -134,5 +133,6 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	while (wait(&state) >= 0)
 	{
 	}
-	exit_state(env, state, sampel_state, new_envp);
+	if (sampel_state != -33)
+		exit_state(env, state, sampel_state, new_envp);
 }

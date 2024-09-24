@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 19:35:06 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/24 19:58:56 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 char	**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		char **envp)
 {
+	
 	red_info->prev = -1;
 	red_info->is_one_cmd = false;
 	envp = lst_to_envp(*env);
