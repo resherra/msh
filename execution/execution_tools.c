@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   excution_tools.c                                   :+:      :+:    :+:   */
+/*   execution_tools.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 04:26:11 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 19:16:09 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	error(int err, char *path)
 	perror("msh-0.1$ ");
 	exit(err);
 }
+
 int	is_bultin(t_env **envs, t_cmd *cmd, int is_one)
 {
 	int	sampel;

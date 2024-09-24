@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   excution_of_heredoc.c                              :+:      :+:    :+:   */
+/*   execution_of_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 04:11:20 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 21:11:39 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../init.h"
+#include "../init.h"      
 
 void	handle_herdc_inp(int *fd, int *out, t_red_info *red_info)
 {
@@ -58,7 +58,7 @@ void	herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 	if (!cmd->cmd)
 		exit(0);
 	if (!red_info->herdc_content)
-			exit(0);
+		exit(0);
 	handle_herdc_inp(fd, out, red_info);
 	if (red_info->fd_out != -5)
 	{
@@ -70,24 +70,9 @@ void	herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 		error(errno, cmd->path);
 }
 
-// void	exit_state(t_env **env, int state, int smpl_state, char **envp)
-// {
-// 	char	*tmp;
-
-// 	tmp = (*env)->value;
-// 	if (smpl_state != -1 && smpl_state != 2)
-// 		state = smpl_state;
-// 	else
-// 		state = WEXITSTATUS(state);
-// 	(*env)->value = ft_itoa(state);
-// 	free(tmp);
-// 	free_envp(envp);
-// }
-
 void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		char **envp)
 {
-
 	if (pipe(red_info->fd) < 0)
 		return (exit_state(env, 1, -1, envp));
 	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
@@ -105,7 +90,7 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		}
 		if (g_pid == -42)
 		{
-			//exit_state(env, 1, -1, envp);
+			exit_state(env, 1, -2, envp);
 			close(red_info->fd[0]);
 			close(red_info->fd[1]);
 			break ;
@@ -117,6 +102,7 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 char	**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		char **envp)
 {
+	
 	red_info->prev = -1;
 	red_info->is_one_cmd = false;
 	envp = lst_to_envp(*env);

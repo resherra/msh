@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
+/*   Updated: 2024/09/24 19:25:44 by schakkou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../init.h"
 
 static int	up_date(t_env *env, char **old, char **curr, char *old_path)
@@ -9,7 +21,7 @@ static int	up_date(t_env *env, char **old, char **curr, char *old_path)
 		else if (!ft_strcmp(env->key, "OLDPWD"))
 			old = &env->value;
 		if (old && curr)
-			break;
+			break ;
 		env = env->next;
 	}
 	if (curr)
@@ -27,7 +39,7 @@ static int	up_date(t_env *env, char **old, char **curr, char *old_path)
 	return (0);
 }
 
-void search_path(t_env *env, char **home)
+void	search_path(t_env *env, char **home)
 {
 	*home = NULL;
 	while (env)
@@ -35,23 +47,24 @@ void search_path(t_env *env, char **home)
 		if (!ft_strcmp(env->key, "HOME"))
 		{
 			*home = env->value;
-			break;
+			break ;
 		}
 		env = env->next;
 	}
 }
-int ft_cd(char *path, t_env *env)
+
+int	ft_cd(char *path, t_env *env)
 {
 	char	**old;
 	char	**curr;
-	char	*old_Path;
+	char	*old_path;
 	char	*home_path;
 
 	search_path(env, &home_path);
 	old = NULL;
 	curr = NULL;
-	old_Path = getcwd(NULL, 0);
-	if (!old_Path)
+	old_path = getcwd(NULL, 0);
+	if (!old_path)
 		return (perror("msh-0.1$ "), 1);
 	if (!path)
 	{
@@ -60,5 +73,5 @@ int ft_cd(char *path, t_env *env)
 	}
 	else if (chdir(path))
 		return (perror("cd"), 1);
-	return (up_date(env, old, curr, old_Path));
+	return (up_date(env, old, curr, old_path));
 }

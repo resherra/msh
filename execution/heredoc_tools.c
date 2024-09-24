@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 04:03:39 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 19:30:40 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,14 @@ static char	*expand(char *str, t_env *env)
 		return (str);
 	j = i;
 	if (tmp[j] == '_' || ft_isalpha(tmp[j]))
-		j++ ;
+		j++;
 	else if (ft_isdigit(tmp[j]))
-    {
-        while (str[j])
-		    str[i++ - 1] = str[++j];
-        str[i] = 0;
-        return (str);
-    }
+	{
+		while (str[j])
+			str[i++ - 1] = str[++j];
+		str[i] = 0;
+		return (str);
+	}
 	else
 		return (str);
 	while (ft_isalnum(tmp[j]) || tmp[j] == '_')
@@ -121,8 +121,8 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 		input = expand(input, env);
 		if (!input)
 		{
-            perror("msh-0.1$ ");
-            free(input);
+			perror("msh-0.1$ ");
+			free(input);
 			free(red_info->herdc_content);
 			exit(1);
 		}
