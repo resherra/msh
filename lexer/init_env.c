@@ -35,7 +35,6 @@ void	incr_lvl(t_env **var)
 	char	*tmp;
 	int		curr_value;
 
-	tmp = NULL;
 	curr_value = ft_atoi((*var)->value);
 	tmp = (*var)->value;
 	char *itoi_return = ft_itoa(curr_value + 1);

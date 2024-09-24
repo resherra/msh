@@ -12,75 +12,52 @@
 
 #include "init.h"
 
-int pid;
-
-
-//to be deleted
-void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
+void	handler(int sign)
 {
-	(void)head;
-	(void)pre;
-	(void)cmd;
-
-	//traverse_primary_tokens_list(head);
-	// traverse_primary_tokens_list(pre);
-	//clear the list
-	// traverse_parse_list(cmd);
-	// printf("\n\n\n");
-}
-
-void handler(int sign)
-{
-    (void)sign;
-	
-   printf("\n");
-	if (pid != -2 && pid != -3)
-		pid = -42;
+	(void)sign;
+	printf("\n");
+	if (g_pid != -2 && g_pid != -3)
+		g_pid = -42;
 	else
 	{
-		pid = -3;
+		g_pid = -3;
 		rl_replace_line("", 0);
 		rl_on_new_line();
-   		rl_redisplay();	
+		rl_redisplay();
 	}
 }
 
-
-
 int	main(int ac, char **av, char **envp)
-{	
-	(void)av;
-    t_data data;
+{
+	t_data	data;
 
+	(void)av;
 	if (ac > 1)
-	    return 1;
+		return (1);
 	init_all(&data);
 	init_env(&data.envs, envp, &data.paths);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)
 	{
-        pid = -2;
+		g_pid = -2;
 		data.str = readline("msh-0.1$ ");
-		if (pid == -3)
+		if (g_pid == -3)
 			data.envs->value = ft_strdup("1");
 		if (!data.str)
 			exit(1);
-        if (lexer(data.str, &data.head, data.envs, &data.pre))
-        {
-            clear_all(&data);
-            continue;
-        }
-        lstclear(&data.head);
+		if (lexer(data.str, &data.head, data.envs, &data.pre))
+		{
+			clear_all(&data);
+			continue ;
+		}
+		lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-        lstclear(&data.pre);
-//        printf("\n\n\n");
-//        traverse_parse_list(data.cmd);
-//        printf("\n\n\n");
-        add_history(data.str);
-        excution(&data.envs, data.cmd, &pid);
-        free_cmd_list(&data.cmd);
+		lstclear(&data.pre);
+		add_history(data.str);
+		excution(&data.envs, data.cmd, &g_pid);
+		free_cmd_list(&data.cmd);
 		free(data.str);
 	}
-	return 0;
+	return (0);
 }

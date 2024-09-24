@@ -33,7 +33,7 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 		if (!(*curr->str))
 		{
 			curr = curr->next;
-			continue;
+			continue ;
 		}
 		arg = new_arg(ft_strdup(curr->str));
 		arg_add_back(&new_cmd->args_list, arg);
@@ -89,7 +89,7 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 			{
 				counter++;
 				new_cmd->is_herdc = true;
-			}     
+			}
 			curr = heredoc_special_handling(curr, new_red, new_cmd, envs);
 			if (curr)
 				curr = curr->next;

@@ -6,11 +6,11 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 19:58:56 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/24 21:11:39 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../init.h"
+#include "../init.h"      
 
 void	handle_herdc_inp(int *fd, int *out, t_red_info *red_info)
 {
@@ -80,15 +80,15 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 	{
 		if (cmd->is_herdc == true)
 		{
-			pid = fork();
-			if (pid == -1)
+			g_pid = fork();
+			if (g_pid == -1)
 				return (perror("msh-0.1$ "), exit_state(env, 1, -1, envp));
-			if (pid == 0)
+			if (g_pid == 0)
 				herdc_child(cmd, red_info, *env, envp);
 			red_info->nmbr_cmd_herdc--;
-			waitpid(pid, NULL, 0);
+			waitpid(g_pid, NULL, 0);
 		}
-		if (pid == -42)
+		if (g_pid == -42)
 		{
 			exit_state(env, 1, -2, envp);
 			close(red_info->fd[0]);

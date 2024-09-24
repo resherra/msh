@@ -78,11 +78,12 @@ int	pth(char *paths, char **path, char **pre_path)
 
 char	*extract_path(char *cmd, char **paths)
 {
-	char		*pre_path;
-	char		*path;
-	char		*curr_pth;
-	int	i = 0;
+	char	*pre_path;
+	char	*path;
+	char	*curr_pth;
+	int		i;
 
+	i = 0;
 	if (!cmd || !(*cmd))
 		return (NULL);
 	pre_path = ft_strjoin("/", cmd);
@@ -98,9 +99,8 @@ char	*extract_path(char *cmd, char **paths)
 		return (NULL);
 	while (paths[i])
 	{
-		if (pth(paths[i], &path, &pre_path))
+		if (pth(paths[i++], &path, &pre_path))
 			return (path);
-		i++;
 	}
 	return (free_and_return(pre_path, cmd));
 }
