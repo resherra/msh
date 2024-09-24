@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 04:24:10 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 19:37:22 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
-
 
 void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env,
 		char **envp)
@@ -67,6 +66,12 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	char	*tmp;
 
 	tmp = (*env)->value;
+
+	if (smpl_state == -2)
+	{
+		(*env)->value = ft_strdup("1");
+		return (free(tmp));
+	}
 	if (smpl_state != -1 && smpl_state != 2)
 		state = smpl_state;
 	else

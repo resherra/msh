@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 12:22:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/21 00:48:24 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/24 19:20:41 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-int    ft_exit(t_cmd *cmd)
+int	ft_exit(t_cmd *cmd)
 {
-	int state;
+	int	state;
 
 	state = 0;
 	if (cmd && cmd->args[1] && cmd->args[2])
