@@ -9,7 +9,7 @@ int ft_echo(char **str)
 
 	i = 1;
 	option = 0;
-	while (*str && str[i][0] == '-' && str[i][1] == 'n')
+	while (str && *str && str[i] &&  str[i][0] == '-' && str[i][1] == 'n')
 	{
 		j = 1;
 		while (str[i][j] == 'n')
@@ -19,7 +19,7 @@ int ft_echo(char **str)
 		option = 1;
 		i++;
 	}
-	while (str[i])
+	while (str && *str && str[i])
 	{
 		write(STDOUT_FILENO, str[i], ft_strlen(str[i]));
 		if (str[++i])
