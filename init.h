@@ -124,6 +124,15 @@ typedef struct s_dl
 	struct s_dl			*next;
 }						t_delmtr;
 
+typedef struct s_parser_vars
+{
+	t_token				*curr;
+	t_red				*new_red;
+	t_cmd				*new_cmd;
+	t_args				*arg;
+	int					counter;
+}						t_parser_vars;
+
 typedef struct s_cmd
 {
 	char				*cmd;
@@ -237,7 +246,6 @@ int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
-
 char					*free_and_return(char *pre_path, char *to_return);
 
 void					special_case(t_token *curr, t_token **new,
@@ -245,6 +253,9 @@ void					special_case(t_token *curr, t_token **new,
 
 int						lexer(char *str, t_token **head, t_env *env,
 							t_token **pre);
+
+void					count_heredoc(t_parser_vars *vars);
+void					init_vars(t_parser_vars *vars, t_token **pre);
 
 // excution
 typedef struct execution_tools
@@ -263,7 +274,7 @@ typedef struct execution_tools
 	int					pfds[2];
 }						t_red_info;
 void					excution(t_env **env, t_cmd *cmd, int *pid);
-int						implement_redirections(t_red *redr,
+int	implement_redirections(t_red *redr,
 							t_red_info *red_infom,
 							t_env *env,
 							int herdc_child);

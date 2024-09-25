@@ -12,18 +12,18 @@
 
 #include "libft.h"
 
-int ft_strcmp(char *str1, char *str2)
+int	ft_strcmp(char *str1, char *str2)
 {
-    if (!str1 || !str2)
-        return -1;
-    while (*str1 && *str2 && *str1 == *str2)
-    {
-        str2++;
-        str1++;
-    }
-    if (*str1 > *str2)
-        return (1);
-    else if (*str1 < *str2)
-        return (-1);
-    return (0);
+	if (!str1 || !str2)
+		return (-1);
+	while (*str1 && *str2 && *str1 == *str2)
+	{
+		str2++;
+		str1++;
+	}
+	if (*str1 > *str2)
+		return (1);
+	else if (*str1 < *str2)
+		return (-1);
+	return (0);
 }

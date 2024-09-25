@@ -31,28 +31,29 @@ static int	check_n_files(char *str)
 	return (i);
 }
 
-
-static int prr(char *str)
+static int	prr(char *str)
 {
-    int i = 0;
-    while(str[i])
-    {
-        if (str[i] == '\x03')
-        {
-            if (check_n_files(str) != 1)
-                return 1;
-            else
-                break;
-        }
-        i++;
-    }
-    return 0;
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\x03')
+		{
+			if (check_n_files(str) != 1)
+				return (1);
+			else
+				break ;
+		}
+		i++;
+	}
+	return (0);
 }
 
 int	check_ambg(char *str, t_env *envs)
 {
-    (void)envs;
-    if (!ft_strcmp(str, "\x03") || prr(str))
-        return 1;
+	(void)envs;
+	if (!ft_strcmp(str, "\x03") || prr(str))
+		return (1);
 	return (0);
 }

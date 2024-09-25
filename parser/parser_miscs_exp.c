@@ -23,3 +23,20 @@ char	*free_and_return(char *pre_path, char *to_return)
 	free(pre_path);
 	return (to_return);
 }
+
+void	init_vars(t_parser_vars *vars, t_token **pre)
+{
+	vars->arg = NULL;
+	vars->new_red = NULL;
+	vars->curr = *pre;
+	vars->counter = 0;
+}
+
+void	count_heredoc(t_parser_vars *vars)
+{
+	if (vars->curr && !vars->new_cmd->is_herdc && vars->curr->type == HERE_DOC)
+	{
+		vars->counter++;
+		vars->new_cmd->is_herdc = true;
+	}
+}

@@ -34,12 +34,13 @@ void	incr_lvl(t_env **var)
 {
 	char	*tmp;
 	int		curr_value;
+	char	*it_ret;
 
 	curr_value = ft_atoi((*var)->value);
 	tmp = (*var)->value;
-	char *itoi_return = ft_itoa(curr_value + 1);
-	(*var)->value = ft_strjoin(itoi_return, "\x03");
-	free(itoi_return);
+	it_ret = ft_itoa(curr_value + 1);
+	(*var)->value = ft_strjoin(it_ret, "\x03");
+	free(it_ret);
 	free(tmp);
 }
 

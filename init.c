@@ -27,6 +27,16 @@ void	handler(int sign)
 	}
 }
 
+void static	setup(char **str, t_env **envs)
+{
+	g_pid = -2;
+	*str = readline("msh-0.1$ ");
+	if (g_pid == -3)
+		(*envs)->value = ft_strdup("1");
+	if (!(*str))
+		exit(1);
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
@@ -40,12 +50,7 @@ int	main(int ac, char **av, char **envp)
 	signal(SIGINT, handler);
 	while (1)
 	{
-		g_pid = -2;
-		data.str = readline("msh-0.1$ ");
-		if (g_pid == -3)
-			data.envs->value = ft_strdup("1");
-		if (!data.str)
-			exit(1);
+		setup(&data.str, &data.envs);
 		if (lexer(data.str, &data.head, data.envs, &data.pre))
 		{
 			clear_all(&data);
@@ -59,5 +64,4 @@ int	main(int ac, char **av, char **envp)
 		free_cmd_list(&data.cmd);
 		free(data.str);
 	}
-	return (0);
 }

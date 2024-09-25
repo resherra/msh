@@ -22,7 +22,7 @@ void	*ft_calloc(size_t count, size_t size)
 		return (NULL);
 	dst = malloc(res);
 	if (!dst)
-	    exit(1);
+		exit(1);
 	ft_bzero(dst, res);
 	return (dst);
 }

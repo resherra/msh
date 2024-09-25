@@ -67,37 +67,27 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 
 void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 {
-	t_token	*curr;
-	t_red	*new_red;
-	t_cmd	*new_cmd;
-	t_args	*arg;
-	int		counter;
+	t_parser_vars	vars;
 
-	arg = NULL;
-	new_red = NULL;
-	curr = *pre;
-	counter = 0;
-	while (curr)
+	init_vars(&vars, pre);
+	while (vars.curr)
 	{
-		new_cmd = lst_new_cmd();
-		while (curr && curr->type != PIPE)
+		vars.new_cmd = lst_new_cmd();
+		while (vars.curr && vars.curr->type != PIPE)
 		{
-			curr = get_args(curr, arg, new_cmd);
-			if (curr && curr->type == PIPE)
+			vars.curr = get_args(vars.curr, vars.arg, vars.new_cmd);
+			if (vars.curr && vars.curr->type == PIPE)
 				break ;
-			if (curr && !new_cmd->is_herdc && curr->type == HERE_DOC)
-			{
-				counter++;
-				new_cmd->is_herdc = true;
-			}
-			curr = heredoc_special_handling(curr, new_red, new_cmd, envs);
-			if (curr)
-				curr = curr->next;
+			count_heredoc(&vars);
+			vars.curr = heredoc_special_handling(vars.curr, vars.new_red,
+					vars.new_cmd, envs);
+			if (vars.curr)
+				vars.curr = vars.curr->next;
 		}
-		fill_cmd(cmd, new_cmd, envs, paths);
-		if (curr)
-			curr = curr->next;
+		fill_cmd(cmd, vars.new_cmd, envs, paths);
+		if (vars.curr)
+			vars.curr = vars.curr->next;
 	}
 	if (cmd && *cmd)
-		(*cmd)->nmbr_of_herdc = counter;
+		(*cmd)->nmbr_of_herdc = vars.counter;
 }
