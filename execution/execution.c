@@ -12,8 +12,7 @@
 
 #include "../init.h"
 
-void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env,
-		char **envp)
+void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	int	state;
 
@@ -42,8 +41,7 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env,
 		error(errno, cmd->path);
 }
 
-void	child(t_cmd *cmd, t_red_info *red_info, t_env **env,
-		char **envp)
+void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	red_info->herdc_content = NULL;
 	red_info->red_input = NULL;
@@ -75,7 +73,7 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	prev_sate = smpl_state;
 	tmp = (*env)->value;
 	if (g_pid == -42)
-	    state = 1;
+		state = 1;
 	else if (smpl_state != -1 && smpl_state != -33 && smpl_state != -32)
 		state = smpl_state;
 	else

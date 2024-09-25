@@ -38,7 +38,10 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 	while (curr && join_check(curr))
 	{
 		if (handle_single_dollar(&curr))
-			continue ;
+        {
+		    curr = curr->next;
+            continue ;
+        }
 		if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
 		{
 			quote_case_wrapper(after_heredoc, flag, &curr, str);
@@ -104,8 +107,8 @@ void	sanitize(t_token *head, t_token **new)
 	while (curr)
 	{
 		str = NULL;
-		curr = join(curr, &str, false, &flag);
-		if (str)
+        curr = join(curr, &str, false, &flag);
+        if (str)
 		{
 			node = lst_new(str, WORD, GENERAL);
 			lst_add_back(new, node);

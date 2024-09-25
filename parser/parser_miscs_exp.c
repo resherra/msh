@@ -40,3 +40,18 @@ void	count_heredoc(t_parser_vars *vars)
 		vars->new_cmd->is_herdc = true;
 	}
 }
+
+
+int all_space_var(char *str)
+{
+    char *tmp;
+
+    tmp = ft_strtrim(str, " ");
+    if (!ft_strcmp(tmp, "\x03"))
+    {
+        free(tmp);
+        return 1;
+    }
+    free(tmp);
+    return 0;
+}

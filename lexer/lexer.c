@@ -57,13 +57,13 @@ int	syntax_check(t_token *pre)
 int	lexer(char *str, t_token **head, t_env *env, t_token **pre)
 {
 	tokenize(str, head);
-	if (set_state(*head, env))
+    if (set_state(*head, env))
 	{
 		printf("Syntax Error: unclosed quotes\n");
 		return (1);
 	}
-	sanitize(*head, pre);
-	if (syntax_check(*pre))
+    sanitize(*head, pre);
+    if (syntax_check(*pre))
 		return (1);
 	return (0);
 }

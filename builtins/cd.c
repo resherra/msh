@@ -46,7 +46,7 @@ void	search_path(t_env *env, char **home)
 	{
 		if (!ft_strcmp(env->key, "HOME"))
 		{
-			*home = env->value;
+			*home = ft_strtrim(env->value, "\x03");
 			break ;
 		}
 		env = env->next;
@@ -69,7 +69,11 @@ int	ft_cd(char *path, t_env *env)
 	if (!path)
 	{
 		if (home_path == NULL || chdir(home_path))
-			return (printf("msh-0.1$: HOME not set\n"), 1);
+        {
+            free(home_path);
+            return (printf("msh-0.1$: HOME not set\n"), 1);
+        }
+		free(home_path);
 	}
 	else if (chdir(path))
 		return (perror("cd"), 1);

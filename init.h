@@ -288,7 +288,6 @@ void					save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 							t_red_info *red_info);
 char					**pre_excution(t_env **env, t_cmd *cmd,
 							t_red_info *red_info, char **envp);
-t_env					*new_env_export(char *key, char *value);
 
 char					**lst_to_envp(t_env *envs);
 void					free_envp(char **envp);
@@ -297,6 +296,8 @@ void					exit_state(t_env **env, int state, int smpl_state,
 							char **envp);
 
 int						print_syntax_error(char *str);
+int all_space_var(char *str);
+
 //miscs
 const char				*format_state(int type);
 const char				*format_type(int type);

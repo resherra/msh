@@ -26,11 +26,12 @@ void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 	cmd_add_back(cmd, new_cmd);
 }
 
+
 t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 {
 	while (curr && curr->type == WORD)
 	{
-		if (!(*curr->str))
+		if (!(*curr->str) || all_space_var(curr->str))
 		{
 			curr = curr->next;
 			continue ;
