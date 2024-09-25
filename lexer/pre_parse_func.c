@@ -6,7 +6,7 @@
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 19:19:34 by recherra          #+#    #+#             */
-/*   Updated: 2024/08/02 19:19:35 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:00:59 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 			continue ;
 		}
 		else if (curr->type == S_QUOTE && curr->next
-				&& curr->next->type == S_QUOTE)
+			&& curr->next->type == S_QUOTE)
 		{
 			quote_case_wrapper(after_heredoc, flag, &curr, str);
 			continue ;

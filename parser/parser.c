@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/22 21:17:09 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:00:01 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 	if (new_cmd->args_list && check_in_env(new_cmd->args_list->str, envs))
 		tmp = treat_env(&new_cmd->args_list);
 	new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp,
-								new_cmd->args_list);
+			new_cmd->args_list);
 	new_cmd->cmd = new_cmd->args[0];
 	new_cmd->path = extract_path(new_cmd->cmd, paths);
 	cmd_add_back(cmd, new_cmd);

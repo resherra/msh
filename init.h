@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/25 03:55:33 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/25 17:03:49 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,8 +273,10 @@ typedef struct execution_tools
 	int					fd[2];
 	int					pfds[2];
 }						t_red_info;
+
 void					excution(t_env **env, t_cmd *cmd, int *pid);
-int	implement_redirections(t_red *redr,
+
+int						implement_redirections(t_red *redr,
 							t_red_info *red_infom,
 							t_env *env,
 							int herdc_child);
