@@ -19,9 +19,8 @@ t_args	*new_arg(char *str)
 	new = malloc(sizeof(t_args));
 	if (!new)
 		exit(1);
-	new->str = ft_strtrim(str, "\x03");
+	new->str = str;
 	new->next = NULL;
-	free(str);
 	return (new);
 }
 

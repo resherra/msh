@@ -39,7 +39,11 @@ char	**lst_to_arr(int size, t_args *args_list)
 	i = 0;
 	while (curr)
 	{
-		args[i++] = ft_strdup(curr->str);
+	    if (i == 0)
+            args[i] = ft_strdup(curr->str);
+	    else
+	        args[i] = ft_strtrim(curr->str, "\x03");
+	    i++;
 		curr = curr->next;
 	}
 	args[i] = NULL;
