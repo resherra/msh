@@ -74,8 +74,8 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	}
 	prev_sate = smpl_state;
 	tmp = (*env)->value;
-	if (state == -42)
-		(*env)->value = ft_strdup("1");
+	if (g_pid == -42)
+	    state = 1;
 	else if (smpl_state != -1 && smpl_state != -33 && smpl_state != -32)
 		state = smpl_state;
 	else
