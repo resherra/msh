@@ -60,7 +60,6 @@ int	ft_cd(char *path, t_env *env)
 	char	*old_path;
 	char	*home_path;
 
-	search_path(env, &home_path);
 	old = NULL;
 	curr = NULL;
 	old_path = getcwd(NULL, 0);
@@ -68,6 +67,7 @@ int	ft_cd(char *path, t_env *env)
 		return (perror("msh-0.1$ "), 1);
 	if (!path)
 	{
+        search_path(env, &home_path);
 		if (home_path == NULL || chdir(home_path))
         {
             free(home_path);
@@ -77,6 +77,6 @@ int	ft_cd(char *path, t_env *env)
 		free(home_path);
 	}
 	else if (chdir(path))
-		return (perror("cd"), 1);
+        return (perror("cd"), free(old_path), 1);
 	return (up_date(env, old, curr, old_path));
 }
