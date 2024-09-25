@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_of_heredoc.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 21:11:39 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:44:12 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		char **envp)
 {
 	if (pipe(red_info->fd) < 0)
-		return (exit_state(env, 1, -1, envp));
+		return (exit_state(env, errno, -32, envp));
 	red_info->nmbr_cmd_herdc = cmd->nmbr_of_herdc;
 	while (cmd)
 	{
@@ -82,7 +82,7 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		{
 			g_pid = fork();
 			if (g_pid == -1)
-				return (perror("msh-0.1$ "), exit_state(env, 1, -1, envp));
+				return (perror("msh-0.1$ "), exit_state(env, errno, -32, envp));
 			if (g_pid == 0)
 				herdc_child(cmd, red_info, *env, envp);
 			red_info->nmbr_cmd_herdc--;
@@ -90,7 +90,6 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		}
 		if (g_pid == -42)
 		{
-			exit_state(env, 1, -2, envp);
 			close(red_info->fd[0]);
 			close(red_info->fd[1]);
 			break ;
@@ -102,7 +101,6 @@ void	excute_heredocs(t_env **env, t_cmd *cmd, t_red_info *red_info,
 char	**pre_excution(t_env **env, t_cmd *cmd, t_red_info *red_info,
 		char **envp)
 {
-	
 	red_info->prev = -1;
 	red_info->is_one_cmd = false;
 	envp = lst_to_envp(*env);

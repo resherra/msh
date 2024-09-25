@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_tools.c                                  :+:      :+:    :+:   */
+/*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 04:00:31 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/25 13:43:43 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ void	implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env,
 		red_info->red_input = NULL;
 		if (in_herdc_child)
 			heredoc(cur, red_info, env);
-		// if (in_herdc_child && !red_info->herdc_content)
-		// 	red_info->herdc_content = ft_strdup("");
 	}
 }
 

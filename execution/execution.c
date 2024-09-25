@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 21:17:00 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:44:34 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,22 +63,30 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env,
 
 void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 {
-	char	*tmp;
+	char		*tmp;
+	static int	prev_sate;
 
-	tmp = (*env)->value;
-	if (smpl_state == -2)
+	if (state == -1 && smpl_state == -1 && prev_sate == -32)
 	{
-		(*env)->value = ft_strdup("1");
-		return (free(tmp));
+		free_envp(envp);
+		envp = NULL;
+		return ;
 	}
-	if (smpl_state != -1 && smpl_state != 2)
+	prev_sate = smpl_state;
+	tmp = (*env)->value;
+	if (state == -42)
+		(*env)->value = ft_strdup("1");
+	else if (smpl_state != -1 && smpl_state != -33 && smpl_state != -32)
 		state = smpl_state;
 	else
 		state = WEXITSTATUS(state);
 	(*env)->value = ft_itoa(state);
 	free(tmp);
-	free_envp(envp);
-	envp = NULL;
+	if (smpl_state != -33 && smpl_state != -32)
+	{
+		free_envp(envp);
+		envp = NULL;
+	}
 }
 
 int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
@@ -115,7 +123,8 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	t_red_info	red_info;
 	char		**new_envp;
 
-	state = 0;
+	state = -1;
+	new_envp = NULL;
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
@@ -133,6 +142,5 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	while (wait(&state) >= 0)
 	{
 	}
-	if (sampel_state != -33)
-		exit_state(env, state, sampel_state, new_envp);
+	exit_state(env, state, sampel_state, new_envp);
 }

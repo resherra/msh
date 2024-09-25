@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_tools.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 19:16:09 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:26:18 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,5 @@ int	sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
 	{
 		return (ft_cd(cmd->args[1], *envs));
 	}
-	return (2);
+	return (-1);
 }

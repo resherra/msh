@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/24 04:48:08 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/25 03:55:33 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,6 +237,15 @@ int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
+
+char					*free_and_return(char *pre_path, char *to_return);
+
+void					special_case(t_token *curr, t_token **new,
+							t_token **node);
+
+int						lexer(char *str, t_token **head, t_env *env,
+							t_token **pre);
+
 // excution
 typedef struct execution_tools
 {
@@ -247,23 +256,14 @@ typedef struct execution_tools
 	int					number_of_herd;
 	int					nmbr_cmd_herdc;
 	int					fd_out;
-	int					check_sig;
+	int					check;
 	int					prev;
 	int					fd_inp;
 	int					fd[2];
 	int					pfds[2];
 }						t_red_info;
-
-char					*free_and_return(char *pre_path, char *to_return);
-
-void					special_case(t_token *curr, t_token **new,
-							t_token **node);
-
-int						lexer(char *str, t_token **head, t_env *env,
-							t_token **pre);
-
 void					excution(t_env **env, t_cmd *cmd, int *pid);
-int	implement_redirections(t_red *redr,
+int						implement_redirections(t_red *redr,
 							t_red_info *red_infom,
 							t_env *env,
 							int herdc_child);
