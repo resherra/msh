@@ -71,6 +71,7 @@ int	ft_cd(char *path, t_env *env)
 		if (home_path == NULL || chdir(home_path))
         {
             free(home_path);
+            free(old_path);
             return (printf("msh-0.1$: HOME not set\n"), 1);
         }
 		free(home_path);
