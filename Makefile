@@ -21,7 +21,7 @@ all: $(NAME)
 
 $(NAME):  init.h $(LIBFT)  $(OBJS)
 	cc $(CFLAGS) -o $(NAME) $(OBJS) -lreadline -L/Users/$(USER)/goinfre/homebrew/Cellar/readline/8.2.13/lib $(LIBFT)
-# cp ms /Users/$(USER)/Library/Python/3.9/bin
+	cp ms /Users/$(USER)/Library/Python/3.9/bin
 
 $(LIBFT):
 	@make -C libft/
