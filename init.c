@@ -40,9 +40,6 @@ void static	setup(char **str, t_env **envs)
 	}
 }
 
-
-
-
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
@@ -64,7 +61,7 @@ int	main(int ac, char **av, char **envp)
 		}
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-		lstclear(&data.pre);
+        lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);

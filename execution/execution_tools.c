@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/25 13:26:18 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 17:10:57 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	error(int err, char *path)
 		exit(0);
 	if (opendir(path) != NULL)
 		return (printf("msh-0.1$: %s: is a directory\n", path), exit(126));
-	else if (!ft_strchr(path, '/') && prev_errno == ENOENT)
+	else if (!*path || (!ft_strchr(path, '/') && prev_errno == ENOENT))
 	{
 		write(2, "msh-0.1$: ", 10);
 		write(2, path, ft_strlen(path));

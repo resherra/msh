@@ -45,6 +45,7 @@ void	expansion(t_token *var, t_env *envs, bool in_double_quotes)
 	t_env	*curr;
 	int		len;
 	char	*tmp;
+	bool joe = false;
 
 	curr = envs;
 	len = ft_strlen(var->str);
@@ -62,7 +63,15 @@ void	expansion(t_token *var, t_env *envs, bool in_double_quotes)
 		curr = curr->next;
 	}
 	tmp = var->str;
-	var->str = ft_strdup("");
+	if (in_double_quotes)
+        var->str = ft_strdup("");
+	else
+    {
+	    joe = true;
+        var->str = ft_strdup(" ");
+        var->type = SPACES;
+    }
 	free(tmp);
-	var->type = WORD;
+	if (!joe)
+	    var->type = WORD;
 }

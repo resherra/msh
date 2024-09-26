@@ -14,7 +14,7 @@
 
 int	check_operator(char *str, int i)
 {
-	if (*(str + i) == ' ')
+	if ((*(str + i) >= 9 && *(str + i) <= 13) || *(str + i) == ' ')
 		return (SPACES);
 	else if (*(str + i) == '|')
 		return (PIPE);

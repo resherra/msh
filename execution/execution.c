@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 16:43:32 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 17:01:51 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	else if (!state)
 		exit(0);
 	if (execve(cmd->path, cmd->args, envp) == -1)
-		error(errno, cmd->path);
+		error(errno, cmd->cmd);
 }
 
 void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
