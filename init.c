@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/24 05:07:51 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 03:56:00 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ void static	setup(char **str, t_env **envs)
 	if (g_pid == -3)
 		(*envs)->value = ft_strdup("1");
 	if (!(*str))
-		exit(1);
+	{
+		printf("exit\n");
+		exit(0);
+	}
 }
 
 
@@ -66,6 +69,6 @@ int	main(int ac, char **av, char **envp)
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-		system("leaks -q ms");
+		//system("leaks -q ms");
 	}
 }

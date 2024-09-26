@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/25 13:44:34 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 04:31:31 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,13 @@ void	exit_state(t_env **env, int state, int smpl_state, char **envp)
 	if (state == -1 && smpl_state == -1 && prev_sate == -32)
 	{
 		free_envp(envp);
-		envp = NULL;
 		return ;
 	}
 	prev_sate = smpl_state;
 	tmp = (*env)->value;
-	if (g_pid == -42)
+	if (WIFSIGNALED(state))
+		state = WTERMSIG(state) + 128;
+	else if (g_pid == -42)
 		state = 1;
 	else if (smpl_state != -1 && smpl_state != -33 && smpl_state != -32)
 		state = smpl_state;

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/25 13:44:12 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 04:49:40 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	handle_herdc_inp(int *fd, int *out, t_red_info *red_info)
 	if (pipe(fd) < 0)
 		return (perror("msh-01$: "), free(red_info->herdc_content),
 			exit(errno));
-	if (red_info->nmbr_cmd_herdc == 1)
+	if (red_info->nmbr_cmd_herdc == 1 && red_info->herdc_content)
 		return (write(red_info->fd[1], red_info->herdc_content,
 				ft_strlen(red_info->herdc_content)), exit(0));
-	else if (red_info->fd_out != -5)
+	else if (red_info->fd_out != -5 && red_info->herdc_content)
 		write(fd[1], red_info->herdc_content,
 			ft_strlen(red_info->herdc_content));
 	else
@@ -57,8 +57,8 @@ void	herdc_child(t_cmd *cmd, t_red_info *red_info, t_env *env, char **envp)
 		return (free(red_info->herdc_content), exit(1));
 	if (!cmd->cmd)
 		exit(0);
-	if (!red_info->herdc_content)
-		exit(0);
+	// if (!red_info->herdc_content)
+	// 	exit(0);
 	handle_herdc_inp(fd, out, red_info);
 	if (red_info->fd_out != -5)
 	{
