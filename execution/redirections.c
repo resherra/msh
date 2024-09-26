@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 04:45:16 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 14:22:39 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static int	heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
 	while (1)
 	{
 		input = readline(">");
+		
 		if (!input || !ft_strcmp(input, hrdc->red_file))
 		{
 			red_info->number_of_herd--;
@@ -33,9 +34,7 @@ static int	heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
 				hrdc = hrdc->next;
 		}
 		else if (red_info->number_of_herd == 1)
-		{
 			save_herdoc_data(env, hrdc, input, red_info);
-		}
 	}
 	return (0);
 }
@@ -127,7 +126,7 @@ int	implement_redirections(t_red *redr, t_red_info *red_info, t_env *env,
 	red_info->red_input = NULL;
 	red_info->fd_out = -5;
 	implement_heredoc(redr, red_info, env, in_herdc_child);
-	if (red_info->nmbr_cmd_herdc != 1 || !in_herdc_child)
+	if (red_info->nmbr_cmd_herdc != 1 || !in_herdc_child )
 	{
 		open_files(redr, red_info);
 		if (red_info->fd_out == -2)

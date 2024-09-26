@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 04:31:31 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 16:43:32 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,14 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 
 void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
+	int out[2];
+
 	red_info->herdc_content = NULL;
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
 	signal(SIGINT, SIG_DFL);
-	if (cmd->redirections && !implement_redirections(cmd->redirections,
+	if (cmd->redirections && (!cmd->is_herdc || red_info->nmbr_cmd_herdc == 1) && !implement_redirections(cmd->redirections,
 			red_info, *env, false))
 	{
 		free(red_info->herdc_content);
@@ -56,6 +58,15 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	}
 	if (!cmd->cmd)
 		exit(0);
+	if (cmd->is_herdc && red_info->nmbr_cmd_herdc != 1)
+	{
+		if (pipe(red_info->pfds) == -1)
+			return (perror("msh-0.1$ "), exit(errno));
+		write(out[1], "", 1);
+		close(out[1]);
+		dup2(out[0], STDIN_FILENO);
+		close(out[0]);
+	}
 	excute(cmd, red_info, env, envp);
 }
 
@@ -129,13 +140,11 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
 	while (*pid != -42 && cmd)
 	{
-		if (cmd && cmd->is_herdc == true && red_info.nmbr_cmd_herdc != 1)
+		sampel_state = logic(cmd, &red_info, env, new_envp);
+		if (cmd && cmd->is_herdc == true)
 		{
 			red_info.nmbr_cmd_herdc--;
-			cmd = cmd->next;
-			continue ;
 		}
-		sampel_state = logic(cmd, &red_info, env, new_envp);
 		cmd = cmd->next;
 	}
 	while (wait(&state) >= 0)
