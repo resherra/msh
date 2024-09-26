@@ -56,6 +56,12 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	}
 	if (!cmd->cmd)
 		exit(0);
+    else if (!(*cmd->cmd))
+    {
+        write(2, "msh-0.1$: ", 10);
+        write(2, ": command not found\n", 20);
+        exit(127);
+    }
 	excute(cmd, red_info, env, envp);
 }
 
