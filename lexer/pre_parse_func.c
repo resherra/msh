@@ -50,7 +50,7 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 		else if (curr->type == S_QUOTE && curr->next
 			&& curr->next->type == S_QUOTE)
 		{
-			quote_case_wrapper(after_heredoc, flag, &curr, str);
+            quote_case_wrapper(after_heredoc, flag, &curr, str);
 			continue ;
 		}
 		else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
@@ -110,7 +110,7 @@ void	sanitize(t_token *head, t_token **new)
         curr = join(curr, &str, false, &flag);
         if (str)
 		{
-			node = lst_new(str, WORD, GENERAL);
+            node = lst_new(str, WORD, GENERAL);
 			lst_add_back(new, node);
 		}
 		if (curr && curr->type != SPACES)

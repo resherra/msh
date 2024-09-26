@@ -40,9 +40,6 @@ void static	setup(char **str, t_env **envs)
 	}
 }
 
-
-
-
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
@@ -62,10 +59,19 @@ int	main(int ac, char **av, char **envp)
 			clear_all(&data);
 			continue ;
 		}
+        printf("\n\n");
+        traverse_primary_tokens_list(data.head);
+        printf("\n\n");
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-		lstclear(&data.pre);
+        printf("\n\n");
+         traverse_primary_tokens_list(data.pre);
+        printf("\n\n");
+        lstclear(&data.pre);
 		add_history(data.str);
+         printf("\n\n\n");
+         traverse_parse_list(data.cmd);
+         printf("\n\n\n");
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);

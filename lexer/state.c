@@ -65,9 +65,7 @@ int	set_state(t_token *head, t_env *env)
 		curr = double_quote_check(curr, &doub_quote_flag, env);
 		curr = single_quote_check(curr, &sing_quote_flag);
 		if (curr && curr->type == ENV)
-		{
 			expansion(curr, env, false);
-		}
 		if (doub_quote_flag == true || sing_quote_flag == true)
 			return (1);
 		curr = curr->next;
