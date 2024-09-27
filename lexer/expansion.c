@@ -68,8 +68,9 @@ void	expansion(t_token *var, t_env *envs, bool in_double_quotes)
 	else
     {
 	    joe = true;
-        var->str = ft_strdup(" ");
+        var->str = ft_strdup("");
         var->type = SPACES;
+        var->state = IN_DOUBLE_Q;
     }
 	free(tmp);
 	if (!joe)

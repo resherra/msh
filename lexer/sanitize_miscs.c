@@ -29,7 +29,7 @@ int	handle_single_dollar(t_token **curr)
 int	join_check(t_token *token)
 {
 	if (token->type == WORD || token->type == S_QUOTE || token->type == D_QUOTE
-		|| token->type == ENV)
+		|| token->type == ENV || (token->type == SPACES && token->state == IN_DOUBLE_Q))
 		return (1);
 	return (0);
 }

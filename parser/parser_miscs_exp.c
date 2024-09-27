@@ -65,6 +65,8 @@ char *ultimate_trim(char *str)
     char *tmp;
 
     to_return = NULL;
+    if (!(*str) || !ft_strcmp(str, "\x03"))
+        return ft_strdup("");
     while (str[i])
     {
         if (str[i] == '\x03')

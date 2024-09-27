@@ -29,9 +29,9 @@ void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 
 t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 {
-	while (curr && curr->type == WORD)
+	while (curr && (curr->type == WORD || curr->type == SPACES))
 	{
-        if (all_space_var(curr->str))
+        if (curr->type == SPACES || all_space_var(curr->str))
 		{
 			curr = curr->next;
 			continue ;
@@ -45,7 +45,6 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 }
 
 
-
 t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
@@ -54,13 +53,11 @@ t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
 	else
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
-	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
-    {
+	if (curr->next->type == SPACES || check_ambg(new_red->red_file, envs))
         new_red->is_ambegious = true;
-    }
-//	tmp = new_red->red_file;
-//	new_red->red_file = ultimate_trim(new_red->red_file);
-//	free(tmp);
+	tmp = new_red->red_file;
+	new_red->red_file = ultimate_trim(new_red->red_file);
+	free(tmp);
 	red_add_back(&new_cmd->redirections, new_red);
 	curr = curr->next;
 	return (curr);
@@ -69,7 +66,7 @@ t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
-	if (curr && curr->next && curr->next->type == WORD)
+	if (curr && curr->next && (curr->next->type == WORD || curr->next->type == SPACES))
 		curr = get_redirections(curr, new_red, new_cmd, envs);
 	return (curr);
 }

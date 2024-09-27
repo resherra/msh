@@ -42,10 +42,7 @@ char	**lst_to_arr(int size, t_args *args_list)
 		if (i == 0)
 			args[i] = ft_strdup(curr->str);
 		else
-        {
-//            args[i] = ft_strtrim(curr->str, "\x03");
-            args[i] = ultimate_trim(curr->str);
-        }
+		    args[i] = ft_strtrim(curr->str, "\x03");
 		i++;
 		curr = curr->next;
 	}

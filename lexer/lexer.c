@@ -38,8 +38,10 @@ int	syntax_check(t_token *pre)
 	{
 		if (check_redirections(curr))
 		{
-			if (!curr->next || curr->next->type != WORD)
-				return (print_syntax_error(curr->str));
+			if (!curr->next || (curr->next->type != WORD && curr->next->type != SPACES))
+            {
+                return (print_syntax_error(curr->str));
+            }
 		}
 		if (curr->type == PIPE)
 		{
