@@ -297,6 +297,7 @@ void					exit_state(t_env **env, int state, int smpl_state,
 
 int						print_syntax_error(char *str);
 int all_space_var(char *str);
+char *ultimate_trim(char *str);
 
 //miscs
 const char				*format_state(int type);

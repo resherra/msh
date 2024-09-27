@@ -55,3 +55,29 @@ int all_space_var(char *str)
     free(tmp);
     return 0;
 }
+
+
+char *ultimate_trim(char *str)
+{
+    int i = 0;
+    char *to_return;
+    char *to_str;
+    char *tmp;
+
+    to_return = NULL;
+    while (str[i])
+    {
+        if (str[i] == '\x03')
+        {
+            i++;
+            continue;
+        }
+        to_str = char_to_str(str[i]);
+        tmp = to_return;
+        to_return = ft_strjoin(to_return, to_str);
+        free(tmp);
+        free(to_str);
+        i++;
+    }
+    return to_return;
+}

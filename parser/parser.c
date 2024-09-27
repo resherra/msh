@@ -44,15 +44,23 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 	return (curr);
 }
 
+
+
 t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
+    char *tmp;
 	if (curr->next->state == IN_DOUBLE_Q)
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
 	else
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
 	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
-		new_red->is_ambegious = true;
+    {
+        new_red->is_ambegious = true;
+    }
+//	tmp = new_red->red_file;
+//	new_red->red_file = ultimate_trim(new_red->red_file);
+//	free(tmp);
 	red_add_back(&new_cmd->redirections, new_red);
 	curr = curr->next;
 	return (curr);
