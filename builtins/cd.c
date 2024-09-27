@@ -67,16 +67,16 @@ int	ft_cd(char *path, t_env *env)
 		return (perror("msh-0.1$ "), 1);
 	if (!path)
 	{
-        search_path(env, &home_path);
+		search_path(env, &home_path);
 		if (home_path == NULL || chdir(home_path))
-        {
-            free(home_path);
-            free(old_path);
-            return (printf("msh-0.1$: HOME not set\n"), 1);
-        }
+		{
+			free(home_path);
+			free(old_path);
+			return (printf("msh-0.1$: HOME not set\n"), 1);
+		}
 		free(home_path);
 	}
 	else if (chdir(path))
-        return (perror("cd"), free(old_path), 1);
+		return (perror("cd"), free(old_path), 1);
 	return (up_date(env, old, curr, old_path));
 }
