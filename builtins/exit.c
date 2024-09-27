@@ -26,8 +26,7 @@ int	ft_exit(t_cmd *cmd, char *exit_state)
 			i++;
 		if (cmd->args[1][i] != 0)
 		{
-			printf("exit\n");
-			printf(" exit : %s: numeric argument required \n" , cmd->args[1]);
+			printf("exit : %s: numeric argument required \n" , cmd->args[1]);
 			exit(255);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/27 02:13:59 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/27 16:10:58 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,21 @@ void	handler(int sign)
 
 void static	setup(char **str, t_env **envs)
 {
+	char	*tmp;
+
+	tmp = (*envs)->value;
 	g_pid = -2;
 	*str = readline("msh-0.1$ ");
 	if (g_pid == -3)
+	{
 		(*envs)->value = ft_strdup("1");
+		free(tmp);
+	}
 	if (!(*str))
 	{
-		printf("exit\n");
-		exit(0);
+		ft_exit(NULL, (*envs)->value);
 	}
 }
-
-
-
 
 int	main(int ac, char **av, char **envp)
 {
