@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/27 16:16:10 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/27 20:44:40 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 	if (hrdc->expanded)
 	{
 		while (input[i])
-		{	
+		{
 			if (input[i] == '$')
 			{
 				input = expand(input, env, i);
@@ -126,7 +126,8 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 			i++;
 		}
 		if (!input)
-			return (perror("msh-0.1$ "), free(input), free(red_info->herdc_content), exit(1));
+			return (perror("msh-0.1$ "), free(input),
+				free(red_info->herdc_content), exit(1));
 	}
 	tmp = red_info->herdc_content;
 	red_info->herdc_content = ft_join(red_info->herdc_content, input);
