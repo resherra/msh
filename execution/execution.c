@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 17:01:51 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/27 02:14:58 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,12 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
+	// /* ra el ahsab teset */char **tmp = new_envp;
+	// while (*tmp)
+	// {
+	// 	printf("%s\n", *tmp);
+	// 	tmp++;
+	// }
 	while (*pid != -42 && cmd)
 	{
 		sampel_state = logic(cmd, &red_info, env, new_envp);

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 17:10:57 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/26 23:51:51 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
 {
 	(void)redir_info;
 	if (!ft_strcmp("exit", cmd->cmd))
-		return (ft_exit(cmd));
+		return (ft_exit(cmd, (*envs)->value));
 	else if (!strcmp("export", cmd->cmd))
 	{
 		return (ft_export(*envs, cmd->args));

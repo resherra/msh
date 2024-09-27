@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* *********builtins/exit.c***************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
@@ -12,11 +12,25 @@
 
 #include "../init.h"
 
-int	ft_exit(t_cmd *cmd)
+int	ft_exit(t_cmd *cmd, char *exit_state)
 {
 	int	state;
+	int	i;
 
-	state = 0;
+	i = 0;
+	state =  ft_atoi(exit_state);
+	printf("exit\n");
+	if (cmd && cmd->args[1])
+	{
+		while (cmd->args[1][i]  >= '0' && cmd->args[1][i] <= '9')
+			i++;
+		if (cmd->args[1][i] != 0)
+		{
+			printf("exit\n");
+			printf(" exit : %s: numeric argument required \n" , cmd->args[1]);
+			exit(255);
+		}
+	}
 	if (cmd && cmd->args[1] && cmd->args[2])
 	{
 		printf("too many arguments\n");
@@ -24,6 +38,5 @@ int	ft_exit(t_cmd *cmd)
 	}
 	if (cmd && (cmd)->cmd && (cmd)->args[1])
 		state = ft_atoi((cmd)->args[1]);
-	printf("exit\n");
 	exit(state % 256);
 }
