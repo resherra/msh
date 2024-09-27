@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/25 17:03:49 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/27 02:15:24 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ typedef struct s_data
 	t_cmd				*cmd;
 	char				**paths;
 	char				*str;
+	char				**envp;
 }						t_data;
 
 typedef struct s_util_vars
@@ -223,7 +224,7 @@ int						ft_export(t_env *envs, char **args);
 int						ft_echo(char **str);
 int						ft_cd(char *path, t_env *env);
 int						pwd(void);
-int						ft_exit(t_cmd *cmd);
+int						ft_exit(t_cmd *cmd, char *exit_state);
 
 //PARSINGd
 

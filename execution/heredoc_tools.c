@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/24 19:30:40 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/26 21:04:14 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,12 @@ static char	*is_exist(t_env *env, char *str, int start, int end)
 	return (str);
 }
 
-static char	*expand(char *str, t_env *env)
+static char	*expand(char *str, t_env *env, int i)
 {
 	char	*tmp;
 	int		j;
-	int		i;
 
 	tmp = str;
-	i = 0;
-	while (tmp[i] != '$' && tmp[i])
-		i++;
 	if (!tmp[i++])
 		return (str);
 	j = i;
@@ -115,10 +111,21 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 		t_red_info *red_info)
 {
 	char	*tmp;
+	int		i;
 
+	i = 0;
 	if (hrdc->expanded)
 	{
-		input = expand(input, env);
+		while (input[i])
+		{	
+			if (input[i] == '$')
+			{
+				//tmp = input;
+				input = expand(input, env, i);
+				//free(tmp);
+			}
+			i++;
+		}
 		if (!input)
 		{
 			perror("msh-0.1$ ");

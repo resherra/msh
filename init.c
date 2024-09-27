@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/26 16:24:27 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/27 02:13:59 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ void static	setup(char **str, t_env **envs)
 	}
 }
 
+
+
+
 int	main(int ac, char **av, char **envp)
 {
 	t_data	data;
@@ -61,7 +64,7 @@ int	main(int ac, char **av, char **envp)
 		}
         lstclear(&data.head);
 		parser(&data.cmd, &data.pre, data.paths, data.envs);
-        lstclear(&data.pre);
+		lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
