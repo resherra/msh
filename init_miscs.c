@@ -18,7 +18,6 @@ void	init_all(t_data *data)
 	data->envp = NULL;
 	data->cmd = NULL;
 	data->head = NULL;
-	data->paths = NULL;
 	data->pre = NULL;
 	data->str = NULL;
 }

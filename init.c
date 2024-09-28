@@ -53,7 +53,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac > 1)
 		return (1);
 	init_all(&data);
-	init_env(&data.envs, envp, &data.paths);
+	init_env(&data.envs, envp);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)
@@ -65,9 +65,7 @@ int	main(int ac, char **av, char **envp)
 			continue ;
 		}
         lstclear(&data.head);
-        parser(&data.cmd, &data.pre, data.paths, data.envs);
-        printf("\n\n");
-        traverse_primary_tokens_list(data.pre);
+        parser(&data.cmd, &data.pre, data.envs);
 		lstclear(&data.pre);
 		add_history(data.str);
 		printf("\n\n\n");
@@ -76,6 +74,6 @@ int	main(int ac, char **av, char **envp)
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-		//system("leaks -q ms");
+		system("leaks -q ms");
 	}
 }

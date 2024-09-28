@@ -12,7 +12,7 @@
 
 #include "../init.h"
 
-void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
+void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs)
 {
 	int	tmp;
 
@@ -22,7 +22,7 @@ void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 	new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp,
 			new_cmd->args_list);
 	new_cmd->cmd = new_cmd->args[0];
-	new_cmd->path = extract_path(new_cmd->cmd, paths);
+	new_cmd->path = extract_path(new_cmd->cmd, envs);
 	cmd_add_back(cmd, new_cmd);
 }
 
@@ -71,7 +71,7 @@ t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 	return (curr);
 }
 
-void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
+void	parser(t_cmd **cmd, t_token **pre, t_env *envs)
 {
 	t_parser_vars	vars;
 
@@ -90,7 +90,7 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 			if (vars.curr)
 				vars.curr = vars.curr->next;
 		}
-		fill_cmd(cmd, vars.new_cmd, envs, paths);
+		fill_cmd(cmd, vars.new_cmd, envs);
 		if (vars.curr)
 			vars.curr = vars.curr->next;
 	}
