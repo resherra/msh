@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/27 20:44:40 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/28 17:52:00 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ static char	*extract_value(char *value, int start, int end, char *str)
 	return (free(str), res);
 }
 
-static char	*is_exist(t_env *env, char *str, int start, int end)
+static char	*is_exist(t_env *env, char *str, int start, int *new)
 {
 	char	*var;
 
-	var = ft_substr(str, start, (end - start));
+	var = ft_substr(str, start, (*new - start));
 	if (!var)
 		return (NULL);
 	while (env)
@@ -69,42 +69,41 @@ static char	*is_exist(t_env *env, char *str, int start, int end)
 		if (!ft_strcmp(var, env->key))
 		{
 			free(var);
-			return (extract_value(env->value, start, end, str));
+			return (extract_value(env->value, start, *new, str));
 		}
 		env = env->next;
 	}
-	while (str[end])
+	while (str[*new])
 	{
-		str[start - 1] = str[end++];
+		str[start - 1] = str[(*new)++];
 		start++;
 	}
 	str[start - 1] = 0;
 	return (str);
 }
 
-static char	*expand(char *str, t_env *env, int i)
+static char	*expand(char *str, t_env *env, int i, int *new_index)
 {
 	char	*tmp;
-	int		j;
 
 	tmp = str;
 	if (!tmp[i++])
 		return (str);
-	j = i;
-	if (tmp[j] == '_' || ft_isalpha(tmp[j]))
-		j++;
-	else if (ft_isdigit(tmp[j]))
+	*new_index = i;
+	if (tmp[*new_index] == '_' || ft_isalpha(tmp[*new_index]))
+		(*new_index)++;
+	else if (ft_isdigit(tmp[*new_index]))
 	{
-		while (str[j])
-			str[i++ - 1] = str[++j];
+		while (str[*new_index])
+			str[i++ - 1] = str[++(*new_index)];
 		str[i] = 0;
 		return (str);
 	}
 	else
 		return (str);
-	while (ft_isalnum(tmp[j]) || tmp[j] == '_')
-		j++;
-	return (is_exist(env, str, i, j));
+	while (ft_isalnum(tmp[*new_index]) || tmp[*new_index] == '_')
+		(*new_index)++;
+	return (is_exist(env, str, i, new_index));
 }
 
 void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
@@ -112,6 +111,7 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 {
 	char	*tmp;
 	int		i;
+	int		new_index;
 
 	i = 0;
 	if (hrdc->expanded)
@@ -120,8 +120,8 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 		{
 			if (input[i] == '$')
 			{
-				input = expand(input, env, i);
-				i = -1;
+				input = expand(input, env, i, &new_index);
+				i = new_index -1;
 			}
 			i++;
 		}
@@ -135,3 +135,4 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 		return (perror("msh-0.1$ "), free(tmp), free(input), exit(1));
 	free(tmp);
 }
+
