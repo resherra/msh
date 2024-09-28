@@ -6,18 +6,19 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/28 15:34:10 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/28 18:04:58 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-void sig_handler(int sig)
+void	sig_handler(int sig)
 {
 	(void)(sig);
-	write(2, "Quit : 3\n", 9);	
+	write(2, "Quit : 3\n", 9);
 	exit(1);
 }
+
 void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	int	state;
@@ -47,7 +48,6 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	if (execve(cmd->path, cmd->args, envp) == -1)
 		error(errno, cmd->cmd);
 }
-
 
 void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {

@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/28 17:52:00 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/28 20:55:19 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,28 @@ static char	*extract_value(char *value, int start, int end, char *str)
 static char	*is_exist(t_env *env, char *str, int start, int *new)
 {
 	char	*var;
+	int		end;
 
 	var = ft_substr(str, start, (*new - start));
 	if (!var)
 		return (NULL);
+	end = *new;
 	while (env)
 	{
 		if (!ft_strcmp(var, env->key))
 		{
+			printf("start == %i, new == %i\n", start, end);
+			*new = start + ft_strlen(env->value) - 2;
+			printf("start == %i\n", *new);
 			free(var);
-			return (extract_value(env->value, start, *new, str));
+			return (extract_value(env->value, start, end, str));
 		}
 		env = env->next;
 	}
-	while (str[*new])
+	*new = start - 1;
+	while (str[end])
 	{
-		str[start - 1] = str[(*new)++];
+		str[start - 1] = str[end++];
 		start++;
 	}
 	str[start - 1] = 0;
@@ -86,6 +92,7 @@ static char	*expand(char *str, t_env *env, int i, int *new_index)
 {
 	char	*tmp;
 
+	printf("now == %i, i == %i\n", *new_index, i);
 	tmp = str;
 	if (!tmp[i++])
 		return (str);
@@ -101,8 +108,10 @@ static char	*expand(char *str, t_env *env, int i, int *new_index)
 	}
 	else
 		return (str);
+	printf("now2.0 == %i\n", *new_index);
 	while (ft_isalnum(tmp[*new_index]) || tmp[*new_index] == '_')
 		(*new_index)++;
+	printf("now2 == %i\n", *new_index);
 	return (is_exist(env, str, i, new_index));
 }
 
@@ -121,7 +130,8 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 			if (input[i] == '$')
 			{
 				input = expand(input, env, i, &new_index);
-				i = new_index -1;
+				printf("s == %i\n", new_index);
+				i = new_index - 1;
 			}
 			i++;
 		}
@@ -135,4 +145,3 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 		return (perror("msh-0.1$ "), free(tmp), free(input), exit(1));
 	free(tmp);
 }
-
