@@ -6,16 +6,23 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/27 20:40:47 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/28 15:34:10 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
+void sig_handler(int sig)
+{
+	(void)(sig);
+	write(2, "Quit : 3\n", 9);	
+	exit(1);
+}
 void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	int	state;
 
+	signal(SIGQUIT, sig_handler);
 	if (cmd->is_herdc && red_info->nmbr_cmd_herdc == 1)
 	{
 		close(red_info->fd[1]);
@@ -41,6 +48,7 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 		error(errno, cmd->cmd);
 }
 
+
 void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	int	out[2];
@@ -49,7 +57,8 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
-	signal(SIGINT, SIG_DFL);
+	//signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (cmd->redirections && (!cmd->is_herdc || red_info->nmbr_cmd_herdc == 1)
 		&& !implement_redirections(cmd->redirections, red_info, *env, false))
 	{

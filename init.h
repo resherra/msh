@@ -152,7 +152,6 @@ typedef struct s_data
 	t_token				*head;
 	t_token				*pre;
 	t_cmd				*cmd;
-	char				**paths;
 	char				*str;
 	char				**envp;
 }						t_data;
@@ -191,7 +190,7 @@ char					*double_to_str(char *str, int i);
 
 //env utils
 //void				extract_env(t_env **envs, char *str, char ***paths);
-void					init_env(t_env **env, char **envp, char ***paths);
+void                    init_env(t_env **env, char **envp);
 void					ft_env_addback(t_env **env, t_env *new);
 
 //pre-parse functions
@@ -228,7 +227,7 @@ int						ft_exit(t_cmd *cmd, char *exit_state);
 
 //PARSINGd
 
-void					parser(t_cmd **cmd, t_token **pre, char **paths,
+void					parser(t_cmd **cmd, t_token **pre,
 							t_env *envs);
 t_cmd					*lst_new_cmd(void);
 void					cmd_add_back(t_cmd **cmd, t_cmd *new);
@@ -242,12 +241,12 @@ t_red					*lst_new_red(t_type red_type, char *red_file,
 void					red_add_back(t_red **redirections, t_red *new);
 
 char					**lst_to_arr(int size, t_args *args_list);
-char					*extract_path(char *cmd, char **paths);
+char					*extract_path(char *cmd, t_env *envs);
 int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
-char					*free_and_return(char *pre_path, char *to_return);
+char					*free_and_return(char *pre_path, char *to_return, char **paths);
 
 void					special_case(t_token *curr, t_token **new,
 							t_token **node);
@@ -299,6 +298,8 @@ void					exit_state(t_env **env, int state, int smpl_state,
 int						print_syntax_error(char *str);
 int all_space_var(char *str);
 char *ultimate_trim(char *str);
+char **get_paths(char *value);
+void free_paths(char **paths);
 
 //miscs
 const char				*format_state(int type);
