@@ -102,7 +102,7 @@ void free_paths(char **paths)
     int i = 0;
 
     while (paths[i])
-        free(paths[i]);
+        free(paths[i++]);
     free(paths);
 }
 
@@ -133,7 +133,10 @@ char	*extract_path(char *cmd, t_env *envs)
         }
 	}
 	if (!paths)
-		return (NULL);
+    {
+	    free(pre_path);
+        return (NULL);
+    }
 	while (paths[i])
 	{
 		if (pth(paths[i++], &path, &pre_path))
