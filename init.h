@@ -162,6 +162,14 @@ typedef struct s_util_vars
 	char				*full_key;
 }						t_util_vars;
 
+
+typedef struct s_flags
+{
+	bool		flag;
+	bool		expanded_empty;
+	bool		quotes_stick;
+}				t_flags;
+
 void					lstclear(t_token **head);
 void					clear_args_list(t_args **head);
 void					clear_redirections(t_red **head);
@@ -300,6 +308,9 @@ int all_space_var(char *str);
 char *ultimate_trim(char *str);
 char **get_paths(char *value);
 void free_paths(char **paths);
+t_token	*create_node(char *str, t_flags flags);
+int	expanded_empty_check(t_token *curr, t_flags *flags);
+int	sticked_quotes_check(t_token *curr);
 
 //miscs
 const char				*format_state(int type);

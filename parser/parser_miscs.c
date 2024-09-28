@@ -42,7 +42,7 @@ char	**lst_to_arr(int size, t_args *args_list)
 		if (i == 0)
 			args[i] = ft_strdup(curr->str);
 		else
-		    args[i] = ft_strtrim(curr->str, "\x03");
+			args[i] = ultimate_trim(curr->str);
 		i++;
 		curr = curr->next;
 	}
@@ -80,32 +80,35 @@ int	pth(char *paths, char **path, char **pre_path)
 	return (0);
 }
 
-char **get_new_paths(t_env *envs)
+char	**get_new_paths(t_env *envs)
 {
-    t_env *curr = envs;
-    char **paths = NULL;
+	t_env	*curr;
+	char	**paths;
 
-    while (curr)
-    {
-        if (!ft_strcmp("PATH", curr->key))
-        {
-            paths = get_paths(curr->value);
-            return paths;
-        }
-        curr = curr->next;
-    }
-    return paths;
+	curr = envs;
+	paths = NULL;
+	while (curr)
+	{
+		if (!ft_strcmp("PATH", curr->key))
+		{
+			paths = get_paths(curr->value);
+			return (paths);
+		}
+		curr = curr->next;
+	}
+	return (paths);
 }
 
-void free_paths(char **paths)
+void	free_paths(char **paths)
 {
-    int i = 0;
+	int	i;
 
-    if (!paths)
-        return;
-    while (paths[i])
-        free(paths[i++]);
-    free(paths);
+	i = 0;
+	if (!paths)
+		return ;
+	while (paths[i])
+		free(paths[i++]);
+	free(paths);
 }
 
 char	*extract_path(char *cmd, t_env *envs)
@@ -114,38 +117,39 @@ char	*extract_path(char *cmd, t_env *envs)
 	char	*path;
 	char	*curr_pth;
 	int		i;
+	char	**paths;
 
 	i = 0;
 	if (!cmd || !(*cmd))
 		return (NULL);
-    char **paths = get_new_paths(envs);
-    pre_path = ft_strjoin("/", cmd);
+	paths = get_new_paths(envs);
+	pre_path = ft_strjoin("/", cmd);
 	if (*cmd == '/')
-    {
-	    free_paths(paths);
-        return (free_and_return(pre_path, cmd, paths));
-    }
+	{
+		free_paths(paths);
+		return (free_and_return(pre_path, cmd, paths));
+	}
 	if (*cmd == '.')
 	{
 		curr_pth = abslt_rltv(pre_path);
 		if (curr_pth)
-        {
-		    free_paths(paths);
-            return (free_and_return(pre_path, curr_pth, paths));
-        }
+		{
+			free_paths(paths);
+			return (free_and_return(pre_path, curr_pth, paths));
+		}
 	}
 	if (!paths)
-    {
-	    free(pre_path);
-        return (NULL);
-    }
+	{
+		free(pre_path);
+		return (NULL);
+	}
 	while (paths[i])
 	{
 		if (pth(paths[i++], &path, &pre_path))
-        {
-		    free_paths(paths);
-            return (path);
-        }
+		{
+			free_paths(paths);
+			return (path);
+		}
 	}
 	return (free_and_return(pre_path, cmd, paths));
 }

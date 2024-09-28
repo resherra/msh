@@ -12,11 +12,12 @@
 
 #include "../init.h"
 
-char **get_paths(char *value)
+char	**get_paths(char *value)
 {
-	char **paths = ft_split(value, ':');
+	char	**paths;
 
-	return paths;
+	paths = ft_split(value, ':');
+	return (paths);
 }
 
 void	env_add_front(t_env **env, t_env *new)
@@ -46,7 +47,7 @@ void	incr_lvl(t_env **var)
 	free(tmp);
 }
 
-static void extract_env(t_env **envs, char *str)
+static void	extract_env(t_env **envs, char *str)
 {
 	int		i;
 	t_env	*new;
@@ -60,14 +61,14 @@ static void extract_env(t_env **envs, char *str)
 	env_addback(envs, new);
 }
 
-void init_env(t_env **env, char **envp)
+void	init_env(t_env **env, char **envp)
 {
 	int		i;
 	t_env	*new;
 
 	i = 0;
 	while (envp[i])
-	    extract_env(env, envp[i++]);
+		extract_env(env, envp[i++]);
 	new = new_env(ft_strdup("?"), ft_strdup("0"));
 	env_add_front(env, new);
 }

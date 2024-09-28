@@ -122,7 +122,7 @@ void	traverse(t_token *head, t_token *pre, t_cmd *cmd)
     //traverse_primary_tokens_list(head);
     // traverse_primary_tokens_list(pre);
     //clear the list
-    // printf("\n\n\n");
-    // traverse_parse_list(cmd);
-    // printf("\n\n\n");
+//     printf("\n\n\n");
+//     traverse_parse_list(cmd);
+//     printf("\n\n\n");
 }
