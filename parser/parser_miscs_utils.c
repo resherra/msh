@@ -6,7 +6,7 @@
 /*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/28 20:12:58 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/28 20:13:07 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/28 20:53:53 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	free_paths(char **paths)
 
 int	get_act_paths(char **paths, char **path, char **pre_path)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (paths[i])
