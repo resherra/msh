@@ -19,7 +19,7 @@ static int	check_n_files(char *str)
 	int		i;
 
 	i = 0;
-	new = ft_strtrim(str, "\x03");
+	new = ultimate_trim(str);
 	res = ft_split(new, ' ');
 	free(new);
 	while (res[i])
@@ -40,10 +40,14 @@ static int	prr(char *str)
 	{
 		if (str[i] == '\x03')
 		{
-			if (check_n_files(str) != 1)
-				return (1);
+			if (check_n_files(str) != 1 )
+            {
+                return (1);
+            }
 			else
-				break ;
+            {
+                break ;
+            }
 		}
 		i++;
 	}
