@@ -64,13 +64,12 @@ int	main(int ac, char **av, char **envp)
 			clear_all(&data);
 			continue ;
 		}
-        lstclear(&data.head);
-        parser(&data.cmd, &data.pre, data.envs);
+		lstclear(&data.head);
+		parser(&data.cmd, &data.pre, data.envs);
 		lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-//		system("leaks -q ms");
 	}
 }

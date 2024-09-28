@@ -41,9 +41,9 @@ static int	prr(char *str)
 		if (str[i] == '\x03')
 		{
 			if (check_n_files(str) != 1)
-                return (1);
+				return (1);
 			else
-                break ;
+				break ;
 		}
 		i++;
 	}

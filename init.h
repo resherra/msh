@@ -162,6 +162,13 @@ typedef struct s_util_vars
 	char				*full_key;
 }						t_util_vars;
 
+typedef struct s_flags
+{
+	bool				flag;
+	bool				expanded_empty;
+	bool				quotes_stick;
+}						t_flags;
+
 void					lstclear(t_token **head);
 void					clear_args_list(t_args **head);
 void					clear_redirections(t_red **head);
@@ -190,7 +197,7 @@ char					*double_to_str(char *str, int i);
 
 //env utils
 //void				extract_env(t_env **envs, char *str, char ***paths);
-void                    init_env(t_env **env, char **envp);
+void					init_env(t_env **env, char **envp);
 void					ft_env_addback(t_env **env, t_env *new);
 
 //pre-parse functions
@@ -227,8 +234,7 @@ int						ft_exit(t_cmd *cmd, char *exit_state);
 
 //PARSINGd
 
-void					parser(t_cmd **cmd, t_token **pre,
-							t_env *envs);
+void					parser(t_cmd **cmd, t_token **pre, t_env *envs);
 t_cmd					*lst_new_cmd(void);
 void					cmd_add_back(t_cmd **cmd, t_cmd *new);
 
@@ -246,7 +252,8 @@ int						check_in_env(char *str, t_env *envs);
 int						check_ambg(char *str, t_env *envs);
 int						treat_env(t_args **args_list);
 
-char					*free_and_return(char *pre_path, char *to_return, char **paths);
+char					*free_and_return(char *pre_path, char *to_return,
+							char **paths);
 
 void					special_case(t_token *curr, t_token **new,
 							t_token **node);
@@ -296,10 +303,19 @@ void					exit_state(t_env **env, int state, int smpl_state,
 							char **envp);
 
 int						print_syntax_error(char *str);
-int all_space_var(char *str);
-char *ultimate_trim(char *str);
-char **get_paths(char *value);
-void free_paths(char **paths);
+int						all_space_var(char *str);
+char					*ultimate_trim(char *str);
+char					**get_paths(char *value);
+void					free_paths(char **paths);
+t_token					*create_node(char *str, t_flags flags);
+int						expanded_empty_check(t_token *curr, t_flags *flags);
+int						sticked_quotes_check(t_token *curr);
+
+int						get_act_paths(char **paths, char **path,
+							char **pre_path);
+void					free_paths(char **paths);
+char					**get_new_paths(t_env *envs);
+int						pth(char *paths, char **path, char **pre_path);
 
 //miscs
 const char				*format_state(int type);
