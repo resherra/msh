@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/28 21:41:58 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 00:12:04 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,7 @@ static char	*is_exist(t_env *env, char *str, int start, int *new)
 	{
 		if (!ft_strcmp(var, env->key))
 		{
-			printf("start == %i, new == %i\n", start, end);
 			*new = start + ft_strlen(env->value) - 2;
-			printf("start == %i\n", *new);
 			free(var);
 			return (extract_value(env->value, start, end, str));
 		}
@@ -93,7 +91,6 @@ static char	*expand(char *str, t_env *env, int i, int *new_index)
 	char	*tmp;
 	int		j;
 
-	printf("now == %i, i == %i\n", *new_index, i);
 	tmp = str;
 	if (!tmp[i++])
 		return (str);
@@ -103,22 +100,17 @@ static char	*expand(char *str, t_env *env, int i, int *new_index)
 		j++;
 	else if (ft_isdigit(tmp[j]))
 	{
-		printf("1 inp == %s\n", str);
 		while (str[j])
 		{
-			str[i - 1] = str[++j];
-			i++;
+			str[i++ - 1] = str[++j];
 		}
 		str[i] = 0;
-		printf(" inp == %s\n", str);
 		return (str);
 	}
 	else
 		return (str);
-	printf("now2.0 == %i\n", *new_index);
 	while (ft_isalnum(tmp[j]) || tmp[j] == '_')
 		j++;
-	printf("now2 == %i\n", *new_index);
 	*new_index = j;
 	return (is_exist(env, str, i, new_index));
 }
@@ -138,8 +130,6 @@ void	save_herdoc_data(t_env *env, t_red *hrdc, char *input,
 			if (input[i] == '$')
 			{
 				input = expand(input, env, i, &new_index);
-				printf("s == %i\n", new_index);
-				printf("\n\n\n\n");
 				i = new_index - 1;
 			}
 			i++;
