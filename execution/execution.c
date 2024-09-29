@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 18:28:20 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:05:45 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,18 @@ void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 
 void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
-	int out[2];
+	int	out[2];
 
 	red_info->herdc_content = NULL;
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
+	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
-	if (cmd->redirections && (!cmd->is_herdc || red_info->nmbr_cmd_herdc == 1) && !implement_redirections(cmd->redirections,
-			red_info, *env, false))
+	if (cmd->redirections && (!cmd->is_herdc || red_info->nmbr_cmd_herdc == 1)
+		&& !implement_redirections(cmd->redirections, red_info, *env, false))
 	{
-		free(red_info->herdc_content);
-		exit(1);
+		return (free(red_info->herdc_content), exit(1));
 	}
 	if (!cmd->cmd)
 		exit(0);
@@ -112,6 +112,7 @@ int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 			perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -33);
 	if (g_pid == 0)
 		child(cmd, red_info, env, envp);
+	signal(SIGQUIT, sig_handle);
 	if (cmd->is_herdc == true && red_info->nmbr_cmd_herdc == 1
 		&& red_info->nmbr_cmd_herdc--)
 		close(red_info->fd[0]);
@@ -138,7 +139,7 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
-	while (*pid != -42 && cmd)
+	while (*pid != -42 && g_pid != -32 && cmd)
 	{
 		sampel_state = logic(cmd, &red_info, env, new_envp);
 		if (cmd && cmd->is_herdc == true)
@@ -151,4 +152,5 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	{
 	}
 	exit_state(env, state, sampel_state, new_envp);
+	signal(SIGQUIT, SIG_IGN);
 }

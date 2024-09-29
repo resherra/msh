@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_miscs.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 18:40:39 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/22 18:40:48 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/27 01:46:20 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	init_all(t_data *data)
 {
 	data->envs = NULL;
+	data->envp = NULL;
 	data->cmd = NULL;
 	data->head = NULL;
-	data->paths = NULL;
 	data->pre = NULL;
 	data->str = NULL;
 }

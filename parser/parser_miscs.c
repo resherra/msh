@@ -42,7 +42,7 @@ char	**lst_to_arr(int size, t_args *args_list)
 		if (i == 0)
 			args[i] = ft_strdup(curr->str);
 		else
-			args[i] = ft_strtrim(curr->str, "\x03");
+			args[i] = ultimate_trim(curr->str);
 		i++;
 		curr = curr->next;
 	}
@@ -80,31 +80,31 @@ int	pth(char *paths, char **path, char **pre_path)
 	return (0);
 }
 
-char	*extract_path(char *cmd, char **paths)
+char	*extract_path(char *cmd, t_env *envs)
 {
 	char	*pre_path;
 	char	*path;
 	char	*curr_pth;
-	int		i;
+	char	**paths;
 
-	i = 0;
 	if (!cmd || !(*cmd))
 		return (NULL);
+	paths = get_new_paths(envs);
 	pre_path = ft_strjoin("/", cmd);
 	if (*cmd == '/')
-		return (free_and_return(pre_path, cmd));
+		return (free_and_return(pre_path, cmd, paths));
 	if (*cmd == '.')
 	{
 		curr_pth = abslt_rltv(pre_path);
 		if (curr_pth)
-			return (free_and_return(pre_path, curr_pth));
+			return (free_and_return(pre_path, curr_pth, paths));
 	}
-	if (!paths)
-		return (NULL);
-	while (paths[i])
+	if (get_act_paths(paths, &path, &pre_path))
+		return (path);
+	if (!access(cmd, F_OK))
 	{
-		if (pth(paths[i++], &path, &pre_path))
-			return (path);
+		free(pre_path);
+		return (cmd);
 	}
-	return (free_and_return(pre_path, cmd));
+	return (free_and_return(pre_path, cmd, paths));
 }

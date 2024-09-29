@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   parser_miscs_exp_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
+/*   By: recherra <recherra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/27 16:02:32 by apple            ###   ########.fr       */
+/*   Created: 2024/09/28 19:46:01 by recherra          #+#    #+#             */
+/*   Updated: 2024/09/28 19:46:15 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-int	env(t_env *envs, t_cmd *cmd)
+int	all_space_var(char *str)
 {
-	t_env	*curr;
+	char	*tmp;
 
-	curr = envs;
-	if (cmd && cmd->args[1])
-		return (1);
-	curr = curr->next;
-	while (curr)
+	tmp = ft_strtrim(str, " ");
+	if (!ft_strcmp(tmp, "\x03"))
 	{
-		if (!curr->in_export)
-			printf("%s=%s\n", curr->key, curr->value);
-		curr = curr->next;
+		free(tmp);
+		return (1);
 	}
+	free(tmp);
 	return (0);
 }

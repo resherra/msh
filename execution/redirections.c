@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 18:28:37 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:06:07 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static int	heredoc(t_red *hrdc, t_red_info *red_info, t_env *env)
 	while (1)
 	{
 		input = readline(">");
-		
 		if (!input || !ft_strcmp(input, hrdc->red_file))
 		{
 			red_info->number_of_herd--;
@@ -114,7 +113,6 @@ void	implement_heredoc(t_red *redr, t_red_info *red_info, t_env *env,
 			if (!heredoc(cur, red_info, env))
 				red_info->herdc_content = NULL;
 		}
-			
 	}
 }
 
@@ -126,7 +124,7 @@ int	implement_redirections(t_red *redr, t_red_info *red_info, t_env *env,
 	red_info->red_input = NULL;
 	red_info->fd_out = -5;
 	implement_heredoc(redr, red_info, env, in_herdc_child);
-	if (red_info->nmbr_cmd_herdc != 1 || !in_herdc_child )
+	if (red_info->nmbr_cmd_herdc != 1 || !in_herdc_child)
 	{
 		open_files(redr, red_info);
 		if (red_info->fd_out == -2)

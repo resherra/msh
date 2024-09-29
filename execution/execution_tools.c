@@ -6,11 +6,17 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 18:28:25 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/29 19:05:36 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
+
+void	sig_handle(int sig)
+{
+	(void)(sig);
+	write(2, "Quit : 3\n", 9);
+}
 
 void	free_envp(char **envp)
 {
@@ -82,7 +88,7 @@ int	sample_bultin(t_env **envs, t_cmd *cmd, t_red_info *redir_info)
 {
 	(void)redir_info;
 	if (!ft_strcmp("exit", cmd->cmd))
-		return (ft_exit(cmd));
+		return (ft_exit(cmd, (*envs)->value));
 	else if (!strcmp("export", cmd->cmd))
 	{
 		return (ft_export(*envs, cmd->args));

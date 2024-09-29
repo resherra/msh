@@ -33,30 +33,28 @@ void	quote_case_wrapper(bool after_heredoc, bool *flag, t_token **curr,
 	safejoin(curr, str, true);
 }
 
-static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
+static t_token	*join(t_token *curr, char **str, bool after_heredoc,
+		t_flags *flags)
 {
 	while (curr && join_check(curr))
 	{
 		if (handle_single_dollar(&curr))
-        {
-		    curr = curr->next;
-            continue ;
-        }
-		if (curr->type == D_QUOTE && curr->next && curr->next->type == D_QUOTE)
 		{
-			quote_case_wrapper(after_heredoc, flag, &curr, str);
+			curr = curr->next;
 			continue ;
 		}
-		else if (curr->type == S_QUOTE && curr->next
-			&& curr->next->type == S_QUOTE)
+		if (expanded_empty_check(curr, flags))
+			flags->expanded_empty = true;
+		if (sticked_quotes_check(curr))
 		{
-            quote_case_wrapper(after_heredoc, flag, &curr, str);
+			flags->quotes_stick = true;
+			quote_case_wrapper(after_heredoc, &flags->flag, &curr, str);
 			continue ;
 		}
 		else if (curr->type == D_QUOTE || curr->type == S_QUOTE)
 		{
 			if (after_heredoc)
-				*flag = true;
+				flags->flag = true;
 			curr = curr->next;
 			continue ;
 		}
@@ -66,7 +64,7 @@ static t_token	*join(t_token *curr, char **str, bool after_heredoc, bool *flag)
 }
 
 static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
-		char **str, bool *flag)
+		char **str, t_flags *flags)
 {
 	t_token	*node;
 	t_token	*tmp;
@@ -80,10 +78,10 @@ static t_token	*handle_ope_and_delimiter(t_token *curr, t_token **new,
 		while (curr && curr->type == SPACES)
 			curr = curr->next;
 		tmp = curr;
-		curr = join(curr, str, true, flag);
+		curr = join(curr, str, true, flags);
 		if (*str)
 		{
-			if (*flag)
+			if (flags->flag)
 				node = lst_new(*str, WORD, IN_DOUBLE_Q);
 			else
 				node = lst_new(*str, WORD, GENERAL);
@@ -100,21 +98,23 @@ void	sanitize(t_token *head, t_token **new)
 	t_token	*curr;
 	t_token	*node;
 	char	*str;
-	bool	flag;
+	t_flags	flags;
 
-	flag = false;
+	flags.expanded_empty = false;
+	flags.quotes_stick = false;
+	flags.flag = false;
 	curr = head;
 	while (curr)
 	{
 		str = NULL;
-        curr = join(curr, &str, false, &flag);
-        if (str)
+		curr = join(curr, &str, false, &flags);
+		if (str)
 		{
-            node = lst_new(str, WORD, GENERAL);
+			node = create_node(str, flags);
 			lst_add_back(new, node);
 		}
 		if (curr && curr->type != SPACES)
-			curr = handle_ope_and_delimiter(curr, new, &str, &flag);
+			curr = handle_ope_and_delimiter(curr, new, &str, &flags);
 		if (curr)
 			curr = curr->next;
 	}

@@ -6,11 +6,13 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/26 16:24:27 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 18:44:37 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
+
+int		g_pid;
 
 void	handler(int sign)
 {
@@ -27,16 +29,21 @@ void	handler(int sign)
 	}
 }
 
-void static	setup(char **str, t_env **envs)
+static void	setup(char **str, t_env **envs)
 {
+	char	*tmp;
+
+	tmp = (*envs)->value;
 	g_pid = -2;
 	*str = readline("msh-0.1$ ");
 	if (g_pid == -3)
+	{
 		(*envs)->value = ft_strdup("1");
+		free(tmp);
+	}
 	if (!(*str))
 	{
-		printf("exit\n");
-		exit(0);
+		ft_exit(NULL, (*envs)->value);
 	}
 }
 
@@ -48,7 +55,8 @@ int	main(int ac, char **av, char **envp)
 	if (ac > 1)
 		return (1);
 	init_all(&data);
-	init_env(&data.envs, envp, &data.paths);
+	init_env(&data.envs, envp);
+	
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)
@@ -59,13 +67,12 @@ int	main(int ac, char **av, char **envp)
 			clear_all(&data);
 			continue ;
 		}
-        lstclear(&data.head);
-		parser(&data.cmd, &data.pre, data.paths, data.envs);
-        lstclear(&data.pre);
+		lstclear(&data.head);
+		parser(&data.cmd, &data.pre, data.envs);
+		lstclear(&data.pre);
 		add_history(data.str);
 		excution(&data.envs, data.cmd, &g_pid);
 		free_cmd_list(&data.cmd);
 		free(data.str);
-		//system("leaks -q ms");
 	}
 }

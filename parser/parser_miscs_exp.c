@@ -18,8 +18,9 @@ void	special_case(t_token *curr, t_token **new, t_token **node)
 	lst_add_back(new, *node);
 }
 
-char	*free_and_return(char *pre_path, char *to_return)
+char	*free_and_return(char *pre_path, char *to_return, char **paths)
 {
+	free_paths(paths);
 	free(pre_path);
 	return (to_return);
 }
@@ -41,17 +42,30 @@ void	count_heredoc(t_parser_vars *vars)
 	}
 }
 
-
-int all_space_var(char *str)
+char	*ultimate_trim(char *str)
 {
-    char *tmp;
+	int		i;
+	char	*to_ret;
+	char	*to_str;
+	char	*tmp;
 
-    tmp = ft_strtrim(str, " ");
-    if (!ft_strcmp(tmp, "\x03"))
-    {
-        free(tmp);
-        return 1;
-    }
-    free(tmp);
-    return 0;
+	i = 0;
+	to_ret = NULL;
+	if (!(*str) || !ft_strcmp(str, "\x03"))
+		return (ft_strdup(""));
+	while (str[i])
+	{
+		if (str[i] == '\x03')
+		{
+			i++;
+			continue ;
+		}
+		to_str = char_to_str(str[i]);
+		tmp = to_ret;
+		to_ret = ft_strjoin(to_ret, to_str);
+		free(tmp);
+		free(to_str);
+		i++;
+	}
+	return (to_ret);
 }

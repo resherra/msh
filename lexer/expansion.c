@@ -40,38 +40,52 @@ static void	check_dq_flag(t_token *var, t_env *curr, bool in_double_quotes)
 		var->str = ft_strdup(curr->value);
 }
 
+void	change_empty_type(t_token *var, bool *joe)
+{
+	*joe = true;
+	var->str = ft_strdup("");
+	var->type = SPACES;
+	var->state = IN_DOUBLE_Q;
+}
+
+int	find_var(t_token *var, t_env *curr, bool in_double_quotes)
+{
+	char	*tmp;
+
+	if (!ft_strcmp(var->str + 1, curr->key))
+	{
+		tmp = var->str;
+		check_dq_flag(var, curr, in_double_quotes);
+		free(tmp);
+		return (1);
+	}
+	return (0);
+}
+
 void	expansion(t_token *var, t_env *envs, bool in_double_quotes)
 {
 	t_env	*curr;
 	int		len;
+	bool	joe;
 	char	*tmp;
-	bool joe = false;
 
+	joe = false;
 	curr = envs;
 	len = ft_strlen(var->str);
 	if (single_dollar(var, len))
 		return ;
 	while (curr)
 	{
-		if (!ft_strcmp(var->str + 1, curr->key))
-		{
-			tmp = var->str;
-			check_dq_flag(var, curr, in_double_quotes);
-			free(tmp);
+		if (find_var(var, curr, in_double_quotes))
 			return ;
-		}
 		curr = curr->next;
 	}
 	tmp = var->str;
 	if (in_double_quotes)
-        var->str = ft_strdup("");
+		var->str = ft_strdup("");
 	else
-    {
-	    joe = true;
-        var->str = ft_strdup(" ");
-        var->type = SPACES;
-    }
+		change_empty_type(var, &joe);
 	free(tmp);
 	if (!joe)
-	    var->type = WORD;
+		var->type = WORD;
 }

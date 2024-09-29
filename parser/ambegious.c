@@ -19,7 +19,7 @@ static int	check_n_files(char *str)
 	int		i;
 
 	i = 0;
-	new = ft_strtrim(str, "\x03");
+	new = ultimate_trim(str);
 	res = ft_split(new, ' ');
 	free(new);
 	while (res[i])

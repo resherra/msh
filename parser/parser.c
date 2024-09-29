@@ -6,13 +6,13 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 17:05:27 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/25 17:00:01 by recherra         ###   ########.fr       */
+/*   Updated: 2024/09/28 20:52:58 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
+void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs)
 {
 	int	tmp;
 
@@ -22,16 +22,15 @@ void	fill_cmd(t_cmd **cmd, t_cmd *new_cmd, t_env *envs, char **paths)
 	new_cmd->args = lst_to_arr(new_cmd->args_lst_size + tmp,
 			new_cmd->args_list);
 	new_cmd->cmd = new_cmd->args[0];
-	new_cmd->path = extract_path(new_cmd->cmd, paths);
+	new_cmd->path = extract_path(new_cmd->cmd, envs);
 	cmd_add_back(cmd, new_cmd);
 }
 
-
 t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 {
-	while (curr && curr->type == WORD)
+	while (curr && (curr->type == WORD || curr->type == SPACES))
 	{
-        if (all_space_var(curr->str))
+		if (curr->type == SPACES || all_space_var(curr->str))
 		{
 			curr = curr->next;
 			continue ;
@@ -47,12 +46,17 @@ t_token	*get_args(t_token *curr, t_args *arg, t_cmd *new_cmd)
 t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
+	char	*tmp;
+
 	if (curr->next->state == IN_DOUBLE_Q)
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), false);
 	else
 		new_red = lst_new_red(curr->type, ft_strdup(curr->next->str), true);
-	if (!ft_strlen(new_red->red_file) || check_ambg(new_red->red_file, envs))
+	if (curr->next->type == SPACES || check_ambg(new_red->red_file, envs))
 		new_red->is_ambegious = true;
+	tmp = new_red->red_file;
+	new_red->red_file = ultimate_trim(new_red->red_file);
+	free(tmp);
 	red_add_back(&new_cmd->redirections, new_red);
 	curr = curr->next;
 	return (curr);
@@ -61,12 +65,13 @@ t_token	*get_redirections(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 t_token	*heredoc_special_handling(t_token *curr, t_red *new_red, t_cmd *new_cmd,
 		t_env *envs)
 {
-	if (curr && curr->next && curr->next->type == WORD)
+	if (curr && curr->next && (curr->next->type == WORD
+			|| curr->next->type == SPACES))
 		curr = get_redirections(curr, new_red, new_cmd, envs);
 	return (curr);
 }
 
-void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
+void	parser(t_cmd **cmd, t_token **pre, t_env *envs)
 {
 	t_parser_vars	vars;
 
@@ -85,7 +90,7 @@ void	parser(t_cmd **cmd, t_token **pre, char **paths, t_env *envs)
 			if (vars.curr)
 				vars.curr = vars.curr->next;
 		}
-		fill_cmd(cmd, vars.new_cmd, envs, paths);
+		fill_cmd(cmd, vars.new_cmd, envs);
 		if (vars.curr)
 			vars.curr = vars.curr->next;
 	}
