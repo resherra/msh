@@ -6,11 +6,17 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/26 23:51:51 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 18:37:39 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
+
+void	sig_handle(int sig)
+{
+	(void)(sig);
+	write(2, "Quit : 3\n", 9);
+}
 
 void	free_envp(char **envp)
 {

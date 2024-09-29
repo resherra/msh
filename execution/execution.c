@@ -6,24 +6,16 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/28 18:04:58 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 18:41:11 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../init.h"
 
-void	sig_handler(int sig)
-{
-	(void)(sig);
-	write(2, "Quit : 3\n", 9);
-	exit(1);
-}
-
 void	excute(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 {
 	int	state;
 
-	signal(SIGQUIT, sig_handler);
 	if (cmd->is_herdc && red_info->nmbr_cmd_herdc == 1)
 	{
 		close(red_info->fd[1]);
@@ -57,13 +49,12 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 	red_info->red_input = NULL;
 	red_info->red_out = NULL;
 	red_info->fd_out = -5;
-	//signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	if (cmd->redirections && (!cmd->is_herdc || red_info->nmbr_cmd_herdc == 1)
 		&& !implement_redirections(cmd->redirections, red_info, *env, false))
 	{
-		free(red_info->herdc_content);
-		exit(1);
+		return (free(red_info->herdc_content), exit(1));
 	}
 	if (!cmd->cmd)
 		exit(0);
@@ -121,6 +112,7 @@ int	logic(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 			perror("msh-0.1$ "), exit_state(env, errno, -1, envp), -33);
 	if (g_pid == 0)
 		child(cmd, red_info, env, envp);
+	signal(SIGQUIT, sig_handle);
 	if (cmd->is_herdc == true && red_info->nmbr_cmd_herdc == 1
 		&& red_info->nmbr_cmd_herdc--)
 		close(red_info->fd[0]);
@@ -147,7 +139,7 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
-	while (*pid != -42 && cmd)
+	while (*pid != -42 && g_pid != -32 && cmd)
 	{
 		sampel_state = logic(cmd, &red_info, env, new_envp);
 		if (cmd && cmd->is_herdc == true)
@@ -160,4 +152,5 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	{
 	}
 	exit_state(env, state, sampel_state, new_envp);
+	signal(SIGQUIT, SIG_IGN);
 }

@@ -6,11 +6,13 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 06:59:18 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/28 17:01:59 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 18:44:37 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "init.h"
+
+int		g_pid;
 
 void	handler(int sign)
 {
@@ -54,6 +56,7 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	init_all(&data);
 	init_env(&data.envs, envp);
+	
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)

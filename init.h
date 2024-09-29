@@ -6,7 +6,7 @@
 /*   By: apple <apple@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 07:00:03 by recherra          #+#    #+#             */
-/*   Updated: 2024/09/27 14:01:02 by apple            ###   ########.fr       */
+/*   Updated: 2024/09/29 18:49:26 by apple            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,11 @@
 # include <termios.h>
 # include <unistd.h>
 
+extern int				g_pid;
+
 //macros for errors
 # define NOT_VALID_IDNTF -2
 # define ALLOCATION_ERROR -3
-# define SEND_FIGINT -42
-
-int						g_pid;
 
 typedef struct s_cmd	t_cmd;
 
@@ -281,6 +280,7 @@ typedef struct execution_tools
 	int					pfds[2];
 }						t_red_info;
 
+void					sig_handle(int sig);
 void					excution(t_env **env, t_cmd *cmd, int *pid);
 
 int						implement_redirections(t_red *redr,
