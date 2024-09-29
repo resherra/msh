@@ -15,8 +15,7 @@
 void	skip_spaces(char *str, t_tokenizer_vars *vars)
 {
 	while ((str[vars->i] >= 9 && str[vars->i] <= 13) || str[vars->i] == ' ')
-		;
-	vars->i++;
+	    vars->i++;
 }
 
 t_token	*get_last_node(t_token **head)
