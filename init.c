@@ -12,8 +12,6 @@
 
 #include "init.h"
 
-int		g_pid;
-
 void	handler(int sign)
 {
 	(void)sign;
@@ -56,7 +54,6 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	init_all(&data);
 	init_env(&data.envs, envp);
-	
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handler);
 	while (1)
