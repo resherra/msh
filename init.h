@@ -30,7 +30,7 @@
 # include <termios.h>
 # include <unistd.h>
 
-extern int				g_pid;
+int						g_pid;
 
 //macros for errors
 # define NOT_VALID_IDNTF -2

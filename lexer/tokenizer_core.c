@@ -17,7 +17,8 @@ static void	get_full_var(char *str, t_tokenizer_vars *vars)
 	vars->env_utils.len = 0;
 	vars->env_utils.tmp = vars->i;
 	vars->i++;
-	if (!ft_isalpha(*(str + vars->i)) && *(str + vars->i) != '_')
+	if (str[vars->i] && !ft_isalpha(*(str + vars->i)) && *(str + vars->i) != '_'
+		&& *(str + vars->i) != '"' && *(str + vars->i) != '\'')
 	{
 		vars->env_utils.len++;
 		return ;
