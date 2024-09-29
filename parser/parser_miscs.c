@@ -99,12 +99,12 @@ char	*extract_path(char *cmd, t_env *envs)
 		if (curr_pth)
 			return (free_and_return(pre_path, curr_pth, paths));
 	}
-	if (!paths)
-	{
-		free(pre_path);
-		return (NULL);
-	}
 	if (get_act_paths(paths, &path, &pre_path))
 		return (path);
+	if (!access(cmd, F_OK))
+	{
+		free(pre_path);
+		return (cmd);
+	}
 	return (free_and_return(pre_path, cmd, paths));
 }

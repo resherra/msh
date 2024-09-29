@@ -48,6 +48,8 @@ int	get_act_paths(char **paths, char **path, char **pre_path)
 	int	i;
 
 	i = 0;
+	if (!paths)
+		return (0);
 	while (paths[i])
 	{
 		if (pth(paths[i++], path, pre_path))
