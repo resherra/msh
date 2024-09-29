@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/29 19:05:45 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/29 20:02:32 by schakkou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ void	child(t_cmd *cmd, t_red_info *red_info, t_env **env, char **envp)
 		exit(0);
 	if (cmd->is_herdc && red_info->nmbr_cmd_herdc != 1)
 	{
-		if (pipe(red_info->pfds) == -1)
+		if (pipe(out) == -1)
 			return (perror("msh-0.1$ "), exit(errno));
 		write(out[1], "", 1);
-		close(out[1]);
 		dup2(out[0], STDIN_FILENO);
+		close(out[1]);
 		close(out[0]);
 	}
 	excute(cmd, red_info, env, envp);
@@ -139,7 +139,7 @@ void	excution(t_env **env, t_cmd *cmd, int *pid)
 	if (!cmd)
 		return ;
 	new_envp = pre_excution(env, cmd, &red_info, new_envp);
-	while (*pid != -42 && g_pid != -32 && cmd)
+	while (*pid != -42 && cmd)
 	{
 		sampel_state = logic(cmd, &red_info, env, new_envp);
 		if (cmd && cmd->is_herdc == true)
