@@ -3,9 +3,8 @@
 
 a C based unix shell that mimics the behavior of Bash. 
 
-## Screenshots
 
-![App Screenshot](https://github.com/resherra/FildeFer/blob/master/Screen%20Shot%202024-04-27%20at%206.15.51%20PM.png)
+![App Screenshot](https://github.com/resherra/msh/blob/master/msh.png)
 
 
 ## Run Locally
@@ -13,29 +12,18 @@ a C based unix shell that mimics the behavior of Bash.
 Clone the project
 
 ```bash
-  git clone git@github.com:resherra/FildeFer.git
+  gcl git@github.com:resherra/msh.git && cd msh
 ```
 
 
-Go to the project directory
+Get the Readline library if its not already exist (i'm using brew) && change the paths in the Makefile
 
 ```bash
-  cd fildefer
+  brew install readline
 ```
 
-Clone the minilibx and build the library..
+Build the program's files && Run
 
 ```bash
-  git clone git@github.com:42Paris/minilibx-linux.git
-```
-
-Build the program's files
-```bash
-  make bonus
-```
-
-Run 
-
-```bash
-  ./fdf_bonus maps/elem-fract.fdf
+  make && ./msh 
 ```
