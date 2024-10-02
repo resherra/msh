@@ -6,7 +6,7 @@
 /*   By: schakkou <schakkou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:09:21 by schakkou          #+#    #+#             */
-/*   Updated: 2024/09/29 21:48:24 by schakkou         ###   ########.fr       */
+/*   Updated: 2024/09/29 21:48:24 by recherra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,11 @@
 
 int						g_pid;
 
-//macros for errors
 # define NOT_VALID_IDNTF -2
 # define ALLOCATION_ERROR -3
 
 typedef struct s_cmd	t_cmd;
 
-//tokens
 typedef enum e_type
 {
 	WORD,
@@ -53,7 +51,6 @@ typedef enum e_type
 	HERE_DOC,
 }						t_type;
 
-//state
 typedef enum e_state
 {
 	IN_DOUBLE_Q,
@@ -61,7 +58,6 @@ typedef enum e_state
 	GENERAL
 }						t_state;
 
-//token's element
 typedef struct s_token
 {
 	char				*str;
@@ -71,7 +67,6 @@ typedef struct s_token
 	struct s_token		*prev;
 }						t_token;
 
-//tokenizer vars
 typedef struct s_env_token_utils
 {
 	int					len;
@@ -88,11 +83,9 @@ typedef struct s_tokenizer_vars
 	t_env_token_utils	env_utils;
 }						t_tokenizer_vars;
 
-//d-list functions
 t_token					*lst_new(char *str, t_type type, t_state state);
 void					lst_add_back(t_token **head, t_token *node);
 
-//env
 typedef struct s_env
 {
 	char				*key;
@@ -183,36 +176,27 @@ void					tokenize(char *str, t_token **head);
 
 void					skip_spaces(char *str, t_tokenizer_vars *vars);
 
-//state function
 int						set_state(t_token *head, t_env *env);
 
-//variables expansion
 void					expansion(t_token *var, t_env *envs,
 							bool in_double_quotes);
 
-//tokens content utils
 char					*char_to_str(char c);
 char					*double_to_str(char *str, int i);
 
-//env utils
-//void				extract_env(t_env **envs, char *str, char ***paths);
 void					init_env(t_env **env, char **envp);
 void					ft_env_addback(t_env **env, t_env *new);
 
-//pre-parse functions
 void					sanitize(t_token *head, t_token **new);
 
-//env list utils
 t_env					*new_env(char *key, char *value);
 void					env_addback(t_env **env, t_env *new);
 void					ft_env_addback(t_env **env, t_env *new);
 
 void					env_delone(t_env *env, void (*del)(void *));
 
-//tokenizer miscs
 t_token					*get_last_node(t_token **head);
 
-//operator checks & others
 int						check_operator(char *str, int i);
 int						check(char *str, int tmp);
 int						sm_check(int type);
@@ -222,7 +206,6 @@ int						handle_single_dollar(t_token **curr);
 
 void					lstclear(t_token **head);
 
-//Built-ins
 int						unset(t_env **envs, char **vars);
 int						env(t_env *envs, t_cmd *cmd);
 int						ft_export(t_env *envs, char **args);
@@ -231,7 +214,6 @@ int						ft_cd(char *path, t_env *env);
 int						pwd(void);
 int						ft_exit(t_cmd *cmd, char *exit_state);
 
-//PARSINGd
 
 void					parser(t_cmd **cmd, t_token **pre, t_env *envs);
 t_cmd					*lst_new_cmd(void);
@@ -263,7 +245,6 @@ int						lexer(char *str, t_token **head, t_env *env,
 void					count_heredoc(t_parser_vars *vars);
 void					init_vars(t_parser_vars *vars, t_token **pre);
 
-// excution
 typedef struct execution_tools
 {
 	char				*red_out;
@@ -317,7 +298,6 @@ void					free_paths(char **paths);
 char					**get_new_paths(t_env *envs);
 int						pth(char *paths, char **path, char **pre_path);
 
-//miscs
 const char				*format_state(int type);
 const char				*format_type(int type);
 void					traverse_primary_tokens_list(t_token *env);
@@ -326,6 +306,5 @@ int						test_builtins(char *str, t_env **envs, t_cmd *cmd);
 void					freed(void *str);
 void					traverse_parse_list(t_cmd *cmd);
 
-// free all
 
 #endif
